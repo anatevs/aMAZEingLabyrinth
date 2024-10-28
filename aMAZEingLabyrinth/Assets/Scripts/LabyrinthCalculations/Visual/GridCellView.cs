@@ -67,14 +67,40 @@ namespace GameCore
             }
         }
 
-        private string ShowString(bool value)
+        public void SetPathCell(Vector2Int position)
         {
-            return value ? "1" : "0";
+            var pos = new Vector3Int(position.x, position.y, 0);
+            _tilemap.SetTile(pos, _tilePath);
         }
 
-        private TileBase ShowTile(bool value)
+        private TileBase GetTile(bool value)
         {
             return value ? _tileGround : _tileWall;
+        }
+
+        public bool GetValue((int X, int Y) position)
+        {
+            var pos = new Vector3Int(position.X, position.Y, 0);
+            var tile = _tilemap.GetTile(pos);
+
+            return GetValue(tile);
+        }
+
+        private bool GetValue(TileBase tile)
+        {
+            if (tile == _tileGround)
+            {
+                return true;
+            }
+            else if (tile == _tileWall)
+            {
+                return false;
+            }
+            else
+            {
+                Debug.Log("not wall or ground tile!");
+                return false;
+            }
         }
     }
 }
