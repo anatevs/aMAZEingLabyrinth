@@ -26,6 +26,8 @@ namespace GameCore
             _xShift = _xCount / 2;
             _yShift = _yCount / 2;
 
+            Debug.Log($"{_xShift}, {_yShift}");
+
             _xRange = new int[2] { -_xShift, _xShift - 1 };
             _yRange = new int[2] { -_yShift, _yShift - 1 };
         }
@@ -35,10 +37,11 @@ namespace GameCore
             var x = point.X + _xShift;
             var y = point.Y + _yShift;
 
-            if (x >= _xCount || y >= _yCount)
+            if (x >= _xCount || y >= _yCount || x < 0 || y < 0)
             {
                 return false;
             }
+            //Debug.Log($"{x}, {y}");
 
             return _elements[x, y];
         }

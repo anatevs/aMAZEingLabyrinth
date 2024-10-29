@@ -18,8 +18,9 @@ namespace GameCore
         [SerializeField]
         private bool _findPath;
 
-        private (int, int) _size = (10, 10);
-        private int _centerShift = 5;
+        private (int, int) _size = (22, 14);
+        private int _centerShiftX = 11;
+        private int _centerShiftY = 7;
 
         private LabyrinthGrid _labyrinthGrid;
 
@@ -27,9 +28,9 @@ namespace GameCore
         {
             _labyrinthGrid = new LabyrinthGrid(_size);
 
-            for (int i = -_centerShift; i < _centerShift; i++)
+            for (int i = -_centerShiftX; i < _centerShiftX; i++)
             {
-                for (int j = -_centerShift; j < _centerShift; j++)
+                for (int j = -_centerShiftY; j < _centerShiftY; j++)
                 {
                     var point = (i, j);
                     var value = _labyrinthView.GetValue(point);
