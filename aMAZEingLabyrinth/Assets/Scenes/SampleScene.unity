@@ -189,8 +189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _labyrinthView: {fileID: 192550049}
-  _startPoint: fcfffffffcffffff
-  _endPoint: 02000000fcffffff
+  _startPoint: feffffffffffffff
+  _endPoint: ffffffffffffffff
   _findPath: 1
 --- !u!1 &519420028
 GameObject:

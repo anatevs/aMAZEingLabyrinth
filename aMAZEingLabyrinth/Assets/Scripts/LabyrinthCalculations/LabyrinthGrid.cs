@@ -48,22 +48,29 @@ namespace GameCore
             _elements[point.X + _xShift, point.Y + _yShift] = value;
         }
 
-        private readonly int[] _searchShifts = { -1, 1 };
+        private readonly int[] _neighborsShifts = { -1, 1 };
 
         private List<Vector2Int> GetValidNeighbors((int X, int Y) point)
         {
             var result = new List<Vector2Int>();
 
-            for (int i = 0; i < _searchShifts.Length; i++)
+            for (int i = 0; i < _neighborsShifts.Length; i++)
             {
-                for (int j = 0; j < _searchShifts.Length; j++)
-                {
-                    var neighborPos = new Vector2Int { x = point.X + i, y = point.Y + j };
+                var neighborPos = new Vector2Int { x = point.X + _neighborsShifts[i], y = point.Y };
 
-                    if (IsValid((neighborPos.x, neighborPos.y)))
-                    {
-                        result.Add(neighborPos);
-                    }
+                if (IsValid((neighborPos.x, neighborPos.y)))
+                {
+                    result.Add(neighborPos);
+                }
+            }
+
+            for (int j = 0; j < _neighborsShifts.Length; j++)
+            {
+                var neighborPos = new Vector2Int { x = point.X, y = point.Y + _neighborsShifts[j] };
+
+                if (IsValid((neighborPos.x, neighborPos.y)))
+                {
+                    result.Add(neighborPos);
                 }
             }
 
@@ -73,6 +80,12 @@ namespace GameCore
         public bool TryFindAStarPath(Vector2Int startPoint, Vector2Int endPoint, out List<Vector2Int> result)
         {
             result = new();
+
+            if (!(IsValid((startPoint.x, startPoint.y)) && IsValid((endPoint.x, endPoint.y))))
+            {
+                Debug.Log("start point or end point is not valid");
+                return false;
+            }
 
             if (startPoint == endPoint)
             {
@@ -115,6 +128,23 @@ namespace GameCore
 
                     foreach (var neighbor in validNeighbors)
                     {
+                        //var neighborData = new AStarData
+                        //{
+                        //    Point = neighbor,
+                        //    PathDistance = (currentData.PathDistance + 1) * (currentData.PathDistance + 1),
+                        //    TargetDistance = (endPoint - neighbor).sqrMagnitude
+                        //};
+
+                        //var neighborNode = new ANode()
+                        //{
+                        //    Parent = currentNode,
+                        //    SelfData = neighborData
+                        //};
+
+                        //opened.Add(neighborNode);
+                        //markedPoints.Add(currentXY[0]);
+                        //markedPoints.Add(currentXY[1]);
+
                         currentXY[0] = neighbor.x;
                         currentXY[1] = neighbor.y;
 
@@ -185,6 +215,8 @@ namespace GameCore
             }
 
             Debug.Log(baka);
+            Debug.Log($"closed amount {closed.Count}, opened amount {opened.Count}");
+
 
             return (result.Count > 1);
         }

@@ -48,8 +48,8 @@ namespace GameCore
 
                 var res = _labyrinthGrid.TryFindAStarPath(start, end, out List<Vector2Int> result);
 
-                _labyrinthView.SetPathCell(start);
-                _labyrinthView.SetPathCell(end);
+                //_labyrinthView.SetPathCell(start);
+                //_labyrinthView.SetPathCell(end);
 
                 if (res)
                 {
