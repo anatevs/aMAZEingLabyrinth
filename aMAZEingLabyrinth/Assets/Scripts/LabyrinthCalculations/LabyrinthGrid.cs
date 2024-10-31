@@ -41,8 +41,6 @@ namespace GameCore
             {
                 return false;
             }
-            //Debug.Log($"{x}, {y}");
-
             return _elements[x, y];
         }
 
