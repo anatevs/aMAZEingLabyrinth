@@ -32,10 +32,9 @@ namespace GameCore
             {
                 for (int j = -_centerShiftY; j < _centerShiftY; j++)
                 {
-                    var point = (i, j);
-                    var value = _labyrinthView.GetValue(point);
+                    var value = _labyrinthView.GetValue((i, j));
 
-                    _labyrinthGrid.SetValue(value, point);
+                    _labyrinthGrid.SetValue(value, (i+_centerShiftX, j+_centerShiftY));
                 }
             }
         }
@@ -58,7 +57,8 @@ namespace GameCore
 
                     foreach (var pathPoint in result)
                     {
-                        _labyrinthView.SetPathCell(pathPoint);
+                        var tilePoint = new Vector2Int(pathPoint.x - _centerShiftX, pathPoint.y - _centerShiftY);
+                        _labyrinthView.SetPathCell(tilePoint);
                         Debug.Log(pathPoint);
                     }
                 }

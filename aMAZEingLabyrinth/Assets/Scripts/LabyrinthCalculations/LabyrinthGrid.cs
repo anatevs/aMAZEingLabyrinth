@@ -7,14 +7,8 @@ namespace GameCore
     {
         private bool[,] _elements;
 
-        private int _xCount;
-        private int _yCount;
-
-        private int _xShift;
-        private int _yShift;
-
-        private int[] _xRange;
-        private int[] _yRange;
+        private readonly int _xCount;
+        private readonly int _yCount;
 
         public LabyrinthGrid((int X, int Y) count)
         {
@@ -22,20 +16,12 @@ namespace GameCore
 
             _xCount = count.X;
             _yCount = count.Y;
-
-            _xShift = _xCount / 2;
-            _yShift = _yCount / 2;
-
-            Debug.Log($"{_xShift}, {_yShift}");
-
-            _xRange = new int[2] { -_xShift, _xShift - 1 };
-            _yRange = new int[2] { -_yShift, _yShift - 1 };
         }
 
         public bool IsValid((int X, int Y) point)
         {
-            var x = point.X + _xShift;
-            var y = point.Y + _yShift;
+            var x = point.X;
+            var y = point.Y;
 
             if (x >= _xCount || y >= _yCount || x < 0 || y < 0)
             {
@@ -46,7 +32,7 @@ namespace GameCore
 
         public void SetValue(bool value, (int X, int Y) point)
         {
-            _elements[point.X + _xShift, point.Y + _yShift] = value;
+            _elements[point.X, point.Y] = value;
         }
 
         private readonly int[] _neighborsShifts = { -1, 1 };
@@ -129,23 +115,6 @@ namespace GameCore
 
                     foreach (var neighbor in validNeighbors)
                     {
-                        //var neighborData = new AStarData
-                        //{
-                        //    Point = neighbor,
-                        //    PathDistance = (currentData.PathDistance + 1) * (currentData.PathDistance + 1),
-                        //    TargetDistance = (endPoint - neighbor).sqrMagnitude
-                        //};
-
-                        //var neighborNode = new ANode()
-                        //{
-                        //    Parent = currentNode,
-                        //    SelfData = neighborData
-                        //};
-
-                        //opened.Add(neighborNode);
-                        //markedPoints.Add(currentXY[0]);
-                        //markedPoints.Add(currentXY[1]);
-
                         currentXY[0] = neighbor.x;
                         currentXY[1] = neighbor.y;
 
@@ -235,7 +204,6 @@ namespace GameCore
             return false;
         }
     }
-
 
 
     public class ANode

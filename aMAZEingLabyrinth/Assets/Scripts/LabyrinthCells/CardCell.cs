@@ -8,16 +8,20 @@ namespace GameCore
     {
         public bool[,] Values => _values;
 
+        public int Size => 3;
+
         private readonly List<(int X, int Y)> _walkablePoints = new();
 
         private readonly int _shift;
 
-        private readonly bool[,] _values = new bool[3, 3];
+        private readonly bool[,] _values;
 
         private Transform _view;
 
         public CardCell(List<(int X, int Y)> walkablePoints, Transform view)
         {
+            _values = new bool[Size, Size];
+
             foreach (var point in walkablePoints)
             {
                 _walkablePoints.Add(point);

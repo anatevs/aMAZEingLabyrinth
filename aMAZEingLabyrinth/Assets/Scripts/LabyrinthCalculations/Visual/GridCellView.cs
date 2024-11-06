@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 namespace GameCore
 {
-    public class GridCellView : MonoBehaviour
+    public sealed class GridCellView : MonoBehaviour
     {
         [SerializeField]
         private Tilemap _tilemap;
