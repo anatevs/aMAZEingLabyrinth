@@ -74,10 +74,10 @@ namespace GameCore
             _cell2 = new CardCell(_angleCell, _view2);
 
             Debug.Log("cell1:");
-            //_cell1.PrintMatrix();
+            _cell1.PrintMatrix();
 
             Debug.Log("cell2:");
-            //_cell2.PrintMatrix();
+            _cell2.PrintMatrix();
 
             _cardCells = new CardCell[,]
             {

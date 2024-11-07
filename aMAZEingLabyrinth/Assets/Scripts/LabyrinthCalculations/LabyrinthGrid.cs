@@ -5,14 +5,14 @@ namespace GameCore
 {
     public sealed class LabyrinthGrid
     {
-        private bool[,] _elements;
+        private int[,] _elements;
 
         private readonly int _xCount;
         private readonly int _yCount;
 
         public LabyrinthGrid((int X, int Y) count)
         {
-            _elements = new bool[count.X, count.Y];
+            _elements = new int[count.X, count.Y];
 
             _xCount = count.X;
             _yCount = count.Y;
@@ -27,10 +27,11 @@ namespace GameCore
             {
                 return false;
             }
-            return _elements[x, y];
+
+            return _elements[x, y] != 0;
         }
 
-        public void SetValue(bool value, (int X, int Y) point)
+        public void SetValue(int value, (int X, int Y) point)
         {
             _elements[point.X, point.Y] = value;
         }

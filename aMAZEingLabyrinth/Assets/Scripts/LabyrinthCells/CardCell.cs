@@ -12,13 +12,13 @@ namespace GameCore
 
         private readonly int _shift;
 
-        private readonly bool[,] _values;
+        private readonly int[,] _values;
 
         private Transform _view;
 
         public CardCell(List<(int X, int Y)> walkablePoints, Transform view)
         {
-            _values = new bool[Size, Size];
+            _values = new int[Size, Size];
 
             foreach (var point in walkablePoints)
             {
@@ -28,26 +28,26 @@ namespace GameCore
             _view = view;
 
 
-            _shift = (int)(_values.GetLength(0) / 2);
+            _shift = (int)(Size / 2);
 
             Init();
         }
 
         private void Init()
         {
-            SetCoordinate((0, 0), true);
+            SetCoordinate((0, 0), 1);
 
-            SetWalkablePoints(true);
+            SetWalkablePoints(1);
         }
 
-        public bool GetValue(int row, int col)
+        public int GetValue(int row, int col)
         {
             return _values[row, col];
         }
 
         public void Rotate(int angleDeg)
         {
-            SetWalkablePoints(false);
+            SetWalkablePoints(0);
 
             for (int i = 0; i < _walkablePoints.Count; i++)
             {
@@ -55,7 +55,7 @@ namespace GameCore
                     CellRotationInfo.Rot90MatrixCoef[angleDeg]);
             }
 
-            SetWalkablePoints(true);
+            SetWalkablePoints(1);
 
             _view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * _view.rotation;
         }
@@ -65,7 +65,7 @@ namespace GameCore
             return (point.Y * rot90.Item1, point.X * rot90.Item2);
         }
 
-        private void SetWalkablePoints(bool value)
+        private void SetWalkablePoints(int value)
         {
             foreach (var point in _walkablePoints)
             {
@@ -73,7 +73,7 @@ namespace GameCore
             }
         }
 
-        private void SetCoordinate((int X, int Y) point, bool value)
+        private void SetCoordinate((int X, int Y) point, int value)
         {
             _values[AxisToIndex(point.Y, -1), AxisToIndex(point.X, 1)] = value;
         }
@@ -88,31 +88,6 @@ namespace GameCore
             return (index - _shift) * sign;
         }
 
-        //[SerializeField]
-        //private int _angleDeg = 90;
-
-        //[SerializeField]
-        //private bool _check = false;
-
-        //private void Start()
-        //{
-        //    Init();
-
-        //    PrintMatrix();
-        //}
-
-        //private void Update()
-        //{
-        //    if (_check)
-        //    {
-        //        Rotate(_angleDeg);
-
-        //        PrintMatrix();
-
-        //        _check = false;
-        //    }
-        //}
-
         public void PrintMatrix()
         {
             Debug.Log("matrix:");
@@ -123,7 +98,7 @@ namespace GameCore
 
                 for (int j = 0; j < _values.GetLength(0); j++)
                 {
-                    rowString = rowString + _values[i, j] + ",";
+                    rowString = rowString + _values[i, j] + "  ";
                 }
 
                 Debug.Log(rowString);
