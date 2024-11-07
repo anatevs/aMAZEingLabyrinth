@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 namespace GameCore
 {
-    public sealed class GridCellView : MonoBehaviour
+    public sealed class GridCellView_Tiles : MonoBehaviour
     {
         [SerializeField]
         private Tilemap _tilemap;

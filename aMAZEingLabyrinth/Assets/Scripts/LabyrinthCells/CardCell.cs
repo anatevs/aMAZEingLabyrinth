@@ -6,8 +6,6 @@ namespace GameCore
 {
     public class CardCell
     {
-        public bool[,] Values => _values;
-
         public int Size => 3;
 
         private readonly List<(int X, int Y)> _walkablePoints = new();
@@ -40,6 +38,11 @@ namespace GameCore
             SetCoordinate((0, 0), true);
 
             SetWalkablePoints(true);
+        }
+
+        public bool GetValue(int row, int col)
+        {
+            return _values[row, col];
         }
 
         public void Rotate(int angleDeg)
