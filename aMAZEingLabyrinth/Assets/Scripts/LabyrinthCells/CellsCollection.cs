@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameCore
@@ -19,8 +20,8 @@ namespace GameCore
         private CardCell[,] _cardCells;
 
 
-        private int _tShapeCount = 6; //all are reward
-        private int _angleShapeCount = 16; //6 are reward
+        private int _tShapeCount = 6 + 12; //all are reward + 12 staying reward
+        private int _angleShapeCount = 16 + 4; //6 are reward + 4 staying
         private int _lineShapeCount = 12;
 
         private readonly List<(int X, int Y)> _angleCell = new()
@@ -33,7 +34,7 @@ namespace GameCore
         {
             (1, 0),
             (-1, 0),
-            (0, -1)
+            (0, 1)
         };
 
         private readonly List<(int X, int Y)> _lineCell = new()
@@ -71,13 +72,23 @@ namespace GameCore
         private void Start()
         {
             _cell1 = new CardCell(_angleCell, _view1);
-            _cell2 = new CardCell(_angleCell, _view2);
+            _cell2 = new CardCell(_tCell, _view2);
 
-            Debug.Log("cell1:");
-            _cell1.PrintMatrix();
 
-            Debug.Log("cell2:");
-            _cell2.PrintMatrix();
+            //Debug.Log("cell1:");
+            //_cell1.PrintMatrix();
+
+            //Debug.Log("cell2:");
+            //_cell2.PrintMatrix();
+
+            //make cicle to generate all game field
+
+            //1. empty 7x7 with empty cells
+            //2. fullfill static with values and views
+            //3. randomly fullfill dynamic ones
+
+            //var view = Instantiate(_view1);
+            //view.position =
 
             _cardCells = new CardCell[,]
             {
@@ -125,17 +136,20 @@ namespace GameCore
 
             if (_findPath)
             {
+                var xLocal = (int)transform.position.x;
+                var yLocal = (int)transform.position.y;
+
                 var start = new Vector2Int(_startPoint[0], _startPoint[1]);
                 var end = new Vector2Int(_endPoint[0], _endPoint[1]);
 
                 var res = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
 
-                var markerPos = new Vector3(_startPoint[0], _startPoint[1], _pathMarker.transform.position.z);
+                var markerPos = new Vector3(_startPoint[0] + xLocal, _startPoint[1] + yLocal, _pathMarker.transform.position.z);
 
                 Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
 
-                markerPos.x = _endPoint[0];
-                markerPos.y = _endPoint[1];
+                markerPos.x = _endPoint[0] + xLocal;
+                markerPos.y = _endPoint[1] + yLocal;
                 Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
 
                 //_labyrinthView.SetPathCell(start);
@@ -147,8 +161,8 @@ namespace GameCore
 
                     foreach (var pathPoint in result)
                     {
-                        markerPos.x = pathPoint.x;
-                        markerPos.y = pathPoint.y;
+                        markerPos.x = pathPoint.x + xLocal;
+                        markerPos.y = pathPoint.y + yLocal;
 
                         Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
                         //var tilePoint = new Vector2Int(pathPoint.x - _centerShiftX, pathPoint.y - _centerShiftY);

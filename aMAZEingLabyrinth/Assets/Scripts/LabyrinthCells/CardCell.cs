@@ -35,9 +35,23 @@ namespace GameCore
 
         private void Init()
         {
-            SetCoordinate((0, 0), 1);
+            SetValue((0, 0), 1);
 
             SetWalkablePoints(1);
+
+            Debug.Log($"{_view.name} start matrix:");
+            PrintMatrix();
+
+            int rotStep = 90;
+            var initRotCount = (int)_view.eulerAngles.z / rotStep;
+            Debug.Log($"init rotation is {_view.eulerAngles.z}: {initRotCount} times {rotStep}");
+            for (int i = 0; i < initRotCount; i++)
+            {
+                RotateMatrix(rotStep);
+            }
+
+            Debug.Log($"{_view.name} init matrix:");
+            PrintMatrix();
         }
 
         public int GetValue(int row, int col)
@@ -46,6 +60,13 @@ namespace GameCore
         }
 
         public void Rotate(int angleDeg)
+        {
+            RotateMatrix(angleDeg);
+
+            _view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * _view.rotation;
+        }
+
+        private void RotateMatrix(int angleDeg)
         {
             SetWalkablePoints(0);
 
@@ -56,8 +77,6 @@ namespace GameCore
             }
 
             SetWalkablePoints(1);
-
-            _view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * _view.rotation;
         }
 
         private (int X, int Y) GetRotatePoint((int X, int Y) point, (int, int) rot90)
@@ -69,11 +88,11 @@ namespace GameCore
         {
             foreach (var point in _walkablePoints)
             {
-                SetCoordinate(point, value);
+                SetValue(point, value);
             }
         }
 
-        private void SetCoordinate((int X, int Y) point, int value)
+        private void SetValue((int X, int Y) point, int value)
         {
             _values[AxisToIndex(point.Y, -1), AxisToIndex(point.X, 1)] = value;
         }
