@@ -67,13 +67,15 @@ namespace GameCore
         private bool _findPath;
 
 
-        
+        private void RotateView(Transform view, int angleDeg)
+        {
+            view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * view.rotation;
+        }
 
         private void Start()
         {
             _cell1 = new CardCell(_angleCell, _view1);
             _cell2 = new CardCell(_tCell, _view2);
-
 
             //Debug.Log("cell1:");
             //_cell1.PrintMatrix();

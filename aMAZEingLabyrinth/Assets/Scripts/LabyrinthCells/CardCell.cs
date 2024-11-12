@@ -14,9 +14,11 @@ namespace GameCore
 
         private readonly int[,] _values;
 
-        private Transform _view;
+        private int _rotation;
 
-        public CardCell(List<(int X, int Y)> walkablePoints, Transform view)
+        private readonly Transform _view;
+
+        public CardCell(List<(int X, int Y)> walkablePoints, Transform view, int centerValue = 1)
         {
             _values = new int[Size, Size];
 
@@ -30,28 +32,21 @@ namespace GameCore
 
             _shift = (int)(Size / 2);
 
-            Init();
+            Init(centerValue);
         }
 
-        private void Init()
+        private void Init(int centerValue)
         {
-            SetValue((0, 0), 1);
+            SetValue((0, 0), centerValue);
 
             SetWalkablePoints(1);
 
-            Debug.Log($"{_view.name} start matrix:");
-            PrintMatrix();
+            _rotation = (int)_view.eulerAngles.z;
 
             int rotStep = 90;
-            var initRotCount = (int)_view.eulerAngles.z / rotStep;
-            Debug.Log($"init rotation is {_view.eulerAngles.z}: {initRotCount} times {rotStep}");
-            for (int i = 0; i < initRotCount; i++)
-            {
-                RotateMatrix(rotStep);
-            }
+            int initRotCount = _rotation / rotStep;
 
-            Debug.Log($"{_view.name} init matrix:");
-            PrintMatrix();
+            RotateMatrix(rotStep, initRotCount);
         }
 
         public int GetValue(int row, int col)
@@ -66,16 +61,18 @@ namespace GameCore
             _view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * _view.rotation;
         }
 
-        private void RotateMatrix(int angleDeg)
+        private void RotateMatrix(int angleDeg, int rotCount = 1)
         {
             SetWalkablePoints(0);
 
-            for (int i = 0; i < _walkablePoints.Count; i++)
+            for (int c = 0; c < rotCount; c++)
             {
-                _walkablePoints[i] = GetRotatePoint(_walkablePoints[i],
-                    CellRotationInfo.Rot90MatrixCoef[angleDeg]);
+                for (int i = 0; i < _walkablePoints.Count; i++)
+                {
+                    _walkablePoints[i] = GetRotatePoint(_walkablePoints[i],
+                        CellRotationInfo.Rot90MatrixCoef[angleDeg]);
+                }
             }
-
             SetWalkablePoints(1);
         }
 
