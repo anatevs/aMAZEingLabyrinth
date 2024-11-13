@@ -1,6 +1,6 @@
 ﻿namespace GameCore
 {
-    public enum CellGeometryTypes
+    public enum CellGeometry
     {
         Angle,
         TShape,

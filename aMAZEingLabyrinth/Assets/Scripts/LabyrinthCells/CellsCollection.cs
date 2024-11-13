@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameCore
@@ -7,43 +6,36 @@ namespace GameCore
     public class CellsCollection : MonoBehaviour
     {
         [SerializeField]
-        private Transform _view1;
+        private CardCell[] _fixedCells;
 
         [SerializeField]
-        private Transform _view2;
-
-        private CardCell _cell1;
-        private CardCell _cell2;
+        private Transform _pathMarkersTransform;
 
         private LabyrinthGrid _grid;
 
-        private CardCell[,] _cardCells;
+        private int _cellSize = 3;
 
+        private CardCellValues[,] _cardCells;
 
-        private int _tShapeCount = 6 + 12; //all are reward + 12 staying reward
-        private int _angleShapeCount = 16 + 4; //6 are reward + 4 staying
+        private (int Rows, int Cols) _size = (7, 7);
+
+        private int[] _fixedIndexes = new int[4] { 0, 2, 4, 6 };
+        private int[] _movableIndexes = new int[3] { 1, 3, 5 };
+
+        private int _tShapeCount = 6 + 12; //all are reward
+        private int _angleShapeCount = 16 + 4; //6 are reward
         private int _lineShapeCount = 12;
 
-        private readonly List<(int X, int Y)> _angleCell = new()
-        {
-            (1, 0),
-            (0, 1)
-        };
-
-        private readonly List<(int X, int Y)> _tCell = new()
-        {
-            (1, 0),
-            (-1, 0),
-            (0, 1)
-        };
-
-        private readonly List<(int X, int Y)> _lineCell = new()
-        {
-            (1, 0),
-            (-1, 0)
-        };
 
 
+        [SerializeField]
+        private CardCell _view1;
+
+        [SerializeField]
+        private CardCell _view2;
+
+        private CardCellValues _cell1;
+        private CardCellValues _cell2;
 
         [SerializeField]
         private int _angleDeg = 90;
@@ -66,22 +58,48 @@ namespace GameCore
         [SerializeField]
         private bool _findPath;
 
+        [SerializeField]
+        private int[] _printRowCol = new int[2];
+
+        [SerializeField]
+        private bool _printCell;
 
         private void RotateView(Transform view, int angleDeg)
         {
-            view.rotation = CellRotationInfo.Quaternioins90[angleDeg] * view.rotation;
+            view.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * view.rotation;
         }
 
         private void Start()
         {
-            _cell1 = new CardCell(_angleCell, _view1);
-            _cell2 = new CardCell(_tCell, _view2);
+            _grid = new LabyrinthGrid((_size.Rows * _cellSize, _size.Cols * _cellSize));
 
-            //Debug.Log("cell1:");
-            //_cell1.PrintMatrix();
+            Debug.Log($"grid is within {_size.Rows * _cellSize} rows and {_size.Cols * _cellSize} columns");
 
-            //Debug.Log("cell2:");
-            //_cell2.PrintMatrix();
+            _cardCells = new CardCellValues[_size.Rows, _size.Cols];
+
+            foreach (var cell in _fixedCells)
+            {
+                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y));
+
+                _cardCells[iCell, jCell] =
+                    new CardCellValues(cell.Geometry, cell.transform);
+
+                SetCartToGridValues(iCell, jCell);
+            }
+
+            //_cell1 = new CardCellValues(CellGeometry.TShape, _view1.transform);
+            //_cell2 = new CardCellValues(CellGeometry.Line, _view2);
+
+            var otherCells = new CardCell[2] { _view1, _view2 };
+            foreach (var cell in otherCells)
+            {
+                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y));
+
+                _cardCells[iCell, jCell] =
+                    new CardCellValues(cell.Geometry, cell.transform);
+
+                SetCartToGridValues(iCell, jCell);
+            }
 
             //make cicle to generate all game field
 
@@ -91,46 +109,24 @@ namespace GameCore
 
             //var view = Instantiate(_view1);
             //view.position =
-
-            _cardCells = new CardCell[,]
-            {
-                { _cell1, _cell2 }
-            };
-
-            var xSize = _cell1.Size * _cardCells.GetLength(1);
-            var ySize = _cell1.Size * _cardCells.GetLength(0);
-
-            _grid = new LabyrinthGrid((xSize, ySize));
-
-            for (int i = 0;  i < _cardCells.GetLength(0); i++)
-            {
-                for (int j = 0; j < _cardCells.GetLength(1); j++)
-                {
-                    SetCardValues(i, j);
-                }
-            }
         }
 
         private void Update()
         {
             if (_check)
             {
-                var rotatedCell = _cell1;
-                var cardIndex = (0, 0);
-
+                var cardIndex = (6, 1);
 
                 if (_cellNumber == 2)
                 {
-                    rotatedCell = _cell2;
-                    cardIndex = (0, 1);
+                    cardIndex = (5, 2);
                 }
+
+                var rotatedCell = _cardCells[cardIndex.Item1, cardIndex.Item2];
 
                 rotatedCell.Rotate(_angleDeg);
 
-                //Debug.Log($"cell{_cellNumber} rotated to {_angleDeg}");
-                //rotatedCell.PrintMatrix();
-
-                SetCardValues(cardIndex.Item1, cardIndex.Item2);
+                SetCartToGridValues(cardIndex.Item1, cardIndex.Item2);
 
                 _check = false;
             }
@@ -138,6 +134,11 @@ namespace GameCore
 
             if (_findPath)
             {
+                for (int i = 0; i < _pathMarkersTransform.childCount; i++)
+                {
+                    Destroy(_pathMarkersTransform.GetChild(i).gameObject);
+                }
+
                 var xLocal = (int)transform.position.x;
                 var yLocal = (int)transform.position.y;
 
@@ -152,10 +153,7 @@ namespace GameCore
 
                 markerPos.x = _endPoint[0] + xLocal;
                 markerPos.y = _endPoint[1] + yLocal;
-                Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
-
-                //_labyrinthView.SetPathCell(start);
-                //_labyrinthView.SetPathCell(end);
+                Instantiate(_pathMarker, markerPos, Quaternion.identity, _pathMarkersTransform);
 
                 if (res)
                 {
@@ -166,10 +164,7 @@ namespace GameCore
                         markerPos.x = pathPoint.x + xLocal;
                         markerPos.y = pathPoint.y + yLocal;
 
-                        Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
-                        //var tilePoint = new Vector2Int(pathPoint.x - _centerShiftX, pathPoint.y - _centerShiftY);
-                        //_labyrinthView.SetPathCell(tilePoint);
-                        //Debug.Log(pathPoint);
+                        Instantiate(_pathMarker, markerPos, Quaternion.identity, _pathMarkersTransform);
                     }
                 }
                 else
@@ -179,9 +174,24 @@ namespace GameCore
 
                 _findPath = false;
             }
+
+            if (_printCell)
+            {
+                var cell = _cardCells[_printRowCol[0], _printRowCol[1]];
+                if (cell == null)
+                {
+                    Debug.Log("null cell");
+                }
+                else
+                {
+                    cell.PrintMatrix();
+                }
+
+                _printCell = false;
+            }
         }
 
-        private void SetCardValues(int i, int j)
+        private void SetCartToGridValues(int i, int j)
         {
             var card = _cardCells[i, j];
 
@@ -189,12 +199,34 @@ namespace GameCore
             {
                 for (int jc = 0; jc < card.Size; jc++)
                 {
-                    var x = j * card.Size + jc;
-                    var y = card.Size - 1 - (i * card.Size + ic);
+                    var xy = GetXY((i, j), (ic, jc));
 
-                    _grid.SetValue(card.GetValue(ic, jc), (x, y));
+                    _grid.SetValue(card.GetValue(ic, jc), xy);
                 }
             }
+        }
+
+        private (int X, int Y) GetXY((int i, int j) cellIndex, (int ic, int jc) elementIndex)
+        {
+            var x = cellIndex.j * _cellSize + elementIndex.jc;
+            var y = _size.Rows * _cellSize - 1 - (cellIndex.i * _cellSize + elementIndex.ic);
+            return (x, y);
+        }
+
+        private (int iCell, int jCell) GetCardIndex((int x, int y) coordinates)
+        {
+            int i = _size.Rows - 1 - coordinates.y / _cellSize;
+            int j = coordinates.x / _cellSize;
+
+            return (i, j);
+        }
+
+        private (int iElement, int jElement) GetCardElementIndex((int x, int y) coordinates)
+        {
+            int ic = _cellSize - 1 - coordinates.y % _cellSize;
+            int jc = coordinates.x % _cellSize;
+
+            return (ic, jc);
         }
     }
 }

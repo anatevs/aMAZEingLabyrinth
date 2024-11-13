@@ -23,5 +23,15 @@ namespace GameCore
                 _angles[1], Quaternion.AngleAxis(_angles[1], Vector3.forward)
             }
         };
+
+        public static (int, int) GetRot90Coef(int angle)
+        {
+            return Rot90MatrixCoef[angle];
+        }
+
+        public static Quaternion GetQuaternion90(int angle)
+        {
+            return Quaternioins90[angle];
+        }
     }
 }
