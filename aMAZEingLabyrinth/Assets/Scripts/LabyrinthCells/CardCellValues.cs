@@ -6,6 +6,8 @@ namespace GameCore
 {
     public class CardCellValues
     {
+        public event Action<int> OnRotated;
+
         public int Size => 3;
 
         private readonly List<(int X, int Y)> _walkablePoints = new();
@@ -14,11 +16,13 @@ namespace GameCore
 
         private readonly int[,] _values;
 
-        private int _rotation;
+        //private int _rotation;
 
-        private readonly Transform _view;
+        //private readonly Transform _view;
 
-        public CardCellValues(CellGeometry geometryType, Transform view, int centerValue = 1)
+        private readonly int _initRotation;
+
+        public CardCellValues(CellGeometry geometryType, float eulerAngleZ, int centerValue = 1)
         {
             var walkablePoints = CellGeometryInfo.GetGeometry(geometryType);
 
@@ -29,7 +33,7 @@ namespace GameCore
                 _walkablePoints.Add(point);
             }
 
-            _view = view;
+            _initRotation = (int)eulerAngleZ;
 
 
             _shift = (int)(Size / 2);
@@ -43,10 +47,10 @@ namespace GameCore
 
             SetWalkablePoints(1);
 
-            _rotation = (int)_view.eulerAngles.z;
+            //_rotation = (int)_view.eulerAngles.z;
 
             int rotStep = 90;
-            int initRotCount = _rotation / rotStep;
+            int initRotCount = _initRotation / rotStep;
 
             RotateMatrix(rotStep, initRotCount);
         }
@@ -60,7 +64,9 @@ namespace GameCore
         {
             RotateMatrix(angleDeg);
 
-            _view.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * _view.rotation;
+            //_view.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * _view.rotation;
+
+            OnRotated?.Invoke(angleDeg);
         }
 
         private void RotateMatrix(int angleDeg, int rotCount = 1)

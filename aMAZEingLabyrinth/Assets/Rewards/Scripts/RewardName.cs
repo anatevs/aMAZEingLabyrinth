@@ -17,7 +17,7 @@
         Helmet = 12,
         Candelabrum = 13,
 
-        Beast = 14,
+        Satyr = 14,
         Bat = 15,
         Bug = 16,
         Spider = 17,

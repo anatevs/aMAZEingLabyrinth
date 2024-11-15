@@ -1,54 +1,56 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Schema;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCore
 {
-    public class CellsCollection : MonoBehaviour
+    public sealed class CellsCollection : MonoBehaviour
     {
         [SerializeField]
         private CardCell[] _fixedCells;
 
         [SerializeField]
+        private CardCell[] _movingCells;
+
+        [SerializeField]
         private Transform _pathMarkersTransform;
+
+        [SerializeField]
+        private Transform _movableCardsTransform;
+
+        [SerializeField]
+        private Transform _playableCardTransform;
 
         private LabyrinthGrid _grid;
 
-        private int _cellSize = 3;
+        private readonly int _cellSize = 3;
 
         private CardCellValues[,] _cardCells;
 
         private (int Rows, int Cols) _size = (7, 7);
 
-        private int[] _fixedIndexes = new int[4] { 0, 2, 4, 6 };
-        private int[] _movableIndexes = new int[3] { 1, 3, 5 };
+        private int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
+        private int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
         private int _tShapeCount = 6 + 12; //all are reward
         private int _angleShapeCount = 16 + 4; //6 are reward
         private int _lineShapeCount = 12;
 
-
-
         [SerializeField]
-        private CardCell _view1;
+        private GameObject _pathMarker;
 
-        [SerializeField]
-        private CardCell _view2;
-
-        private CardCellValues _cell1;
-        private CardCellValues _cell2;
-
+        [Header("Rotation test")]
         [SerializeField]
         private int _angleDeg = 90;
 
         [SerializeField]
+        private int[] _rotateCardIndex = new int[2];
+
+        [SerializeField]
         private bool _check = false;
 
-        [SerializeField]
-        private int _cellNumber = 1;
 
-        [SerializeField]
-        private GameObject _pathMarker;
-
+        [Header("Find path test")]
         [SerializeField]
         private int[] _startPoint = new int[2];
 
@@ -58,16 +60,12 @@ namespace GameCore
         [SerializeField]
         private bool _findPath;
 
+        [Header("Print cell test")]
         [SerializeField]
         private int[] _printRowCol = new int[2];
 
         [SerializeField]
         private bool _printCell;
-
-        private void RotateView(Transform view, int angleDeg)
-        {
-            view.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * view.rotation;
-        }
 
         private void Start()
         {
@@ -77,28 +75,121 @@ namespace GameCore
 
             _cardCells = new CardCellValues[_size.Rows, _size.Cols];
 
+
+            //Init fixed
+
             foreach (var cell in _fixedCells)
             {
                 var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y));
 
-                _cardCells[iCell, jCell] =
-                    new CardCellValues(cell.Geometry, cell.transform);
+                var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
 
-                SetCartToGridValues(iCell, jCell);
+                _cardCells[iCell, jCell] = cellValues;
+
+                cell.LinkWithValues(cellValues);
+
+                SetCardToGridValues(iCell, jCell);
             }
 
-            //_cell1 = new CardCellValues(CellGeometry.TShape, _view1.transform);
-            //_cell2 = new CardCellValues(CellGeometry.Line, _view2);
-
-            var otherCells = new CardCell[2] { _view1, _view2 };
-            foreach (var cell in otherCells)
+            var indexList = new List<int>(_movingCells.Length);
+            for (int i = 0; i < _movingCells.Length; i++)
             {
-                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y));
+                indexList.Add(i);
+            }
+            Debug.Log(indexList.Count);
 
-                _cardCells[iCell, jCell] =
-                    new CardCellValues(cell.Geometry, cell.transform);
+            //Init movable 1
 
-                SetCartToGridValues(iCell, jCell);
+            int movingCount = 0;
+            foreach (var i in _movableRowCols)
+            {
+                for (int j = 0; j < _size.Cols; j++)
+                {
+                    var randomIndex = indexList[Random.Range(0, indexList.Count)];
+
+                    var cell = _movingCells[randomIndex];
+
+                    indexList.Remove(randomIndex);
+
+                    //var cell = _movingCells[movingCount];
+
+                    cell.transform.SetParent(_movableCardsTransform);
+
+                    var (X, Y) = GetXY((i, j), (2, 0));
+
+                    cell.transform.localPosition = new Vector3(X, Y, transform.position.z);
+
+                    var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
+
+                    _cardCells[i, j] = cellValues;
+
+                    cell.LinkWithValues(cellValues);
+
+                    SetCardToGridValues(i, j);
+
+                    //Debug.Log(randomIndex);
+                    movingCount++;
+                }
+            }
+
+
+            //Init movable 2
+
+            foreach (var i in _fixedRowCols)
+            {
+                foreach (var j in _movableRowCols)
+                {
+                    var randomIndex = indexList[Random.Range(0, indexList.Count)];
+
+                    var cell = _movingCells[randomIndex];
+
+                    indexList.Remove(randomIndex);
+
+                    //var cell = _movingCells[movingCount];
+
+                    cell.transform.SetParent(_movableCardsTransform);
+
+                    var (X, Y) = GetXY((i, j), (2, 0));
+
+                    cell.transform.localPosition = new Vector3(X, Y, transform.position.z);
+
+                    var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
+
+                    _cardCells[i, j] = cellValues;
+
+                    cell.LinkWithValues(cellValues);
+
+                    SetCardToGridValues(i, j);
+
+                    //Debug.Log(randomIndex);
+                    movingCount++;
+                }
+
+
+                //playableCard init
+                var playCell = _movingCells[indexList[0]];
+
+                //indexList.RemoveAt(randomIndex);
+
+                //var cell = _movingCells[movingCount];
+
+                playCell.transform.SetParent(_playableCardTransform);
+
+                //var (X, Y) = GetXY((i, j), (2, 0));
+
+                playCell.transform.localPosition = Vector3.zero;
+
+                var playCellValues = new CardCellValues(playCell.Geometry, playCell.transform.eulerAngles.z);
+
+                //_cardCells[i, j] = cellValues;
+
+                playCell.LinkWithValues(playCellValues);
+
+                //SetCardToGridValues(i, j);
+
+                Debug.Log(indexList[0]);
+
+
             }
 
             //make cicle to generate all game field
@@ -115,18 +206,11 @@ namespace GameCore
         {
             if (_check)
             {
-                var cardIndex = (6, 1);
-
-                if (_cellNumber == 2)
-                {
-                    cardIndex = (5, 2);
-                }
-
-                var rotatedCell = _cardCells[cardIndex.Item1, cardIndex.Item2];
+                var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]];
 
                 rotatedCell.Rotate(_angleDeg);
 
-                SetCartToGridValues(cardIndex.Item1, cardIndex.Item2);
+                SetCardToGridValues(_rotateCardIndex[0], _rotateCardIndex[1]);
 
                 _check = false;
             }
@@ -191,7 +275,7 @@ namespace GameCore
             }
         }
 
-        private void SetCartToGridValues(int i, int j)
+        private void SetCardToGridValues(int i, int j)
         {
             var card = _cardCells[i, j];
 

@@ -132,6 +132,8 @@ MonoBehaviour:
   _cellTransform: {fileID: 3880097349464966393}
   _cellGeometry: 0
   _rewardName: 1
+  _rewardImage: {fileID: 6423054805153121488}
+  _rewardsConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
 --- !u!1 &3880097349900968773
 GameObject:
   m_ObjectHideFlags: 0
