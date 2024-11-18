@@ -37,26 +37,25 @@ namespace GameCore
             _cellValues.OnRotated -= SetRotation90;
         }
 
-        public void Init(RewardName rewardName)
+        public void Init(RewardName rewardName, int initAngleDeg)
         {
             _rewardName = rewardName;
             SetRewardSprite();
+
+            SetAngleRotation(CellRotationInfo.CalculateQuaternion(initAngleDeg));
+
+            InitCellValues();
         }
 
         public CardCellValues InitCellValues()
         {
-            var cellValues = new CardCellValues(Geometry, transform.eulerAngles.z);
+            var cellValues = new CardCellValues(Geometry, transform.eulerAngles.z, (int)_rewardName);
 
             _cellValues = cellValues;
 
             _cellValues.OnRotated += SetRotation90;
 
             return _cellValues;
-        }
-
-        public void SetInitRotation(int angleDeg)
-        {
-            SetAngleRotation(CellRotationInfo.CalculateQuaternion(angleDeg));
         }
 
         private void SetRotation90(int angleDeg)

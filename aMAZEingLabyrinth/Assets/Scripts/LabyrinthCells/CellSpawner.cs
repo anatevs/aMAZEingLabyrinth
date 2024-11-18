@@ -15,15 +15,11 @@ namespace GameCore
         {
             var cell = GameObject.Instantiate(_cellPrefabsConfig.GetCardCell(geometry));
 
-            cell.Init(reward);
-
             cell.transform.SetParent(parent);
 
             cell.transform.localPosition = new Vector3(localX, localY, cell.transform.position.z);
 
-            cell.SetInitRotation(rotAngle);
-
-            cell.InitCellValues();
+            cell.Init(reward, rotAngle);
 
             return cell;
         }

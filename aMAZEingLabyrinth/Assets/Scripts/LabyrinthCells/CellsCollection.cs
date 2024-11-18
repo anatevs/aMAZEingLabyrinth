@@ -77,10 +77,9 @@ namespace GameCore
                 var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x,
                     (int)cell.transform.localPosition.y));
 
+                cell.InitCellValues();
 
-                var cellValues = cell.InitCellValues();
-
-                SetValuesToLabyrinth(cellValues, iCell, jCell);
+                SetValuesToLabyrinth(cell.CellValues, iCell, jCell);
             }
 
             InitMovableCellsNewGame();
@@ -139,16 +138,13 @@ namespace GameCore
 
                 var cell = spawner.SpawnCell(cellType.CellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
 
-                var cellValues = cell.InitCellValues();
-
-                SetValuesToLabyrinth(cellValues, Row, Col);
+                SetValuesToLabyrinth(cell.CellValues, Row, Col);
             }
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            var playCell = spawner.SpawnCell(plCellType.CellGeometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
+            spawner.SpawnCell(plCellType.CellGeometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
 
-            playCell.InitCellValues();
         }
 
 
