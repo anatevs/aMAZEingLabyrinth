@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json.Schema;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace GameCore
 {
@@ -10,13 +10,16 @@ namespace GameCore
         private CardCell[] _fixedCells;
 
         [SerializeField]
-        private CardCell[] _movingCells;
-
-        [SerializeField]
         private Transform _pathMarkersTransform;
 
         [SerializeField]
-        private Transform _movableCardsTransform;
+        private Transform _movableParentTransform;
+
+        [SerializeField]
+        private CellPrefabsConfig _cellPrefabsConfig;
+
+        [SerializeField]
+        private MovableCellsConfig _movableCellsConfig;
 
         [SerializeField]
         private Transform _playableCardTransform;
@@ -29,12 +32,8 @@ namespace GameCore
 
         private (int Rows, int Cols) _size = (7, 7);
 
-        private int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
-        private int[] _movableRowCols = new int[3] { 1, 3, 5 };
-
-        private int _tShapeCount = 6 + 12; //all are reward
-        private int _angleShapeCount = 16 + 4; //6 are reward
-        private int _lineShapeCount = 12;
+        private readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
+        private readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
         [SerializeField]
         private GameObject _pathMarker;
@@ -71,136 +70,87 @@ namespace GameCore
         {
             _grid = new LabyrinthGrid((_size.Rows * _cellSize, _size.Cols * _cellSize));
 
-            Debug.Log($"grid is within {_size.Rows * _cellSize} rows and {_size.Cols * _cellSize} columns");
-
             _cardCells = new CardCellValues[_size.Rows, _size.Cols];
-
-
-            //Init fixed
 
             foreach (var cell in _fixedCells)
             {
-                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y));
+                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x,
+                    (int)cell.transform.localPosition.y));
 
-                var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
 
-                _cardCells[iCell, jCell] = cellValues;
+                var cellValues = cell.InitCellValues();
 
-                cell.LinkWithValues(cellValues);
-
-                SetCardToGridValues(iCell, jCell);
+                SetValuesToLabyrinth(cellValues, iCell, jCell);
             }
 
-            var indexList = new List<int>(_movingCells.Length);
-            for (int i = 0; i < _movingCells.Length; i++)
+            InitMovableCellsNewGame();
+        }
+
+        private void InitMovableCellsNewGame()
+        {
+            var movableAmount = _size.Rows * _size.Cols + 1 - _fixedCells.Length;
+
+            if (_movableCellsConfig.Count != movableAmount)
             {
-                indexList.Add(i);
+                throw new System.Exception("Movable cells count in config and in collection must be equal!");
             }
-            Debug.Log(indexList.Count);
 
-            //Init movable 1
+            (int Row, int Col)[] movableNumbers =
+                new (int Row, int Col)[movableAmount - 1];
 
-            int movingCount = 0;
+            int count = 0;
             foreach (var i in _movableRowCols)
             {
                 for (int j = 0; j < _size.Cols; j++)
                 {
-                    var randomIndex = indexList[Random.Range(0, indexList.Count)];
-
-                    var cell = _movingCells[randomIndex];
-
-                    indexList.Remove(randomIndex);
-
-                    //var cell = _movingCells[movingCount];
-
-                    cell.transform.SetParent(_movableCardsTransform);
-
-                    var (X, Y) = GetXY((i, j), (2, 0));
-
-                    cell.transform.localPosition = new Vector3(X, Y, transform.position.z);
-
-                    var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
-
-                    _cardCells[i, j] = cellValues;
-
-                    cell.LinkWithValues(cellValues);
-
-                    SetCardToGridValues(i, j);
-
-                    //Debug.Log(randomIndex);
-                    movingCount++;
+                    movableNumbers[count] = (i, j);
+                    count++;
                 }
             }
-
-
-            //Init movable 2
 
             foreach (var i in _fixedRowCols)
             {
                 foreach (var j in _movableRowCols)
                 {
-                    var randomIndex = indexList[Random.Range(0, indexList.Count)];
-
-                    var cell = _movingCells[randomIndex];
-
-                    indexList.Remove(randomIndex);
-
-                    //var cell = _movingCells[movingCount];
-
-                    cell.transform.SetParent(_movableCardsTransform);
-
-                    var (X, Y) = GetXY((i, j), (2, 0));
-
-                    cell.transform.localPosition = new Vector3(X, Y, transform.position.z);
-
-                    var cellValues = new CardCellValues(cell.Geometry, cell.transform.eulerAngles.z);
-
-                    _cardCells[i, j] = cellValues;
-
-                    cell.LinkWithValues(cellValues);
-
-                    SetCardToGridValues(i, j);
-
-                    //Debug.Log(randomIndex);
-                    movingCount++;
+                    movableNumbers[count] = (i, j);
+                    count++;
                 }
-
-
-                //playableCard init
-                var playCell = _movingCells[indexList[0]];
-
-                //indexList.RemoveAt(randomIndex);
-
-                //var cell = _movingCells[movingCount];
-
-                playCell.transform.SetParent(_playableCardTransform);
-
-                //var (X, Y) = GetXY((i, j), (2, 0));
-
-                playCell.transform.localPosition = Vector3.zero;
-
-                var playCellValues = new CardCellValues(playCell.Geometry, playCell.transform.eulerAngles.z);
-
-                //_cardCells[i, j] = cellValues;
-
-                playCell.LinkWithValues(playCellValues);
-
-                //SetCardToGridValues(i, j);
-
-                Debug.Log(indexList[0]);
-
-
             }
 
-            //make cicle to generate all game field
+            var indexList = new List<int>(Enumerable
+                .Range(0, movableAmount));
 
-            //1. empty 7x7 with empty cells
-            //2. fullfill static with values and views
-            //3. randomly fullfill dynamic ones
+            int[] rotations = new int[4] { 0, 90, 180, 270 };
 
-            //var view = Instantiate(_view1);
-            //view.position =
+            var spawner = new CellSpawner(_cellPrefabsConfig);
+
+            foreach (var (Row, Col) in movableNumbers)
+            {
+                var rotation = rotations[Random.Range(0, rotations.Length)];
+
+                var randomIndex = indexList[Random.Range(0, indexList.Count)];
+
+                var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
+
+                indexList.Remove(randomIndex);
+
+
+                var (X, Y) = GetXY((Row, Col), (2, 0));
+
+                var cell = spawner.SpawnCell(cellType.CellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
+
+                var cellValues = cell.InitCellValues();
+
+                SetValuesToLabyrinth(cellValues, Row, Col);
+            }
+
+            var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
+
+            var playCell = spawner.SpawnCell(plCellType.CellGeometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
+
+            playCell.InitCellValues();
         }
+
 
         private void Update()
         {
@@ -273,6 +223,13 @@ namespace GameCore
 
                 _printCell = false;
             }
+        }
+
+        private void SetValuesToLabyrinth(CardCellValues cellValues, int i, int j)
+        {
+            _cardCells[i, j] = cellValues;
+
+            SetCardToGridValues(i, j);
         }
 
         private void SetCardToGridValues(int i, int j)

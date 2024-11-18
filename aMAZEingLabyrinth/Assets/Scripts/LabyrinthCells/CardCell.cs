@@ -8,6 +8,8 @@ namespace GameCore
 
         public RewardName Reward => _rewardName;
 
+        public CardCellValues CellValues => _cellValues;
+
         [SerializeField]
         private Transform _cellTransform;
 
@@ -32,19 +34,39 @@ namespace GameCore
 
         private void OnDisable()
         {
-            _cellValues.OnRotated -= SetRotation;
+            _cellValues.OnRotated -= SetRotation90;
         }
 
-        public void LinkWithValues(CardCellValues cellValues)
+        public void Init(RewardName rewardName)
         {
+            _rewardName = rewardName;
+            SetRewardSprite();
+        }
+
+        public CardCellValues InitCellValues()
+        {
+            var cellValues = new CardCellValues(Geometry, transform.eulerAngles.z);
+
             _cellValues = cellValues;
 
-            _cellValues.OnRotated += SetRotation;
+            _cellValues.OnRotated += SetRotation90;
+
+            return _cellValues;
         }
 
-        public void SetRotation(int angleDeg)
+        public void SetInitRotation(int angleDeg)
         {
-            transform.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * transform.rotation;
+            SetAngleRotation(CellRotationInfo.CalculateQuaternion(angleDeg));
+        }
+
+        private void SetRotation90(int angleDeg)
+        {
+            SetAngleRotation(CellRotationInfo.GetQuaternion90(angleDeg));
+        }
+
+        private void SetAngleRotation(Quaternion angleQuaternion)
+        {
+            transform.rotation = angleQuaternion * transform.rotation;
         }
 
         private void SetRewardSprite()

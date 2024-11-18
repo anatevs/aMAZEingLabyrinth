@@ -3,11 +3,9 @@
 namespace GameCore
 {
     [Serializable]
-    public struct CellData
+    public struct CardCellsType
     {
-        public int RotationDeg;
-
-        public CellGeometry Geometry;
+        public CellGeometry CellGeometry;
 
         public RewardName Reward;
     }

@@ -17,10 +17,10 @@ namespace GameCore
         public static readonly Dictionary<int, Quaternion> Quaternioins90 = new()
         {
             {
-                _angles[0], Quaternion.AngleAxis(_angles[0], Vector3.forward)
+                _angles[0], CalculateQuaternion(_angles[0])
             },
             {
-                _angles[1], Quaternion.AngleAxis(_angles[1], Vector3.forward)
+                _angles[1], CalculateQuaternion(_angles[1])
             }
         };
 
@@ -32,6 +32,11 @@ namespace GameCore
         public static Quaternion GetQuaternion90(int angle)
         {
             return Quaternioins90[angle];
+        }
+
+        public static Quaternion CalculateQuaternion(int angle)
+        {
+            return Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 }

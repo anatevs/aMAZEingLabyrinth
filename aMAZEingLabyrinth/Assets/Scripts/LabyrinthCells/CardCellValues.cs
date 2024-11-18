@@ -16,9 +16,7 @@ namespace GameCore
 
         private readonly int[,] _values;
 
-        //private int _rotation;
-
-        //private readonly Transform _view;
+        private readonly int _rotStep = 90;
 
         private readonly int _initRotation;
 
@@ -47,12 +45,11 @@ namespace GameCore
 
             SetWalkablePoints(1);
 
-            //_rotation = (int)_view.eulerAngles.z;
+            //int initRotCount = _initRotation / _rotStep;
 
-            int rotStep = 90;
-            int initRotCount = _initRotation / rotStep;
+            //RotateMatrix(_rotStep, initRotCount);
 
-            RotateMatrix(rotStep, initRotCount);
+            RotateMatrix(_initRotation);
         }
 
         public int GetValue(int row, int col)
@@ -64,12 +61,22 @@ namespace GameCore
         {
             RotateMatrix(angleDeg);
 
-            //_view.rotation = CellRotationInfo.GetQuaternion90(angleDeg) * _view.rotation;
-
             OnRotated?.Invoke(angleDeg);
         }
 
-        private void RotateMatrix(int angleDeg, int rotCount = 1)
+        private void RotateMatrix(int angleDeg)
+        {
+            if (angleDeg % _rotStep != 0)
+            {
+                throw new Exception($"angle {angleDeg} is not multiple of 90");
+            }
+
+            int rotCount = angleDeg / _rotStep;
+
+            RotateMatrix(_rotStep, rotCount);
+        }
+
+        private void RotateMatrix(int angleDeg, int rotCount)
         {
             SetWalkablePoints(0);
 
