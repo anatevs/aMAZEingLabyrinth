@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CardCellPrefabs
   m_EditorClassIdentifier: 
   _prefabs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1050685251154288834, guid: cd4cf0eab805d474aa459852acc4c83d, type: 3}
+  - {fileID: -8902830788651966218, guid: 422e93a46a22f9b4d960259d6ac40820, type: 3}
+  - {fileID: -8902830788651966218, guid: b8bcd40f79946754daee4c39db9c0661, type: 3}

@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8264089765f04b743985fd32257bb745, type: 3}
   m_Name: MovableCellsConfig
   m_EditorClassIdentifier: 
+  _angleRewardCells: 110000001000000014000000150000001200000016000000
+  _tShapeRewardCells: 13000000170000000e000000180000000f00000019000000
