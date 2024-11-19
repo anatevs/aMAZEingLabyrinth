@@ -51,10 +51,11 @@ namespace GameCore
 
         [Header("Find path test")]
         [SerializeField]
-        private int[] _startPoint = new int[2];
+        private int[] _startRowCol = new int[2];
 
         [SerializeField]
-        private int[] _endPoint = new int[2];
+        private int[] _endRowCol = new int[2];
+
 
         [SerializeField]
         private bool _findPath;
@@ -136,14 +137,14 @@ namespace GameCore
 
                 var (X, Y) = GetXY((Row, Col), (2, 0));
 
-                var cell = spawner.SpawnCell(cellType.CellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
+                var cell = spawner.SpawnCell(cellType.Geometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
 
                 SetValuesToLabyrinth(cell.CellValues, Row, Col);
             }
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            spawner.SpawnCell(plCellType.CellGeometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
+            spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
 
         }
 
@@ -169,20 +170,23 @@ namespace GameCore
                     Destroy(_pathMarkersTransform.GetChild(i).gameObject);
                 }
 
-                var xLocal = (int)transform.position.x;
-                var yLocal = (int)transform.position.y;
+                var (xStart, yStart) = GetXY((_startRowCol[0], _startRowCol[1]), (1, 1));
+                var (xEnd, yEnd) = GetXY((_endRowCol[0], _endRowCol[1]), (1, 1));
 
-                var start = new Vector2Int(_startPoint[0], _startPoint[1]);
-                var end = new Vector2Int(_endPoint[0], _endPoint[1]);
+                var start = new Vector2Int(xStart, yStart);
+                var end = new Vector2Int(xEnd, yEnd);
 
                 var res = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
 
-                var markerPos = new Vector3(_startPoint[0] + xLocal, _startPoint[1] + yLocal, _pathMarker.transform.position.z);
+                var xLocal = (int)transform.position.x;
+                var yLocal = (int)transform.position.y;
+
+                var markerPos = new Vector3(xStart + xLocal, yStart + yLocal, _pathMarker.transform.position.z);
 
                 Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
 
-                markerPos.x = _endPoint[0] + xLocal;
-                markerPos.y = _endPoint[1] + yLocal;
+                markerPos.x = xEnd + xLocal;
+                markerPos.y = yEnd + yLocal;
                 Instantiate(_pathMarker, markerPos, Quaternion.identity, _pathMarkersTransform);
 
                 if (res)

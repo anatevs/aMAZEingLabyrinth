@@ -59,7 +59,7 @@ namespace GameCore
 
             for (int i = 0; i < typesArray.Length; i++)
             {
-                typesArray[i].CellGeometry = geometry;
+                typesArray[i].Geometry = geometry;
                 typesArray[i].Reward = RewardName.None;
 
                 if (rewards != null)
@@ -68,5 +68,13 @@ namespace GameCore
                 }
             }
         }
+    }
+
+    [Serializable]
+    public struct CardCellsType
+    {
+        public CellGeometry Geometry;
+
+        public RewardName Reward;
     }
 }

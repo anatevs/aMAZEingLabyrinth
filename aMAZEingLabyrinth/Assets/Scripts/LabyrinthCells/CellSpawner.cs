@@ -23,5 +23,10 @@ namespace GameCore
 
             return cell;
         }
+
+        public CardCell SpawnCell(CellData cellData, Transform parentTransform)
+        {
+            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg, cellData.X, cellData.Y, parentTransform);
+        }
     }
 }
