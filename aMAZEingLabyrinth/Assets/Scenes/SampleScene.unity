@@ -480,11 +480,13 @@ MonoBehaviour:
   _angleDeg: 90
   _rotateCardIndex: 0000000000000000
   _check: 0
-  _startPoint: 0100000001000000
-  _endPoint: 0400000002000000
+  _startRowCol: 0000000000000000
+  _endRowCol: 0000000000000000
   _findPath: 0
   _printRowCol: 0000000000000000
   _printCell: 0
+  _shiftRowCol: 0100000000000000
+  _shiftCell: 0
 --- !u!1 &370966480
 GameObject:
   m_ObjectHideFlags: 0
