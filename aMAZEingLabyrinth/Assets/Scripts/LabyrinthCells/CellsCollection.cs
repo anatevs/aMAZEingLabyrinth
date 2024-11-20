@@ -28,7 +28,7 @@ namespace GameCore
 
         private readonly int _cellSize = 3;
 
-        private CardCellValues[,] _cardCells;
+        private CardCell[,] _cardCells;
 
         private (int Rows, int Cols) _size = (7, 7);
 
@@ -71,7 +71,7 @@ namespace GameCore
         {
             _grid = new LabyrinthGrid((_size.Rows * _cellSize, _size.Cols * _cellSize));
 
-            _cardCells = new CardCellValues[_size.Rows, _size.Cols];
+            _cardCells = new CardCell[_size.Rows, _size.Cols];
 
             foreach (var cell in _fixedCells)
             {
@@ -80,7 +80,7 @@ namespace GameCore
 
                 cell.InitCellValues();
 
-                SetValuesToLabyrinth(cell.CellValues, iCell, jCell);
+                SetValuesToLabyrinth(cell, iCell, jCell);
             }
 
             InitMovableCellsNewGame();
@@ -95,7 +95,7 @@ namespace GameCore
                 throw new System.Exception("Movable cells count in config and in collection must be equal!");
             }
 
-            (int Row, int Col)[] movableNumbers =
+            (int Row, int Col)[] movableIndexes =
                 new (int Row, int Col)[movableAmount - 1];
 
             int count = 0;
@@ -103,7 +103,7 @@ namespace GameCore
             {
                 for (int j = 0; j < _size.Cols; j++)
                 {
-                    movableNumbers[count] = (i, j);
+                    movableIndexes[count] = (i, j);
                     count++;
                 }
             }
@@ -112,7 +112,7 @@ namespace GameCore
             {
                 foreach (var j in _movableRowCols)
                 {
-                    movableNumbers[count] = (i, j);
+                    movableIndexes[count] = (i, j);
                     count++;
                 }
             }
@@ -124,7 +124,7 @@ namespace GameCore
 
             var spawner = new CellSpawner(_cellPrefabsConfig);
 
-            foreach (var (Row, Col) in movableNumbers)
+            foreach (var (Row, Col) in movableIndexes)
             {
                 var rotation = rotations[Random.Range(0, rotations.Length)];
 
@@ -139,13 +139,12 @@ namespace GameCore
 
                 var cell = spawner.SpawnCell(cellType.Geometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
 
-                SetValuesToLabyrinth(cell.CellValues, Row, Col);
+                SetValuesToLabyrinth(cell, Row, Col);
             }
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
             spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
-
         }
 
 
@@ -153,7 +152,7 @@ namespace GameCore
         {
             if (_check)
             {
-                var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]];
+                var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]].CellValues;
 
                 rotatedCell.Rotate(_angleDeg);
 
@@ -211,7 +210,7 @@ namespace GameCore
 
             if (_printCell)
             {
-                var cell = _cardCells[_printRowCol[0], _printRowCol[1]];
+                var cell = _cardCells[_printRowCol[0], _printRowCol[1]].CellValues;
                 if (cell == null)
                 {
                     Debug.Log("null cell");
@@ -225,16 +224,50 @@ namespace GameCore
             }
         }
 
-        private void SetValuesToLabyrinth(CardCellValues cellValues, int i, int j)
+        private void ShiftRowOrCol((int row, int col) index, CardCell newCard)
         {
-            _cardCells[i, j] = cellValues;
+            CardCell outCell = null;
+
+            bool isRow = _movableRowCols.Contains(index.row);
+            bool isCol = _movableRowCols.Contains(index.col);
+
+            if (isRow == isCol)
+            {
+                Debug.Log($"trying to move a fixed row or column with edge element index {index}");
+                return;
+            }
+
+
+
+            int direction = 1;
+
+            if (isRow)
+            {
+                if (index.col == _size.Cols)
+                {
+                    direction = -1;
+
+                    //outCell = _cardCells[index.row, 0];
+                }
+
+                var col = index.col;
+                for (int i = 0; i < _size.Cols - 1; i++)
+                {
+
+                }
+            }
+        }
+
+        private void SetValuesToLabyrinth(CardCell cell, int i, int j)
+        {
+            _cardCells[i, j] = cell;
 
             SetCardToGridValues(i, j);
         }
 
         private void SetCardToGridValues(int i, int j)
         {
-            var card = _cardCells[i, j];
+            var card = _cardCells[i, j].CellValues;
 
             for (int ic = 0; ic < card.Size; ic++)
             {

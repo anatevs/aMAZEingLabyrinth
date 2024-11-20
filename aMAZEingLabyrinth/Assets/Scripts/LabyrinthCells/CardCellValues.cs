@@ -45,10 +45,6 @@ namespace GameCore
 
             SetWalkablePoints(1);
 
-            //int initRotCount = _initRotation / _rotStep;
-
-            //RotateMatrix(_rotStep, initRotCount);
-
             RotateMatrix(_initRotation);
         }
 
