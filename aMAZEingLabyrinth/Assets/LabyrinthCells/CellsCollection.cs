@@ -23,15 +23,13 @@ namespace GameCore
         private MovableCellsConfig _movableCellsConfig;
 
         [SerializeField]
-        private Transform _playableCardTransform;
+        private PlayableCell _playableCell;
 
         private LabyrinthGrid _grid;
 
         private readonly int _cellSize = 3;
 
         private CardCell[,] _cardCells;
-
-        private CardCell _playableCell;
 
         private (int Rows, int Cols) _size = (7, 7);
 
@@ -152,7 +150,8 @@ namespace GameCore
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            _playableCell = spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _playableCardTransform);
+            var playableCellCard = spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
+            _playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
 
 
@@ -222,16 +221,14 @@ namespace GameCore
 
             if (_shiftCell)
             {
-                SubstitutePlayableCell((_shiftRowCol[0], _shiftRowCol[1]));
+                MakeShift((_shiftRowCol[0], _shiftRowCol[1]));
 
                 _shiftCell = false;
             }
         }
 
-        private void SubstitutePlayableCell((int row, int col) index)
+        private void MakeShift((int row, int col) index)
         {
-            var currentPlayCell = _playableCell;
-
             bool isRow = _movableRowCols.Contains(index.row);
             bool isCol = _movableRowCols.Contains(index.col);
 
@@ -286,11 +283,7 @@ namespace GameCore
                 col = index.col;
             }
 
-            _playableCell = _cardCells[row, col];
-
-            _playableCell.transform.SetParent(_playableCardTransform);
-            _playableCell.transform.position =
-                currentPlayCell.transform.position;
+            _playableCell.ReplacePlayableCell(_cardCells[row, col], out var oldPlayable);
 
             for (int i = 0; i < iterNumber; i++)
             {
@@ -303,8 +296,8 @@ namespace GameCore
                     col - iterDirectionRowCol[1], setTransformPos: true);
             }
 
-            currentPlayCell.transform.SetParent(_movableParentTransform);
-            SetCellsToLabyrinth(currentPlayCell, index.row, index.col, setTransformPos: true);
+            oldPlayable.transform.SetParent(_movableParentTransform);
+            SetCellsToLabyrinth(oldPlayable, index.row, index.col, setTransformPos: true);
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)

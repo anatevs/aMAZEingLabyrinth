@@ -62,18 +62,20 @@ namespace GameCore
 
         private void RotateMatrix(int angleDeg)
         {
+            int sign = Math.Sign(angleDeg);
+
+            int rotCount = angleDeg / _rotStep * sign;
+
+            RotateMatrix(_rotStep * sign, rotCount);
+        }
+
+        private void RotateMatrix(int angleDeg, int rotCount)
+        {
             if (angleDeg % _rotStep != 0)
             {
                 throw new Exception($"angle {angleDeg} is not multiple of 90");
             }
 
-            int rotCount = angleDeg / _rotStep;
-
-            RotateMatrix(_rotStep, rotCount);
-        }
-
-        private void RotateMatrix(int angleDeg, int rotCount)
-        {
             SetWalkablePoints(0);
 
             for (int c = 0; c < rotCount; c++)
