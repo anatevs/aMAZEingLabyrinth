@@ -11,7 +11,7 @@ namespace GameCore
         private CardCell[] _fixedCells;
 
         [SerializeField]
-        private Transform _pathMarkersTransform;
+        private PathMarkersPool _pathMarkersPool;
 
         [SerializeField]
         private Transform _movableParentTransform;
@@ -38,8 +38,6 @@ namespace GameCore
         private readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
         private readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
-        [SerializeField]
-        private GameObject _pathMarker;
 
         [Header("Rotation test")]
         [SerializeField]
@@ -174,10 +172,7 @@ namespace GameCore
 
             if (_findPath)
             {
-                for (int i = 0; i < _pathMarkersTransform.childCount; i++)
-                {
-                    Destroy(_pathMarkersTransform.GetChild(i).gameObject);
-                }
+                _pathMarkersPool.UnspawnAll();
 
                 var (xStart, yStart) = GetXY((_startRowCol[0], _startRowCol[1]), (1, 1));
                 var (xEnd, yEnd) = GetXY((_endRowCol[0], _endRowCol[1]), (1, 1));
@@ -190,13 +185,8 @@ namespace GameCore
                 var xLocal = (int)transform.position.x;
                 var yLocal = (int)transform.position.y;
 
-                var markerPos = new Vector3(xStart + xLocal, yStart + yLocal, _pathMarker.transform.position.z);
-
-                Instantiate(_pathMarker, markerPos, Quaternion.identity, transform);
-
-                markerPos.x = xEnd + xLocal;
-                markerPos.y = yEnd + yLocal;
-                Instantiate(_pathMarker, markerPos, Quaternion.identity, _pathMarkersTransform);
+                _pathMarkersPool.Spawn(xStart + xLocal, yStart + yLocal);
+                _pathMarkersPool.Spawn(xEnd + xLocal, yEnd + yLocal);
 
                 if (res)
                 {
@@ -204,10 +194,7 @@ namespace GameCore
 
                     foreach (var pathPoint in result)
                     {
-                        markerPos.x = pathPoint.x + xLocal;
-                        markerPos.y = pathPoint.y + yLocal;
-
-                        Instantiate(_pathMarker, markerPos, Quaternion.identity, _pathMarkersTransform);
+                        _pathMarkersPool.Spawn(pathPoint.x + xLocal, pathPoint.y + yLocal);
                     }
                 }
                 else
