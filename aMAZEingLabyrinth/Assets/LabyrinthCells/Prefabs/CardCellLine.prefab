@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5857411227180829801}
   - component: {fileID: 2360539322682175929}
   m_Layer: 0
-  m_Name: Image
+  m_Name: Reward
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5492645151761248656}
   - component: {fileID: -8902830788651966218}
   m_Layer: 0
-  m_Name: CardCellT
+  m_Name: CardCellLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cellTransform: {fileID: 5492645151761248656}
-  _cellGeometry: 1
+  _cellGeometry: 2
   _rewardName: 1
   _rewardImage: {fileID: 2360539322682175929}
   _rewardsConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 5492645153617797055}
   - component: {fileID: 5492645153617797052}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: cf32337c2f4119041b36e31f54542e80, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dc559def176dcf74f9694b186744883e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
