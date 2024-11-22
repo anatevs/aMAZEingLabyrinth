@@ -40,15 +40,15 @@ namespace GameCore
         private readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
 
-        [Header("Rotation test")]
-        [SerializeField]
-        private int _angleDeg = 90;
+        //[Header("Rotation test")]
+        //[SerializeField]
+        //private int _angleDeg = 90;
 
-        [SerializeField]
-        private int[] _rotateCardIndex = new int[2];
+        //[SerializeField]
+        //private int[] _rotateCardIndex = new int[2];
 
-        [SerializeField]
-        private bool _check = false;
+        //[SerializeField]
+        //private bool _checkRotation = false;
 
 
         [Header("Find path test")]
@@ -57,7 +57,6 @@ namespace GameCore
 
         [SerializeField]
         private int[] _endRowCol = new int[2];
-
 
         [SerializeField]
         private bool _findPath;
@@ -69,12 +68,12 @@ namespace GameCore
         [SerializeField]
         private bool _printCell;
 
-        [Header("Shift by playable cell test")]
-        [SerializeField]
-        private int[] _shiftRowCol = new int[2];
+        //[Header("Shift by playable cell test")]
+        //[SerializeField]
+        //private int[] _shiftRowCol = new int[2];
 
-        [SerializeField]
-        private bool _shiftCell;
+        //[SerializeField]
+        //private bool _shiftCell;
 
         private void Start()
         {
@@ -167,16 +166,16 @@ namespace GameCore
 
         private void Update()
         {
-            if (_check)
-            {
-                var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]].CellValues;
+            //if (_checkRotation)
+            //{
+            //    var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]].CellValues;
 
-                rotatedCell.Rotate(_angleDeg);
+            //    rotatedCell.Rotate(_angleDeg);
 
-                SetCardToGridValues(_rotateCardIndex[0], _rotateCardIndex[1]);
+            //    SetCardToGridValues(_rotateCardIndex[0], _rotateCardIndex[1]);
 
-                _check = false;
-            }
+            //    _checkRotation = false;
+            //}
 
 
             if (_findPath)
@@ -229,22 +228,22 @@ namespace GameCore
                 _printCell = false;
             }
 
-            if (_shiftCell)
-            {
-                MakeShift(_shiftRowCol[0], _shiftRowCol[1]);
+            //if (_shiftCell)
+            //{
+            //    MakeShift(_shiftRowCol[0], _shiftRowCol[1]);
 
-                _shiftCell = false;
-            }
+            //    _shiftCell = false;
+            //}
         }
 
-        private void MakeShift(int startRow, int startCol)
+        private void MakeShift(int shiftRow, int shiftCol)
         {
-            bool isRow = _movableRowCols.Contains(startRow);
-            bool isCol = _movableRowCols.Contains(startCol);
+            bool isRow = _movableRowCols.Contains(shiftRow);
+            bool isCol = _movableRowCols.Contains(shiftCol);
 
             if (isRow == isCol)
             {
-                Debug.Log($"trying to move a fixed row or column with edge element index ({startRow}, {startCol})");
+                Debug.Log($"trying to move a fixed row or column with edge element index ({shiftRow}, {shiftCol})");
                 return;
             }
 
@@ -261,7 +260,7 @@ namespace GameCore
                 iterDirectionRowCol[0] = 0;
                 iterDirectionRowCol[1] = -1;
 
-                if (startCol == iterNumber)
+                if (shiftCol == iterNumber)
                 {
                     iterDirectionRowCol[0] = 0;
                     iterDirectionRowCol[1] = 1;
@@ -270,7 +269,7 @@ namespace GameCore
                 }
 
                 col = startIter;
-                row = startRow ;
+                row = shiftRow ;
             }
 
             if (isCol)
@@ -281,7 +280,7 @@ namespace GameCore
                 iterDirectionRowCol[0] = -1;
                 iterDirectionRowCol[1] = 0;
 
-                if (startRow == iterNumber)
+                if (shiftRow == iterNumber)
                 {
                     iterDirectionRowCol[0] = 1;
                     iterDirectionRowCol[1] = 0;
@@ -290,8 +289,10 @@ namespace GameCore
                 }
 
                 row = startIter;
-                col = startCol;
+                col = shiftCol;
             }
+
+            _arrowsService.ChangeDisabledArrow((row, col));
 
             _playableCell.ReplacePlayableCell(_cardCells[row, col], out var oldPlayable);
 
@@ -307,7 +308,7 @@ namespace GameCore
             }
 
             oldPlayable.transform.SetParent(_movableParentTransform);
-            SetCellsToLabyrinth(oldPlayable, startRow, startCol, setTransformPos: true);
+            SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)

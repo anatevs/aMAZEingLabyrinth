@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCore
@@ -7,20 +8,28 @@ namespace GameCore
     {
         public event Action<int, int> OnClick;
 
-        public event Action<ShiftArrow> OnButtonDisactivated;
-
         [SerializeField]
         private ShiftArrow[] _arrows;
 
         private ShiftArrow _disabledArrow;
 
+        private readonly Dictionary<(int, int), ShiftArrow> _indexArrows = new();
+
         private void Start()
         {
             foreach (ShiftArrow arrow in _arrows)
             {
-                arrow.OnShift += Click;
+                _indexArrows.Add(arrow.Index, arrow);
 
-                arrow.OnDisactiveted += ChangeDisabledArrow;
+                arrow.OnShift += Click;
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (ShiftArrow arrow in _arrows)
+            {
+                arrow.OnShift -= Click;
             }
         }
 
@@ -29,24 +38,18 @@ namespace GameCore
             OnClick?.Invoke(row, column);
         }
 
-        private void ChangeDisabledArrow(ShiftArrow newDisabled)
+        public void ChangeDisabledArrow((int, int) index)
         {
+            var newDisabled = _indexArrows[index];
+
             if (_disabledArrow != null)
             {
-                _disabledArrow.EnableButton();
+                _disabledArrow.ActivateButton();
             }
+
+            newDisabled.DisactivateButton();
 
             _disabledArrow = newDisabled;
-        }
-
-        private void OnDisable()
-        {
-            foreach (ShiftArrow arrow in _arrows)
-            {
-                arrow.OnShift -= OnClick;
-
-                arrow.OnDisactiveted -= ChangeDisabledArrow;
-            }
         }
     }
 }

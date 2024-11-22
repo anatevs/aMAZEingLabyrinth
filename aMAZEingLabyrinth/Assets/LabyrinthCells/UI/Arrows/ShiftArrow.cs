@@ -8,7 +8,8 @@ namespace GameCore
     public class ShiftArrow : MonoBehaviour
     {
         public event Action<int, int> OnShift;
-        public event Action<ShiftArrow> OnDisactiveted;
+
+        public (int Row, int Col) Index => (_row, _column);
 
         [SerializeField]
         private int _row;
@@ -30,15 +31,14 @@ namespace GameCore
             _button.onClick.RemoveListener(ActClick);
         }
 
-        public void DisableButton()
+        public void DisactivateButton()
         {
-            _button.enabled = false;
-            OnDisactiveted?.Invoke(this);
+            _button.interactable = false;
         }
 
-        public void EnableButton()
+        public void ActivateButton()
         {
-            _button.enabled = true;
+            _button.interactable = true;
         }
 
         private void ActClick()
