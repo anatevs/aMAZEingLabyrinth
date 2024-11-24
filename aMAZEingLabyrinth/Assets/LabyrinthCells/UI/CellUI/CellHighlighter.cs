@@ -6,15 +6,16 @@ namespace GameCore
     public class CellHighlighter : MonoBehaviour
     {
         [SerializeField]
+        private CellsCollection _cellsCollection;
+
+        [SerializeField]
         private GameObject _highlightImage;
 
         private BoxCollider2D _boxCollider;
 
         private InputSystem _inputSystem;
 
-        private readonly float _halfLabyrinth = 21 / 2;
-        private readonly int _halfCellsCoordinate = 18 / 2;
-        private readonly int _cellSize = 3;
+        private Vector3 _currentPos = new();
 
         private void Awake()
         {
@@ -30,22 +31,21 @@ namespace GameCore
             if (_boxCollider.OverlapPoint(mousePos))
             {
                 _highlightImage.SetActive(true);
-                var x = GetCellCenter(mousePos.x);
-                var y = GetCellCenter(mousePos.y);
 
-                var pos = new Vector2(x, y);
+                var pos = _cellsCollection.GetCellCoordinates(mousePos);
 
+                if (_currentPos == pos)
+                {
+                    return;
+                }
                 _highlightImage.transform.position = pos;
+
+                _currentPos = pos;
             }
             else
             {
                 _highlightImage.SetActive(false);
             }
-        }
-
-        private int GetCellCenter(float coordinate)
-        {
-            return ((int)(coordinate + _halfLabyrinth) / _cellSize) * _cellSize - _halfCellsCoordinate;
         }
     }
 }

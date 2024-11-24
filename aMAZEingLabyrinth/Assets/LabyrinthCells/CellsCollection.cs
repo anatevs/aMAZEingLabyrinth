@@ -180,35 +180,7 @@ namespace GameCore
 
             if (_findPath)
             {
-                _pathMarkersPool.UnspawnAll();
-
-                var (xStart, yStart) = GetXY((_startRowCol[0], _startRowCol[1]), (1, 1));
-                var (xEnd, yEnd) = GetXY((_endRowCol[0], _endRowCol[1]), (1, 1));
-
-                var start = new Vector2Int(xStart, yStart);
-                var end = new Vector2Int(xEnd, yEnd);
-
-                var res = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
-
-                var xLocal = (int)transform.position.x;
-                var yLocal = (int)transform.position.y;
-
-                _pathMarkersPool.Spawn(xStart + xLocal, yStart + yLocal);
-                _pathMarkersPool.Spawn(xEnd + xLocal, yEnd + yLocal);
-
-                if (res)
-                {
-                    Debug.Log($"path found: {res}");
-
-                    foreach (var pathPoint in result)
-                    {
-                        _pathMarkersPool.Spawn(pathPoint.x + xLocal, pathPoint.y + yLocal);
-                    }
-                }
-                else
-                {
-                    Debug.Log($"path found: {res}");
-                }
+                FindPath(_startRowCol, _endRowCol, out _);
 
                 _findPath = false;
             }
@@ -234,6 +206,17 @@ namespace GameCore
 
             //    _shiftCell = false;
             //}
+        }
+
+
+        public Vector3 GetCellCoordinates(Vector3 pos)
+        {
+            (int i, int j) = GetCardIndex(((int)(pos.x - transform.position.x),
+                (int)(pos.y - transform.position.y)));
+
+            var cell = _cardCells[i, j];
+
+            return cell.transform.position;
         }
 
         private void MakeShift(int shiftRow, int shiftCol)
@@ -309,6 +292,47 @@ namespace GameCore
 
             oldPlayable.transform.SetParent(_movableParentTransform);
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
+        }
+
+        private bool FindPath(int[] startRowCol, int[] endRowCol, out List<(int x, int y)> globalXY)
+        {
+            globalXY = new List<(int x, int y)>();
+
+            _pathMarkersPool.UnspawnAll();
+
+            var (xStart, yStart) = GetXY((startRowCol[0], startRowCol[1]), (1, 1));
+            var (xEnd, yEnd) = GetXY((endRowCol[0], endRowCol[1]), (1, 1));
+
+            var start = new Vector2Int(xStart, yStart);
+            var end = new Vector2Int(xEnd, yEnd);
+
+            var res = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
+
+            var xLocal = (int)transform.position.x;
+            var yLocal = (int)transform.position.y;
+
+            _pathMarkersPool.Spawn(xStart + xLocal, yStart + yLocal);
+            _pathMarkersPool.Spawn(xEnd + xLocal, yEnd + yLocal);
+
+            if (res)
+            {
+                Debug.Log($"path found: {res}");
+
+                foreach (var pathPoint in result)
+                {
+                    var (glX, glY) = (pathPoint.x + xLocal, pathPoint.y + yLocal);
+
+                    globalXY.Add((glX, glY));
+
+                    _pathMarkersPool.Spawn(glX, glY);
+                }
+            }
+            else
+            {
+                Debug.Log($"path found: {res}");
+            }
+
+            return res;
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)

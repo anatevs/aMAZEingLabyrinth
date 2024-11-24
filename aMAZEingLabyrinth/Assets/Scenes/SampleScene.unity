@@ -6239,6 +6239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceed9289cc5972d4aa14b4058da1415f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cellsCollection: {fileID: 293525262}
   _highlightImage: {fileID: 2092645388}
 --- !u!1001 &1327931970
 PrefabInstance:
