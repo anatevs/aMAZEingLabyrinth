@@ -1,12 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace GameCore
 {
     [RequireComponent(typeof(BoxCollider2D))]
-    public class CellHighlighter : MonoBehaviour
+    public sealed class CellHighlightView : MonoBehaviour
     {
-        [SerializeField]
-        private CellsCollection _cellsCollection;
+        public event Action<Vector3> OnMouseEnter;
 
         [SerializeField]
         private GameObject _highlightImage;
@@ -14,8 +14,6 @@ namespace GameCore
         private BoxCollider2D _boxCollider;
 
         private InputSystem _inputSystem;
-
-        private Vector3 _currentPos = new();
 
         private void Awake()
         {
@@ -30,22 +28,24 @@ namespace GameCore
 
             if (_boxCollider.OverlapPoint(mousePos))
             {
+                OnMouseEnter?.Invoke(mousePos);
+
                 _highlightImage.SetActive(true);
-
-                var pos = _cellsCollection.GetCellCoordinates(mousePos);
-
-                if (_currentPos == pos)
-                {
-                    return;
-                }
-                _highlightImage.transform.position = pos;
-
-                _currentPos = pos;
             }
             else
             {
                 _highlightImage.SetActive(false);
             }
+        }
+
+        public void SetHighlight(Vector3 pos)
+        {
+            _highlightImage.transform.position = pos;
+        }
+
+        public void HideHighlight()
+        {
+            _highlightImage.SetActive(false);
         }
     }
 }

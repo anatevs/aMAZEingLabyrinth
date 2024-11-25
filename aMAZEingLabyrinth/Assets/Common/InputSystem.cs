@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameCore
 {
-    public class InputSystem : IInput
+    public sealed class InputSystem : IInput
     {
         private readonly Camera _camera;
 
