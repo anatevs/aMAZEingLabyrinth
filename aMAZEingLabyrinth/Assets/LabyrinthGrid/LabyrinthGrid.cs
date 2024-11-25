@@ -5,7 +5,7 @@ namespace GameCore
 {
     public sealed class LabyrinthGrid
     {
-        private int[,] _elements;
+        private readonly int[,] _elements;
 
         private readonly int _xCount;
         private readonly int _yCount;

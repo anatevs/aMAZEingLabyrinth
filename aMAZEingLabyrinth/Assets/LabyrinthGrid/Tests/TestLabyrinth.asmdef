@@ -1,0 +1,22 @@
+{
+    "name": "TestLabyrinth",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cc96cf9308f425449b41bff606adb98d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
