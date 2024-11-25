@@ -8,6 +8,8 @@ namespace GameCore
     {
         public event Action<Vector3> OnMouseEnter;
 
+        public event Action OnCellClicked;
+
         [SerializeField]
         private GameObject _highlightImage;
 
@@ -31,6 +33,11 @@ namespace GameCore
                 OnMouseEnter?.Invoke(mousePos);
 
                 _highlightImage.SetActive(true);
+
+                if (_inputSystem.IsMouseClicked())
+                {
+                    OnCellClicked?.Invoke();
+                }
             }
             else
             {

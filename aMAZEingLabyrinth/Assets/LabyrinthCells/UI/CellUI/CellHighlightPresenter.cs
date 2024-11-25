@@ -15,11 +15,15 @@ namespace GameCore
         private void Awake()
         {
             _view.OnMouseEnter += SetHighlight;
+
+            _view.OnCellClicked += ClickOnCell;
         }
 
         private void OnDisable()
         {
             _view.OnMouseEnter -= SetHighlight;
+
+            _view.OnCellClicked -= ClickOnCell;
         }
 
         private void SetHighlight(Vector3 mousePos)
@@ -34,6 +38,11 @@ namespace GameCore
             _currentPos = pos;
 
             _view.SetHighlight(pos);
+        }
+
+        private void ClickOnCell()
+        {
+            _cellsCollection.FindPath(_currentPos, out _);
         }
     }
 }

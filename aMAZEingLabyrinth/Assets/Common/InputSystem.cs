@@ -19,5 +19,10 @@ namespace GameCore
             return _camera.ScreenToWorldPoint(
                 new Vector3(point.x, point.y, _camera.nearClipPlane));
         }
+
+        public bool IsMouseClicked()
+        {
+            return Input.GetMouseButtonDown(0);
+        }
     }
 }

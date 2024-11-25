@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using System;
+using static UnityEditor.PlayerSettings;
 
 namespace GameCore
 {
@@ -55,11 +56,11 @@ namespace GameCore
         [SerializeField]
         private int[] _startRowCol = new int[2];
 
-        [SerializeField]
-        private int[] _endRowCol = new int[2];
+        //[SerializeField]
+        //private int[] _endRowCol = new int[2];
 
-        [SerializeField]
-        private bool _findPath;
+        //[SerializeField]
+        //private bool _findPath;
 
         [Header("Print cell test")]
         [SerializeField]
@@ -74,6 +75,16 @@ namespace GameCore
 
         //[SerializeField]
         //private bool _shiftCell;
+
+        private void Awake()
+        {
+            _arrowsService.OnClick += MakeShift;
+        }
+
+        private void OnDisable()
+        {
+            _arrowsService.OnClick -= MakeShift;
+        }
 
         private void Start()
         {
@@ -92,13 +103,6 @@ namespace GameCore
             }
 
             InitMovableCellsNewGame();
-
-            _arrowsService.OnClick += MakeShift;
-        }
-
-        private void OnDisable()
-        {
-            _arrowsService.OnClick -= MakeShift;
         }
 
         private void InitMovableCellsNewGame()
@@ -178,12 +182,12 @@ namespace GameCore
             //}
 
 
-            if (_findPath)
-            {
-                FindPath(_startRowCol, _endRowCol, out _);
+            //if (_findPath)
+            //{
+            //    FindPath(_startRowCol, _endRowCol, out _);
 
-                _findPath = false;
-            }
+            //    _findPath = false;
+            //}
 
             if (_printCell)
             {
@@ -211,12 +215,17 @@ namespace GameCore
 
         public Vector3 GetCellCoordinates(Vector3 pos)
         {
-            (int i, int j) = GetCardIndex(((int)(pos.x - transform.position.x),
-                (int)(pos.y - transform.position.y)));
+            (int i, int j) = GetCellIndexFromGlobalXY(pos);
 
             var cell = _cardCells[i, j];
 
             return cell.transform.position;
+        }
+
+        private (int i, int j) GetCellIndexFromGlobalXY(Vector3 pos)
+        {
+            return GetCardIndex(((int)(pos.x - transform.position.x),
+                (int)(pos.y - transform.position.y)));
         }
 
         private void MakeShift(int shiftRow, int shiftCol)
@@ -292,6 +301,15 @@ namespace GameCore
 
             oldPlayable.transform.SetParent(_movableParentTransform);
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
+        }
+
+        public bool FindPath(Vector3 cellGlobalXY, out List<(int x, int y)> globalXY)
+        {
+            globalXY = new();
+
+            (int i, int j) = GetCellIndexFromGlobalXY(cellGlobalXY);
+
+            return FindPath(_startRowCol, new int[2] {i, j}, out globalXY);
         }
 
         private bool FindPath(int[] startRowCol, int[] endRowCol, out List<(int x, int y)> globalXY)

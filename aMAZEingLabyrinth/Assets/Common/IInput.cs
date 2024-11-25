@@ -7,6 +7,6 @@ namespace Assets.Common
     {
         public Vector3 GetMousePos();
 
-
+        public bool IsMouseClicked();
     }
 }
