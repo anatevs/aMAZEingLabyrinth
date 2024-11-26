@@ -17,6 +17,19 @@ namespace GameCore
         private void Start()
         {
             InitPlayers(PlayerType.Blue);
+
+            foreach (var player in _players)
+            {
+                player.OnMoved += SetNextPlayer;
+            }
+        }
+
+        private void OnDisable()
+        {
+            foreach (var player in _players)
+            {
+                player.OnMoved -= SetNextPlayer;
+            }
         }
 
         private void InitPlayers(PlayerType firstPlayer)
@@ -40,7 +53,5 @@ namespace GameCore
 
             CurrentPlayer.SetIsPlaying(true);
         }
-
-
     }
 }
