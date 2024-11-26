@@ -6,11 +6,16 @@ namespace GameCore
     {
         public Player CurrentPlayer => _players[_currentIndex];
 
+        public int PlayersCount => _players.Length;
+
         [SerializeField]
         private PlayersDataConfig _dataConfig;
 
         [SerializeField]
         private Player[] _players;
+
+        [SerializeField]
+        private RewardCardsService _rewardCardsService;
 
         private int _currentIndex = 0;
 
@@ -22,6 +27,8 @@ namespace GameCore
             {
                 player.OnMoved += SetNextPlayer;
             }
+
+            _rewardCardsService.DealOutCards(this);
         }
 
         private void OnDisable()
@@ -52,6 +59,16 @@ namespace GameCore
             _currentIndex = (_currentIndex + 1) % _players.Length;
 
             CurrentPlayer.SetIsPlaying(true);
+        }
+
+        public void AddPlayerReward(int plIndex, RewardName reward)
+        {
+            _players[plIndex].AddReward(reward);
+        }
+
+        public void ReleasePlayerReward(int plIndex)
+        {
+            _players[plIndex].ReleaseReward();
         }
     }
 }

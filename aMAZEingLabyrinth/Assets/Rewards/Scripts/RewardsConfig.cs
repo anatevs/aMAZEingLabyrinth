@@ -12,6 +12,8 @@ namespace GameCore
 
     public class RewardsConfig : ScriptableObject
     {
+        public int RewardsCount => _rewards.Count;
+
         [SerializeField]
         private List<RewardSprite> _rewards =
             Enum.GetValues(typeof(RewardName))
@@ -33,6 +35,11 @@ namespace GameCore
         public Sprite GetRewardSprite(RewardName name)
         {
             return _rewardsDict[name];
+        }
+
+        public RewardSprite GetRewardInfo(int index)
+        {
+            return _rewards[index];
         }
     }
 

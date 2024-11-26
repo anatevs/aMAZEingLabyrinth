@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace GameCore
 {
@@ -26,7 +27,7 @@ namespace GameCore
 
         private RewardName _rewardTarget;
 
-        private Queue<RewardName> _rewardTargets;
+        private Queue<RewardName> _rewardTargets = new();
 
         private CellsCollection _cellsCollection;
 
@@ -58,12 +59,9 @@ namespace GameCore
             OnMoved?.Invoke();
         }
 
-        public void SetRewards(RewardName[] rewards)
+        public void AddReward(RewardName reward)
         {
-            foreach(var target in rewards)
-            {
-                _rewardTargets.Enqueue(target);
-            }
+            _rewardTargets.Enqueue(reward);
         }
 
         public void ReleaseReward()

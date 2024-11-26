@@ -16,16 +16,24 @@ MonoBehaviour:
   - Type: 2
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate: 0100000001000000
+    LabyrinthCoordinate:
+      x: 1
+      y: 1
   - Type: 0
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate: 0100000013000000
+    LabyrinthCoordinate:
+      x: 1
+      y: 19
   - Type: 1
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate: 1300000013000000
+    LabyrinthCoordinate:
+      x: 19
+      y: 19
   - Type: 3
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate: 1300000001000000
+    LabyrinthCoordinate:
+      x: 19
+      y: 1
