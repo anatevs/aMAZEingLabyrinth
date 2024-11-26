@@ -188,7 +188,6 @@ namespace GameCore
             Debug.Log(baka);
             Debug.Log($"closed amount {closed.Count}, opened amount {opened.Count}");
 
-
             return (result.Count > 1);
         }
 

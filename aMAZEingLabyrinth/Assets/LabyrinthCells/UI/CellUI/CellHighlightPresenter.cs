@@ -28,7 +28,7 @@ namespace GameCore
 
         private void SetHighlight(Vector3 mousePos)
         {
-            var pos = _cellsCollection.GetCellCoordinates(mousePos);
+            var pos = _cellsCollection.GetCellCenterCoordinates(mousePos);
 
             if (_currentPos == pos)
             {

@@ -34,7 +34,6 @@ namespace GameCore
 
             if (_pool.TryDequeue(out marker))
             {
-                marker.transform.position = position;
                 marker.SetActive(true);
             }
             else
@@ -42,6 +41,8 @@ namespace GameCore
                 marker = Instantiate(_pathMarker, position,
                     Quaternion.identity, _pathMarkersTransform);
             }
+
+            marker.transform.localPosition = position;
 
             _spawnedMarkers.Add(marker);
 

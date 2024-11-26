@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Linq;
 using System;
-using static UnityEditor.PlayerSettings;
 
 namespace GameCore
 {
@@ -28,6 +27,9 @@ namespace GameCore
 
         [SerializeField]
         private ShiftArrowsService _arrowsService;
+
+        [SerializeField]
+        private PlayersList _players;
 
         private LabyrinthGrid _grid;
 
@@ -181,14 +183,6 @@ namespace GameCore
             //    _checkRotation = false;
             //}
 
-
-            //if (_findPath)
-            //{
-            //    FindPath(_startRowCol, _endRowCol, out _);
-
-            //    _findPath = false;
-            //}
-
             if (_printCell)
             {
                 var cell = _cardCells[_printRowCol[0], _printRowCol[1]].CellValues;
@@ -213,19 +207,11 @@ namespace GameCore
         }
 
 
-        public Vector3 GetCellCoordinates(Vector3 pos)
+        public Vector3 GetCellCenterCoordinates(Vector3 pos)
         {
             (int i, int j) = GetCellIndexFromGlobalXY(pos);
 
-            var cell = _cardCells[i, j];
-
-            return cell.transform.position;
-        }
-
-        private (int i, int j) GetCellIndexFromGlobalXY(Vector3 pos)
-        {
-            return GetCardIndex(((int)(pos.x - transform.position.x),
-                (int)(pos.y - transform.position.y)));
+            return _cardCells[i, j].transform.position;
         }
 
         private void MakeShift(int shiftRow, int shiftCol)
@@ -303,54 +289,51 @@ namespace GameCore
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
         }
 
-        public bool FindPath(Vector3 cellGlobalXY, out List<(int x, int y)> globalXY)
+        public bool FindPath(Vector3 endCellGlobalXY, out List<(int x, int y)> path)
         {
-            globalXY = new();
+            var startRowCol = GetCardIndex(_players.CurrentPlayer.Coordinate);
+            var endRowCol = GetCellIndexFromGlobalXY(endCellGlobalXY);
 
-            (int i, int j) = GetCellIndexFromGlobalXY(cellGlobalXY);
+            var result = FindPath(startRowCol, endRowCol, out path);
 
-            return FindPath(_startRowCol, new int[2] {i, j}, out globalXY);
+            if (result)
+            {
+                _players.CurrentPlayer.MoveThroughPath(path);
+            }
+
+            return result;
         }
 
-        private bool FindPath(int[] startRowCol, int[] endRowCol, out List<(int x, int y)> globalXY)
+        private bool FindPath((int i, int j) startRowCol, (int i, int j) endRowCol, out List<(int x, int y)> resultXY)
         {
-            globalXY = new List<(int x, int y)>();
+            resultXY = new List<(int x, int y)>();
 
             _pathMarkersPool.UnspawnAll();
 
-            var (xStart, yStart) = GetXY((startRowCol[0], startRowCol[1]), (1, 1));
-            var (xEnd, yEnd) = GetXY((endRowCol[0], endRowCol[1]), (1, 1));
+            var (xStart, yStart) = GetXYCenter(startRowCol.i, startRowCol.j);
+            var (xEnd, yEnd) = GetXYCenter(endRowCol.i, endRowCol.j);
 
             var start = new Vector2Int(xStart, yStart);
             var end = new Vector2Int(xEnd, yEnd);
 
-            var res = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
+            var resultBool = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
 
-            var xLocal = (int)transform.position.x;
-            var yLocal = (int)transform.position.y;
+            _pathMarkersPool.Spawn(xStart, yStart);
+            _pathMarkersPool.Spawn(xEnd, yEnd);
 
-            _pathMarkersPool.Spawn(xStart + xLocal, yStart + yLocal);
-            _pathMarkersPool.Spawn(xEnd + xLocal, yEnd + yLocal);
-
-            if (res)
+            if (resultBool)
             {
-                Debug.Log($"path found: {res}");
-
                 foreach (var pathPoint in result)
                 {
-                    var (glX, glY) = (pathPoint.x + xLocal, pathPoint.y + yLocal);
+                    resultXY.Add((pathPoint.x, pathPoint.y));
 
-                    globalXY.Add((glX, glY));
-
-                    _pathMarkersPool.Spawn(glX, glY);
+                    _pathMarkersPool.Spawn(pathPoint.x, pathPoint.y);
                 }
             }
-            else
-            {
-                Debug.Log($"path found: {res}");
-            }
 
-            return res;
+            Debug.Log($"path found: {resultBool}");
+
+            return resultBool;
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)
@@ -381,16 +364,27 @@ namespace GameCore
             }
         }
 
-        private (int X, int Y) GetXY((int i, int j) cellIndex, (int ic, int jc) elementIndex)
+        private (int i, int j) GetCellIndexFromGlobalXY(Vector3 pos)
         {
-            var x = cellIndex.j * _cellSize + elementIndex.jc;
-            var y = _size.Rows * _cellSize - 1 - (cellIndex.i * _cellSize + elementIndex.ic);
-            return (x, y);
+            return GetCardIndex(((int)(pos.x - transform.position.x),
+                (int)(pos.y - transform.position.y)));
+        }
+
+        private (int X, int Y) GetXYCenter(int row, int col)
+        {
+            return GetXY((row, col), (1, 1));
         }
 
         private (int X, int Y) GetXYOrigin(int row, int col)
         {
             return GetXY((row, col), (2, 0));
+        }
+
+        private (int X, int Y) GetXY((int i, int j) cellIndex, (int ic, int jc) elementIndex)
+        {
+            var x = cellIndex.j * _cellSize + elementIndex.jc;
+            var y = _size.Rows * _cellSize - 1 - (cellIndex.i * _cellSize + elementIndex.ic);
+            return (x, y);
         }
 
         private (int iCell, int jCell) GetCardIndex((int x, int y) coordinates)
@@ -401,12 +395,12 @@ namespace GameCore
             return (i, j);
         }
 
-        private (int iElement, int jElement) GetCardElementIndex((int x, int y) coordinates)
-        {
-            int ic = _cellSize - 1 - coordinates.y % _cellSize;
-            int jc = coordinates.x % _cellSize;
+        //private (int iElement, int jElement) GetCardElementIndex((int x, int y) coordinates)
+        //{
+        //    int ic = _cellSize - 1 - coordinates.y % _cellSize;
+        //    int jc = coordinates.x % _cellSize;
 
-            return (ic, jc);
-        }
+        //    return (ic, jc);
+        //}
     }
 }
