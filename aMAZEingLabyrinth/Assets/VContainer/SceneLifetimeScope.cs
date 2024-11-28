@@ -19,7 +19,8 @@ public class SceneLifetimeScope : LifetimeScope
     [SerializeField]
     private CellsLabyrinth _cellsLabyrinth;
 
-
+    [SerializeField]
+    private CellHighlight _cellHighlight;
 
     protected override void Configure(IContainerBuilder builder)
     {
@@ -43,6 +44,7 @@ public class SceneLifetimeScope : LifetimeScope
     {
         builder.RegisterComponent(_shiftArrowsService);
         builder.RegisterComponent(_cellsLabyrinth);
+        builder.RegisterComponent(_cellHighlight);
     }
 
     private void RegisterPipeline(IContainerBuilder builder)

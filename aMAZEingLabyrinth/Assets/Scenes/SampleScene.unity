@@ -307,8 +307,9 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _playerSelector: {fileID: 1329740840}
   _playersList: {fileID: 1276336701}
-  _shiftArrowsService: {fileID: 1567343367}
+  _shiftArrowsService: {fileID: 1480633124}
   _cellsLabyrinth: {fileID: 293525262}
+  _cellHighlight: {fileID: 1322003525}
 --- !u!4 &103270157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7734168399856699471, guid: 251daed78c4c39a4f8a6fce458ecca85, type: 3}
@@ -7878,7 +7879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fe73aa48519e943bfc0cfcc331fc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _labyrinth: {fileID: 0}
+  _labyrinth: {fileID: 293525262}
   _view: {fileID: 1322003524}
 --- !u!1001 &1327931970
 PrefabInstance:
@@ -8219,6 +8220,7 @@ GameObject:
   - component: {fileID: 1480633123}
   - component: {fileID: 1480633122}
   - component: {fileID: 1480633121}
+  - component: {fileID: 1480633124}
   m_Layer: 0
   m_Name: ShiftArrowsCanvas
   m_TagString: Untagged
@@ -8319,6 +8321,31 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1480633124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480633119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9c3bd2acd58724fad4f7318f749b78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _arrows:
+  - {fileID: 1765696066}
+  - {fileID: 1068441288}
+  - {fileID: 1826813377}
+  - {fileID: 1461364925}
+  - {fileID: 551735944}
+  - {fileID: 60424335}
+  - {fileID: 1059101797}
+  - {fileID: 2021777858}
+  - {fileID: 667976051}
+  - {fileID: 1236182297}
+  - {fileID: 2055711785}
+  - {fileID: 606036515}
 --- !u!1001 &1533483130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8394,7 +8421,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1567343366}
-  - component: {fileID: 1567343367}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -8419,31 +8445,6 @@ Transform:
   m_Father: {fileID: 293525261}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1567343367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1567343365}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9c3bd2acd58724fad4f7318f749b78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _arrows:
-  - {fileID: 1765696066}
-  - {fileID: 1068441288}
-  - {fileID: 1826813377}
-  - {fileID: 1461364925}
-  - {fileID: 551735944}
-  - {fileID: 60424335}
-  - {fileID: 1059101797}
-  - {fileID: 2021777858}
-  - {fileID: 667976051}
-  - {fileID: 1236182297}
-  - {fileID: 2055711785}
-  - {fileID: 606036515}
 --- !u!114 &1626672184 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3519668573163540404, guid: 251daed78c4c39a4f8a6fce458ecca85, type: 3}

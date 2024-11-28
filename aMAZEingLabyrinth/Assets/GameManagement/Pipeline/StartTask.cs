@@ -10,13 +10,17 @@ namespace GamePipeline
 
         private readonly ShiftArrowsService _shiftArrowsService;
 
+        private readonly CellHighlight _cellHighlight;
+
         public StartTask(PlayerSelector playerSelector,
             PlayersList playersList,
-            ShiftArrowsService shiftArrowsService)
+            ShiftArrowsService shiftArrowsService,
+            CellHighlight cellHighlight)
         {
             _playerSelector = playerSelector;
             _players = playersList;
             _shiftArrowsService = shiftArrowsService;
+            _cellHighlight = cellHighlight;
         }
 
         protected override void OnRun()
@@ -34,6 +38,7 @@ namespace GamePipeline
             _players.InitPlayers(firstPlayer);
 
             _shiftArrowsService.EnableAllActiveArrows();
+            _cellHighlight.SetActive(true);
 
             Finish();
         }
