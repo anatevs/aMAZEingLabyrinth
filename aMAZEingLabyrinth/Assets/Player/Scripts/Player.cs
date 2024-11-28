@@ -24,8 +24,6 @@ namespace GameCore
 
         private (int x, int j) _coordinate;
 
-        private RewardName _rewardTarget;
-
         private Queue<RewardName> _rewardTargets = new();
 
         private CellsLabyrinth _cellsCollection;

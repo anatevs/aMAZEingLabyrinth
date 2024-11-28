@@ -32,6 +32,8 @@ namespace GameCore
 
         private void InitDropdown()
         {
+            _dropdown.options = new();
+
             foreach(var playerName in Enum.GetValues(typeof(PlayerType)))
             {
                 _dropdown.options.Add(new(playerName.ToString()));

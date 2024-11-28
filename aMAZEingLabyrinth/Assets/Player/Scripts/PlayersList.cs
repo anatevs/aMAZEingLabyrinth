@@ -29,10 +29,10 @@ namespace GameCore
 
         public void InitPlayers(PlayerType firstPlayer)
         {
-            Debug.Log("init players");
-
-            foreach (var player in _players)
+            for (int i = 0; i < _players.Length; i++)
             {
+                var player = _players[i];
+
                 player.Init(_dataConfig.GetData(player.Type));
 
                 player.OnMoved += SetNextPlayer;
@@ -40,6 +40,8 @@ namespace GameCore
                 if (firstPlayer == player.Type)
                 {
                     player.SetIsPlaying(true);
+
+                    _currentIndex = i;
                 }
             }
 
