@@ -21,14 +21,9 @@ namespace GameCore
 
         private void Start()
         {
-            InitPlayers(PlayerType.Blue);
+            //InitPlayers(PlayerType.Blue);
 
-            foreach (var player in _players)
-            {
-                player.OnMoved += SetNextPlayer;
-            }
-
-            _rewardCardsService.DealOutCards(this);
+            //_rewardCardsService.DealOutCards(this);
         }
 
         private void OnDisable()
@@ -39,17 +34,23 @@ namespace GameCore
             }
         }
 
-        private void InitPlayers(PlayerType firstPlayer)
+        public void InitPlayers(PlayerType firstPlayer)
         {
+            Debug.Log("init players");
+
             foreach (var player in _players)
             {
                 player.Init(_dataConfig.GetData(player.Type));
+
+                player.OnMoved += SetNextPlayer;
 
                 if (firstPlayer == player.Type)
                 {
                     player.SetIsPlaying(true);
                 }
             }
+
+            _rewardCardsService.DealOutCards(this);///////////////somewhere else?
         }
 
         public void SetNextPlayer()

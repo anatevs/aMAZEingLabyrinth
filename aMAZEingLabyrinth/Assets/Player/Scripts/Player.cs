@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace GameCore
 {
@@ -13,7 +12,7 @@ namespace GameCore
 
         public (int, int) Coordinate => _coordinate;
 
-        public RewardName RewardTarget => _rewardTargets.Peek();
+        public RewardName CurrentTarget => _rewardTargets.Peek();
 
         [SerializeField]
         private PlayerView _view;

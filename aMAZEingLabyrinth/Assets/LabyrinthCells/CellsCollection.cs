@@ -96,7 +96,7 @@ namespace GameCore
 
             foreach (var cell in _fixedCells)
             {
-                var (iCell, jCell) = GetCardIndex(((int)cell.transform.localPosition.x,
+                var (iCell, jCell) = GetCellIndex(((int)cell.transform.localPosition.x,
                     (int)cell.transform.localPosition.y));
 
                 cell.InitCellValues();
@@ -209,7 +209,8 @@ namespace GameCore
 
         public Vector3 GetCellCenterCoordinates(Vector3 pos)
         {
-            (int i, int j) = GetCellIndexFromGlobalXY(pos);
+            (int i, int j) = GetCellIndex(((int)(pos.x - transform.position.x),
+                (int)(pos.y - transform.position.y)));
 
             return _cardCells[i, j].transform.position;
         }
@@ -291,10 +292,11 @@ namespace GameCore
 
         public bool FindPath(Vector3 endCellGlobalXY, out List<(int x, int y)> path)
         {
-            var startRowCol = GetCardIndex(_players.CurrentPlayer.Coordinate);
-            var endRowCol = GetCellIndexFromGlobalXY(endCellGlobalXY);
+            var startXY = _players.CurrentPlayer.Coordinate;
+            var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
+                (int) (endCellGlobalXY.y - transform.position.y));
 
-            var result = FindPath(startRowCol, endRowCol, out path);
+            var result = FindPath(startXY, endXY, out path);
 
             if (result)
             {
@@ -304,28 +306,24 @@ namespace GameCore
             return result;
         }
 
-        private bool FindPath((int i, int j) startRowCol, (int i, int j) endRowCol, out List<(int x, int y)> resultXY)
+        private bool FindPath((int x, int y) startXY, (int x, int y) endXY, out List<(int x, int y)> path)
         {
-            resultXY = new List<(int x, int y)>();
+            path = new List<(int x, int y)>();
+
+            var start = new Vector2Int(startXY.x, startXY.y);
+            var end = new Vector2Int(endXY.x, endXY.y);
+
+            var resultBool = _grid.TryFindAStarPath(start, end, out List<Vector2Int> resultVector2);
 
             _pathMarkersPool.UnspawnAll();
-
-            var (xStart, yStart) = GetXYCenter(startRowCol.i, startRowCol.j);
-            var (xEnd, yEnd) = GetXYCenter(endRowCol.i, endRowCol.j);
-
-            var start = new Vector2Int(xStart, yStart);
-            var end = new Vector2Int(xEnd, yEnd);
-
-            var resultBool = _grid.TryFindAStarPath(start, end, out List<Vector2Int> result);
-
-            _pathMarkersPool.Spawn(xStart, yStart);
-            _pathMarkersPool.Spawn(xEnd, yEnd);
+            _pathMarkersPool.Spawn(start.x, start.y);
+            _pathMarkersPool.Spawn(end.x, end.y);
 
             if (resultBool)
             {
-                foreach (var pathPoint in result)
+                foreach (var pathPoint in resultVector2)
                 {
-                    resultXY.Add((pathPoint.x, pathPoint.y));
+                    path.Add((pathPoint.x, pathPoint.y));
 
                     _pathMarkersPool.Spawn(pathPoint.x, pathPoint.y);
                 }
@@ -334,6 +332,14 @@ namespace GameCore
             Debug.Log($"path found: {resultBool}");
 
             return resultBool;
+        }
+
+        private bool FindPathRowCol((int i, int j) startRowCol, (int i, int j) endRowCol, out List<(int x, int y)> resultXY)
+        {
+            var start = GetXYCenter(startRowCol.i, startRowCol.j);
+            var end = GetXYCenter(endRowCol.i, endRowCol.j);
+
+            return FindPath(start, end, out resultXY);
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)
@@ -364,12 +370,6 @@ namespace GameCore
             }
         }
 
-        private (int i, int j) GetCellIndexFromGlobalXY(Vector3 pos)
-        {
-            return GetCardIndex(((int)(pos.x - transform.position.x),
-                (int)(pos.y - transform.position.y)));
-        }
-
         private (int X, int Y) GetXYCenter(int row, int col)
         {
             return GetXY((row, col), (1, 1));
@@ -387,7 +387,7 @@ namespace GameCore
             return (x, y);
         }
 
-        private (int iCell, int jCell) GetCardIndex((int x, int y) coordinates)
+        private (int iCell, int jCell) GetCellIndex((int x, int y) coordinates)
         {
             int i = _size.Rows - 1 - coordinates.y / _cellSize;
             int j = coordinates.x / _cellSize;

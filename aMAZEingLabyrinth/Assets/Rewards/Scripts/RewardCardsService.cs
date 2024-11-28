@@ -35,8 +35,6 @@ namespace GameCore
                     indexes.RemoveAt(index);
 
                     players.AddPlayerReward(i_player, reward.Name);
-
-                    Debug.Log($"{reward.Name} added to {i_player}");
                 }
             }
         }

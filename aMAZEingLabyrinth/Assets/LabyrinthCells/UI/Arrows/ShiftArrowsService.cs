@@ -11,12 +11,16 @@ namespace GameCore
         [SerializeField]
         private ShiftArrow[] _arrows;
 
-        private ShiftArrow _disabledArrow;
+        private (int, int) _initIndex = (-1, -1);
+
+        private (int, int) _disabledIndex;
 
         private readonly Dictionary<(int, int), ShiftArrow> _indexArrows = new();
 
         private void Start()
         {
+            _disabledIndex = _initIndex;
+
             foreach (ShiftArrow arrow in _arrows)
             {
                 _indexArrows.Add(arrow.Index, arrow);
@@ -42,14 +46,34 @@ namespace GameCore
         {
             var newDisabled = _indexArrows[index];
 
-            if (_disabledArrow != null)
+            if (_disabledIndex != _initIndex)
             {
-                _disabledArrow.ActivateButton();
+                var prevDisabled = _indexArrows[_disabledIndex];
+                prevDisabled.ActivateButton();
             }
 
             newDisabled.DisactivateButton();
 
-            _disabledArrow = newDisabled;
+            _disabledIndex = index;
+        }
+
+        public void DisableAllArrows()
+        {
+            foreach(var arrow in _arrows)
+            {
+                arrow.DisactivateButton();
+            }
+        }
+
+        public void EnableAllActiveArrows()
+        {
+            foreach (var index in _indexArrows.Keys)
+            {
+                if (index != _disabledIndex)
+                {
+                    _indexArrows[index].ActivateButton();
+                }
+            }
         }
     }
 }

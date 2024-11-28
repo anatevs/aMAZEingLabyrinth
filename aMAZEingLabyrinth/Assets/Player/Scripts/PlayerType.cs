@@ -2,9 +2,9 @@ namespace GameCore
 {
     public enum PlayerType
     {
+        Blue,
         Red,
         Green,
-        Blue,
         Yellow
     }
 }
