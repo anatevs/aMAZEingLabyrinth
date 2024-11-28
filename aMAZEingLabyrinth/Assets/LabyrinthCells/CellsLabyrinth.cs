@@ -5,7 +5,7 @@ using System;
 
 namespace GameCore
 {
-    public sealed class CellsCollection : MonoBehaviour
+    public sealed class CellsLabyrinth : MonoBehaviour
     {
         [SerializeField]
         private CardCell[] _fixedCells;
@@ -24,9 +24,6 @@ namespace GameCore
 
         [SerializeField]
         private PlayableCell _playableCell;
-
-        [SerializeField]
-        private ShiftArrowsService _arrowsService;
 
         [SerializeField]
         private PlayersList _players;
@@ -80,12 +77,12 @@ namespace GameCore
 
         private void Awake()
         {
-            _arrowsService.OnClick += MakeShift;
+            //_arrowsService.OnClick += MakeShift;
         }
 
         private void OnDisable()
         {
-            _arrowsService.OnClick -= MakeShift;
+            //_arrowsService.OnClick -= MakeShift;
         }
 
         private void Start()
@@ -215,8 +212,10 @@ namespace GameCore
             return _cardCells[i, j].transform.position;
         }
 
-        private void MakeShift(int shiftRow, int shiftCol)
+        public void MakeShift(int shiftRow, int shiftCol, out (int row, int col) oppositeIndex)
         {
+            oppositeIndex = (-1, -1);
+
             bool isRow = _movableRowCols.Contains(shiftRow);
             bool isCol = _movableRowCols.Contains(shiftCol);
 
@@ -271,7 +270,7 @@ namespace GameCore
                 col = shiftCol;
             }
 
-            _arrowsService.ChangeDisabledArrow((row, col));
+            oppositeIndex = (row, col);
 
             _playableCell.ReplacePlayableCell(_cardCells[row, col], out var oldPlayable);
 

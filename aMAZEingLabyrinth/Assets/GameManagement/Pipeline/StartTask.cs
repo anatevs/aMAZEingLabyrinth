@@ -8,10 +8,15 @@ namespace GamePipeline
 
         private readonly PlayersList _players;
 
-        public StartTask(PlayerSelector playerSelector, PlayersList playersList)
+        private readonly ShiftArrowsService _shiftArrowsService;
+
+        public StartTask(PlayerSelector playerSelector,
+            PlayersList playersList,
+            ShiftArrowsService shiftArrowsService)
         {
             _playerSelector = playerSelector;
             _players = playersList;
+            _shiftArrowsService = shiftArrowsService;
         }
 
         protected override void OnRun()
@@ -27,6 +32,8 @@ namespace GamePipeline
         private void PlayerSelect(PlayerType firstPlayer)
         {
             _players.InitPlayers(firstPlayer);
+
+            _shiftArrowsService.EnableAllActiveArrows();
 
             Finish();
         }

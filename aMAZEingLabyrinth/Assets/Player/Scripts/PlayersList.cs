@@ -19,13 +19,6 @@ namespace GameCore
 
         private int _currentIndex = 0;
 
-        private void Start()
-        {
-            //InitPlayers(PlayerType.Blue);
-
-            //_rewardCardsService.DealOutCards(this);
-        }
-
         private void OnDisable()
         {
             foreach (var player in _players)

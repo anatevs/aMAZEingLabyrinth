@@ -32,8 +32,6 @@ namespace GameCore
             {
                 OnMouseEnter?.Invoke(mousePos);
 
-                _highlightImage.SetActive(true);
-
                 if (_inputSystem.IsMouseClicked())
                 {
                     OnCellClicked?.Invoke();
@@ -47,6 +45,7 @@ namespace GameCore
 
         public void SetHighlight(Vector3 pos)
         {
+            _highlightImage.SetActive(true);
             _highlightImage.transform.position = pos;
         }
 

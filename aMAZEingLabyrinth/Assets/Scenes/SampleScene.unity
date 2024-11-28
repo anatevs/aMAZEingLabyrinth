@@ -307,6 +307,8 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _playerSelector: {fileID: 1329740840}
   _playersList: {fileID: 1276336701}
+  _shiftArrowsService: {fileID: 1567343367}
+  _cellsLabyrinth: {fileID: 293525262}
 --- !u!4 &103270157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7734168399856699471, guid: 251daed78c4c39a4f8a6fce458ecca85, type: 3}
@@ -923,7 +925,6 @@ MonoBehaviour:
   _cellPrefabsConfig: {fileID: 11400000, guid: 558c606f47b532d4183982dcd1809463, type: 2}
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
   _playableCell: {fileID: 252792296}
-  _arrowsService: {fileID: 1567343367}
   _players: {fileID: 1276336701}
   _startRowCol: 0000000000000000
   _printRowCol: 0000000000000000
@@ -7493,7 +7494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 0}
-  _rewardConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
+  _rewardsConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
 --- !u!1001 &1291781462
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7877,7 +7878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fe73aa48519e943bfc0cfcc331fc6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cellsCollection: {fileID: 293525262}
+  _labyrinth: {fileID: 0}
   _view: {fileID: 1322003524}
 --- !u!1001 &1327931970
 PrefabInstance:

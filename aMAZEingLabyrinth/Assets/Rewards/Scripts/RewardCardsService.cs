@@ -10,19 +10,19 @@ namespace GameCore
         private GameObject _prefab;
 
         [SerializeField]
-        private RewardsConfig _rewardConfig;
+        private RewardsConfig _rewardsConfig;
 
         public void DealOutCards(PlayersList players)
         {
             var indexes = new List<int>(Enumerable
-                .Range(0, _rewardConfig.RewardsCount));
+                .Range(0, _rewardsConfig.RewardsCount));
 
             if (indexes.Count % players.PlayersCount != 0)
             {
                 throw new System.Exception($"rewards count is not a multiple of player's count");
             }
 
-            var rewardsAmount = _rewardConfig.RewardsCount / players.PlayersCount;
+            var rewardsAmount = _rewardsConfig.RewardsCount / players.PlayersCount;
 
             for (int i_player = 0; i_player < players.PlayersCount; i_player++)
             {
@@ -30,7 +30,7 @@ namespace GameCore
                 {
                     var index = Random.Range(0, indexes.Count);
 
-                    var reward = _rewardConfig.GetRewardInfo(indexes[index]);
+                    var reward = _rewardsConfig.GetRewardInfo(indexes[index]);
 
                     indexes.RemoveAt(index);
 

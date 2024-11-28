@@ -1,3 +1,4 @@
+using EventBusNamespace;
 using GameCore;
 using GamePipeline;
 using UnityEngine;
@@ -12,11 +13,36 @@ public class SceneLifetimeScope : LifetimeScope
     [SerializeField]
     private PlayersList _playersList;
 
+    [SerializeField]
+    private ShiftArrowsService _shiftArrowsService;
+
+    [SerializeField]
+    private CellsLabyrinth _cellsLabyrinth;
+
+
+
     protected override void Configure(IContainerBuilder builder)
     {
+        RegisterEventBus(builder);
+
+        RegisterServices(builder);
+
         RegisterPipeline(builder);
 
         RegisterGameManagement(builder);
+
+        RegisterHandlers(builder);
+    }
+
+    private void RegisterEventBus(IContainerBuilder builder)
+    {
+        builder.Register<EventBus>(Lifetime.Singleton);
+    }
+
+    private void RegisterServices(IContainerBuilder builder)
+    {
+        builder.RegisterComponent(_shiftArrowsService);
+        builder.RegisterComponent(_cellsLabyrinth);
     }
 
     private void RegisterPipeline(IContainerBuilder builder)
@@ -32,5 +58,10 @@ public class SceneLifetimeScope : LifetimeScope
     private void RegisterGameManagement(IContainerBuilder builder)
     {
         builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton);
+    }
+
+    private void RegisterHandlers(IContainerBuilder builder)
+    {
+        builder.RegisterEntryPoint<MakeShiftHandler>(Lifetime.Singleton);
     }
 }

@@ -1,3 +1,6 @@
-public interface IEvent
+namespace EventBusNamespace
 {
+    public interface IEvent
+    {
+    }
 }

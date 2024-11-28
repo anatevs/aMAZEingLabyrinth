@@ -19,14 +19,20 @@ namespace GameCore
 
         private void Start()
         {
-            _disabledIndex = _initIndex;
-
             foreach (ShiftArrow arrow in _arrows)
             {
                 _indexArrows.Add(arrow.Index, arrow);
 
                 arrow.OnShift += Click;
             }
+
+            StartGameInitArrows();
+        }
+
+        private void StartGameInitArrows()
+        {
+            _disabledIndex = _initIndex;
+            DisableAllArrows();
         }
 
         private void OnDisable()

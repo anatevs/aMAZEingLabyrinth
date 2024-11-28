@@ -1,3 +1,5 @@
+using EventBusNamespace;
+
 namespace GamePipeline
 {
     public sealed class TurnTask : Task

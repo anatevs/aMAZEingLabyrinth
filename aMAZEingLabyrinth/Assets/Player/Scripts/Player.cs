@@ -28,7 +28,7 @@ namespace GameCore
 
         private Queue<RewardName> _rewardTargets = new();
 
-        private CellsCollection _cellsCollection;
+        private CellsLabyrinth _cellsCollection;
 
         public void Init(PlayerData data)
         {
