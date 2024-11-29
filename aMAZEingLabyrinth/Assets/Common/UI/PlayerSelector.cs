@@ -2,8 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using GameCore;
 
-namespace GameCore
+namespace GameUI
 {
     public sealed class PlayerSelector : MonoBehaviour
     {

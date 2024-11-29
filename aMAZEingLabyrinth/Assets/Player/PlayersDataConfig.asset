@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: PlayersDataConfig
   m_EditorClassIdentifier: 
   _playersData:
-  - Type: 2
-    IsPlaying: 0
-    RewardTargets: 
-    LabyrinthCoordinate:
-      x: 1
-      y: 1
   - Type: 0
     IsPlaying: 0
     RewardTargets: 
     LabyrinthCoordinate:
       x: 1
-      y: 19
+      y: 1
   - Type: 1
+    IsPlaying: 0
+    RewardTargets: 
+    LabyrinthCoordinate:
+      x: 1
+      y: 19
+  - Type: 2
     IsPlaying: 0
     RewardTargets: 
     LabyrinthCoordinate:

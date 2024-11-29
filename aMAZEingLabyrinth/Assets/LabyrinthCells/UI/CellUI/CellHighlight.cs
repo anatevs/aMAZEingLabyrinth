@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using EventBusNamespace;
+using UnityEngine;
+using VContainer;
 
 namespace GameCore
 {
     public sealed class CellHighlight : MonoBehaviour
     {
+        public Vector3 CurrentPosition => _currentPos;
+
         [SerializeField]
         private CellsLabyrinth _labyrinth;
 
@@ -13,6 +17,14 @@ namespace GameCore
         private bool _isActive;
 
         private Vector3 _currentPos = new();
+
+        private EventBus _eventBus;
+
+        [Inject]
+        public void Construct(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
         private void Awake()
         {
@@ -54,7 +66,8 @@ namespace GameCore
         {
             if (_isActive)
             {
-                _labyrinth.FindPath(_currentPos, out _);
+                _eventBus.RaiseEvent(new ClickCellEvent(this));
+                //_labyrinth.FindPath(_currentPos, out _);
             }
         }
     }

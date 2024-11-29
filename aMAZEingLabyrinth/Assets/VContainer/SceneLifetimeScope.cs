@@ -1,5 +1,6 @@
 using EventBusNamespace;
 using GameCore;
+using GameUI;
 using GamePipeline;
 using UnityEngine;
 using VContainer;
@@ -8,7 +9,7 @@ using VContainer.Unity;
 public class SceneLifetimeScope : LifetimeScope
 {
     [SerializeField]
-    private PlayerSelector _playerSelector;
+    private MenusService _menuWindowsService;
 
     [SerializeField]
     private PlayersList _playersList;
@@ -49,7 +50,8 @@ public class SceneLifetimeScope : LifetimeScope
 
     private void RegisterPipeline(IContainerBuilder builder)
     {
-        builder.RegisterComponent(_playerSelector);
+        builder.RegisterComponent(_menuWindowsService);
+
         builder.RegisterComponent(_playersList);
 
         builder.Register<TurnPipeline>(Lifetime.Singleton);
@@ -65,5 +67,6 @@ public class SceneLifetimeScope : LifetimeScope
     private void RegisterHandlers(IContainerBuilder builder)
     {
         builder.RegisterEntryPoint<MakeShiftHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<ClickCellHandler>(Lifetime.Singleton);
     }
 }

@@ -1,11 +1,12 @@
 using GameCore;
+using GameUI;
 using UnityEngine;
 
 namespace GamePipeline
 {
     public sealed class StartTask : Task
     {
-        private readonly PlayerSelector _playerSelector;
+        private readonly MenusService _menusService;
 
         private readonly PlayersList _players;
 
@@ -13,12 +14,12 @@ namespace GamePipeline
 
         private readonly CellHighlight _cellHighlight;
 
-        public StartTask(PlayerSelector playerSelector,
+        public StartTask(MenusService menuWindowsService,
             PlayersList playersList,
             ShiftArrowsService shiftArrowsService,
             CellHighlight cellHighlight)
         {
-            _playerSelector = playerSelector;
+            _menusService = menuWindowsService;
             _players = playersList;
             _shiftArrowsService = shiftArrowsService;
             _cellHighlight = cellHighlight;
@@ -26,12 +27,12 @@ namespace GamePipeline
 
         protected override void OnRun()
         {
-            _playerSelector.OnPlayerSelected += PlayerSelect;
+            _menusService.PlayerSelector.OnPlayerSelected += PlayerSelect;
         }
 
         protected override void OnFinished()
         {
-            _playerSelector.OnPlayerSelected -= PlayerSelect;
+            _menusService.PlayerSelector.OnPlayerSelected -= PlayerSelect;
         }
 
         private void PlayerSelect(PlayerType firstPlayer)

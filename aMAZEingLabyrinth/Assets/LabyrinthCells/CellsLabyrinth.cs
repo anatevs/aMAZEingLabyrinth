@@ -289,7 +289,7 @@ namespace GameCore
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
         }
 
-        public bool FindPath(Vector3 endCellGlobalXY, out List<(int x, int y)> path)
+        public bool FindPath(Vector2 endCellGlobalXY, out List<(int x, int y)> path)
         {
             var startXY = _players.CurrentPlayer.Coordinate;
             var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
@@ -301,6 +301,22 @@ namespace GameCore
             {
                 _players.CurrentPlayer.MoveThroughPath(path);
             }
+
+            return result;
+        }
+
+        public bool FindPath((int, int) startXY, Vector2 endCellGlobalXY, out List<(int x, int y)> path)
+        {
+            //var startXY = _players.CurrentPlayer.Coordinate;
+            var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
+                (int)(endCellGlobalXY.y - transform.position.y));
+
+            var result = FindPath(startXY, endXY, out path);
+
+            //if (result)
+            //{
+            //    _players.CurrentPlayer.MoveThroughPath(path);
+            //}
 
             return result;
         }
