@@ -43,6 +43,7 @@ namespace GameCore
         public void SetActive(bool isActive)
         {
             _isActive = isActive;
+            _view.SetActive(isActive);
         }
 
         private void SetHighlight(Vector3 mousePos)
@@ -67,7 +68,6 @@ namespace GameCore
             if (_isActive)
             {
                 _eventBus.RaiseEvent(new ClickCellEvent(this));
-                //_labyrinth.FindPath(_currentPos, out _);
             }
         }
     }

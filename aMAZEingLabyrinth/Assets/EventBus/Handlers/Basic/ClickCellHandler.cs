@@ -9,23 +9,24 @@ namespace EventBusNamespace
         private readonly PlayersList _playersList;
         private readonly CellsLabyrinth _cellsLabyrinth;
         private readonly MenusService _menusService;
-        private readonly CellHighlight _cellHighlight;
+        private readonly ShiftArrowsService _shiftsArrows;
 
         public ClickCellHandler(EventBus eventBus,
             PlayersList playersList,
             CellsLabyrinth cellsLabyrinth,
             MenusService menusService,
-            CellHighlight cellHighlight) : base(eventBus)
+            ShiftArrowsService shiftsArrowsService) : base(eventBus)
         {
             _playersList = playersList;
             _cellsLabyrinth = cellsLabyrinth;
             _menusService = menusService;
-            _cellHighlight = cellHighlight;
+            _shiftsArrows = shiftsArrowsService;
         }
 
         protected override void RaiseEvent(ClickCellEvent evnt)
         {
-            _cellHighlight.SetActive(false);
+            evnt.CellHighlight.SetActive(false);
+            _shiftsArrows.DisableAllArrows();
 
             var player = _playersList.CurrentPlayer;
 
@@ -46,30 +47,18 @@ namespace EventBusNamespace
                     {
                         Debug.Log($"{player} has {target} on path");
 
-                        player.ReleaseReward();
+                        EventBus.RaiseEvent(new CheckWinEvent(player));
 
-                        if (player.RemainTargetsCount == 0)
-                        {
-                            Debug.Log($"this game is end, the winner is {player.name} player");
-                            //end game
-                        }
-                        else
-                        {
-                            //next player
-                        }
-
-                        break;
+                        return;
                     }
                 }
 
-                //next player
-                //_playersList.SetNextPlayer();
-                //_shiftArrowsService.EnableAllActiveArrows();
-                //_cellHighlight.SetActive(true);
+                EventBus.RaiseEvent(new NextPlayerEvent());
             }
             else
             {
                 _menusService.NoPathMenu.SetActive();
+                evnt.CellHighlight.SetActive(true);
             }
         }
     }

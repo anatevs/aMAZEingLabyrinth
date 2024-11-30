@@ -49,9 +49,9 @@ namespace GameCore
             _highlightImage.transform.position = pos;
         }
 
-        public void HideHighlight()
+        public void SetActive(bool isActive)
         {
-            _highlightImage.SetActive(false);
+            _highlightImage.SetActive(isActive);
         }
     }
 }

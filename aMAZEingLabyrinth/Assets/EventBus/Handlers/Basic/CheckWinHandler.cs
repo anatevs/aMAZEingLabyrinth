@@ -1,4 +1,5 @@
 ﻿using EventBusNamespace;
+using GameCore;
 using System.Collections;
 using UnityEngine;
 
@@ -13,7 +14,21 @@ namespace EventBusNamespace
 
         protected override void RaiseEvent(CheckWinEvent evnt)
         {
+            var player = evnt.Player;
 
+            player.ReleaseReward();
+
+            if (player.RemainTargetsCount == 0)
+            {
+                Debug.Log($"this game is end, the winner is {player.name} player");
+                //end game
+            }
+            else
+            {
+                Debug.Log("next player");
+
+                EventBus.RaiseEvent(new NextPlayerEvent());
+            }
         }
     }
 }

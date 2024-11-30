@@ -54,7 +54,7 @@ public class SceneLifetimeScope : LifetimeScope
 
         builder.RegisterComponent(_playersList);
 
-        builder.Register<GamePipeline>(Lifetime.Singleton);
+        builder.Register<GameplayPipeline>(Lifetime.Singleton);
 
         builder.RegisterEntryPoint<PipelineInstaller>(Lifetime.Singleton);
     }
@@ -68,5 +68,7 @@ public class SceneLifetimeScope : LifetimeScope
     {
         builder.RegisterEntryPoint<MakeShiftHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ClickCellHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<CheckWinHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<NextPlayerHandler>(Lifetime.Singleton);
     }
 }
