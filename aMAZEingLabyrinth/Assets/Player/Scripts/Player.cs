@@ -8,11 +8,15 @@ namespace GameCore
     {
         public event Action OnMoved;
 
+        public event Action<Player> OnTargetChanged;
+
         public PlayerType Type => _playerType;
 
         public (int, int) Coordinate => _coordinate;
 
         public RewardName CurrentTarget => _rewardTargets.Peek();
+
+        public int RemainTargetsCount => _rewardTargets.Count;
 
         [SerializeField]
         private PlayerView _view;
@@ -24,9 +28,7 @@ namespace GameCore
 
         private (int x, int j) _coordinate;
 
-        private Queue<RewardName> _rewardTargets = new();
-
-        private CellsLabyrinth _cellsCollection;
+        private readonly Queue<RewardName> _rewardTargets = new();
 
         public void Init(PlayerData data)
         {
@@ -64,6 +66,25 @@ namespace GameCore
         public void ReleaseReward()
         {
             _rewardTargets.Dequeue();
+
+            OnTargetChanged?.Invoke(this);
+
+            Debug.Log("last reward released");
+            PrintTargets();
+        }
+
+        public void PrintTargets()
+        {
+            var str = "";
+
+            Debug.Log($"{_playerType} has targets:");
+            foreach (RewardName reward in _rewardTargets)
+            {
+                str += reward.ToString() + ", ";
+            }
+
+            Debug.Log(str);
+            Debug.Log($"current target: {CurrentTarget}");
         }
     }
 }

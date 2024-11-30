@@ -12,7 +12,7 @@ namespace GameCore
         [SerializeField]
         private CardCell[] _prefabs = new CardCell[3];
 
-        private Dictionary<CellGeometry, CardCell> _prefabsDict = new();
+        private readonly Dictionary<CellGeometry, CardCell> _prefabsDict = new();
 
         private void OnEnable()
         {

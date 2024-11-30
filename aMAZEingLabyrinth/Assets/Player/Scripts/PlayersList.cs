@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using GameUI;
+using UnityEngine;
 
 namespace GameCore
 {
     public sealed class PlayersList : MonoBehaviour
     {
         public Player CurrentPlayer => _players[_currentIndex];
-
-        public int PlayersCount => _players.Length;
 
         [SerializeField]
         private PlayersDataConfig _dataConfig;
@@ -23,7 +22,8 @@ namespace GameCore
         {
             foreach (var player in _players)
             {
-                player.OnMoved -= SetNextPlayer;
+                //player.OnMoved -= SetNextPlayer;
+                _rewardCardsService.UnsubscribePlayers(player);
             }
         }
 
@@ -35,7 +35,7 @@ namespace GameCore
 
                 player.Init(_dataConfig.GetData(player.Type));
 
-                player.OnMoved += SetNextPlayer;
+                //player.OnMoved += SetNextPlayer;
 
                 if (firstPlayer == player.Type)
                 {
@@ -45,7 +45,13 @@ namespace GameCore
                 }
             }
 
-            _rewardCardsService.DealOutCards(this);///////////////somewhere else?
+            _rewardCardsService.DealOutCards(_players);///////////////somewhere else?
+
+            Debug.Log("init rewards:");
+            foreach (var player in _players)
+            {
+                player.PrintTargets();
+            }
         }
 
         public void SetNextPlayer()
@@ -55,11 +61,6 @@ namespace GameCore
             _currentIndex = (_currentIndex + 1) % _players.Length;
 
             CurrentPlayer.SetIsPlaying(true);
-        }
-
-        public void AddPlayerReward(int plIndex, RewardName reward)
-        {
-            _players[plIndex].AddReward(reward);
         }
 
         public void ReleasePlayerReward(int plIndex)

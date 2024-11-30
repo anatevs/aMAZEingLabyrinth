@@ -1,7 +1,5 @@
-﻿using EventBusNamespace;
-using GameCore;
+﻿using GameCore;
 using GameUI;
-using System.Collections;
 using UnityEngine;
 
 namespace EventBusNamespace
@@ -11,27 +9,50 @@ namespace EventBusNamespace
         private readonly PlayersList _playersList;
         private readonly CellsLabyrinth _cellsLabyrinth;
         private readonly MenusService _menusService;
+        private readonly CellHighlight _cellHighlight;
 
         public ClickCellHandler(EventBus eventBus,
             PlayersList playersList,
             CellsLabyrinth cellsLabyrinth,
-            MenusService menusService) : base(eventBus)
+            MenusService menusService,
+            CellHighlight cellHighlight) : base(eventBus)
         {
             _playersList = playersList;
             _cellsLabyrinth = cellsLabyrinth;
             _menusService = menusService;
+            _cellHighlight = cellHighlight;
         }
 
         protected override void RaiseEvent(ClickCellEvent evnt)
         {
-            var startXY = _playersList.CurrentPlayer.Coordinate;
+            _cellHighlight.SetActive(false);
+
+            var player = _playersList.CurrentPlayer;
+
+            var startXY = player.Coordinate;
             var endXY = evnt.CellHighlight.CurrentPosition;
 
             var result = _cellsLabyrinth.FindPath(startXY, endXY, out var path);
 
             if (result)
             {
-                _playersList.CurrentPlayer.MoveThroughPath(path);
+                player.MoveThroughPath(path);
+
+                var target = player.CurrentTarget;
+
+                foreach (var xy in path)
+                {
+                    if (_cellsLabyrinth.HasCellReward(xy, target))
+                    {
+                        Debug.Log($"{player} has {target} on path");
+
+                        player.ReleaseReward();
+
+                        break;
+                    }
+                }
+
+                //raise event of remain cards check?
 
                 //handle reward if exist
 

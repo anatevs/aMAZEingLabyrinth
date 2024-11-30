@@ -27,15 +27,15 @@ namespace GamePipeline
 
         protected override void OnRun()
         {
-            _menusService.PlayerSelector.OnPlayerSelected += PlayerSelect;
+            _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
         }
 
         protected override void OnFinished()
         {
-            _menusService.PlayerSelector.OnPlayerSelected -= PlayerSelect;
+            _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
         }
 
-        private void PlayerSelect(PlayerType firstPlayer)
+        private void SelectFirstPlayer(PlayerType firstPlayer)
         {
             _players.InitPlayers(firstPlayer);
 

@@ -101,7 +101,8 @@ namespace GameCore
                 SetCellsToLabyrinth(cell, iCell, jCell);
             }
 
-            InitMovableCellsNewGame();
+            //InitMovableCellsNewGame();
+            InitAllMovableCrossType();
         }
 
         private void InitMovableCellsNewGame()
@@ -163,6 +164,68 @@ namespace GameCore
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
             var playableCellCard = spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
+            _playableCell.ReplacePlayableCell(playableCellCard, out _);
+        }
+
+        private void InitAllMovableCrossType()
+        {
+            var movableAmount = _size.Rows * _size.Cols + 1 - _fixedCells.Length;
+
+            if (_movableCellsConfig.Count != movableAmount)
+            {
+                throw new System.Exception("Movable cells count in config and in collection must be equal!");
+            }
+
+            (int Row, int Col)[] movableIndexes =
+                new (int Row, int Col)[movableAmount - 1];
+
+            int count = 0;
+            foreach (var i in _movableRowCols)
+            {
+                for (int j = 0; j < _size.Cols; j++)
+                {
+                    movableIndexes[count] = (i, j);
+                    count++;
+                }
+            }
+
+            foreach (var i in _fixedRowCols)
+            {
+                foreach (var j in _movableRowCols)
+                {
+                    movableIndexes[count] = (i, j);
+                    count++;
+                }
+            }
+
+            var cellGeometry = CellGeometry.Cross;
+
+            var indexList = new List<int>(Enumerable
+                .Range(0, movableAmount));
+
+            var spawner = new CellSpawner(_cellPrefabsConfig);
+
+            foreach (var (Row, Col) in movableIndexes)
+            {
+                var rotation = 0;
+
+                var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
+
+                var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
+
+                indexList.Remove(randomIndex);
+
+
+                var (X, Y) = GetXYOrigin(Row, Col);
+
+                var cell = spawner.SpawnCell(cellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
+
+                SetCellsToLabyrinth(cell, Row, Col);
+            }
+
+            var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
+
+            var playableCellCard = spawner.SpawnCell(cellGeometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
             _playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
 
@@ -289,34 +352,19 @@ namespace GameCore
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
         }
 
-        public bool FindPath(Vector2 endCellGlobalXY, out List<(int x, int y)> path)
+        public bool HasCellReward((int x, int y) localXY, RewardName reward)
         {
-            var startXY = _players.CurrentPlayer.Coordinate;
-            var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
-                (int) (endCellGlobalXY.y - transform.position.y));
+            var (i, j) = GetCellIndex(localXY);
 
-            var result = FindPath(startXY, endXY, out path);
-
-            if (result)
-            {
-                _players.CurrentPlayer.MoveThroughPath(path);
-            }
-
-            return result;
+            return _cardCells[i, j].Reward == reward;
         }
 
         public bool FindPath((int, int) startXY, Vector2 endCellGlobalXY, out List<(int x, int y)> path)
         {
-            //var startXY = _players.CurrentPlayer.Coordinate;
             var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
                 (int)(endCellGlobalXY.y - transform.position.y));
 
             var result = FindPath(startXY, endXY, out path);
-
-            //if (result)
-            //{
-            //    _players.CurrentPlayer.MoveThroughPath(path);
-            //}
 
             return result;
         }
