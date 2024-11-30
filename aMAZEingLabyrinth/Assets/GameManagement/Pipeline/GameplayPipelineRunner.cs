@@ -3,34 +3,34 @@ using VContainer;
 
 namespace GamePipeline
 {
-    public sealed class TurnPipelineRunner : MonoBehaviour
+    public sealed class GameplayPipelineRunner : MonoBehaviour
     {
         private bool _isRunOnFinish = true;
 
-        private TurnPipeline _turnPipeline;
+        private GameplayPipeline _gameplayPipeline;
         //private GameManager _gameManager;
 
         [Inject]
-        public void Construct(TurnPipeline turnPipeline)//, GameManager gameManager)
+        public void Construct(GameplayPipeline turnPipeline)//, GameManager gameManager)
         {
-            _turnPipeline = turnPipeline;
+            _gameplayPipeline = turnPipeline;
             //_gameManager = gameManager;
         }
 
         private void OnEnable()
         {
-            _turnPipeline.OnFinished += RunAgain;
+            _gameplayPipeline.OnFinished += RunAgain;
             //_gameManager.OnGameFinished += FinishGame;
         }
 
         private void Start()
         {
-            _turnPipeline.Run();
+            _gameplayPipeline.Run();
         }
 
         private void OnDisable()
         {
-            _turnPipeline.OnFinished -= RunAgain;
+            _gameplayPipeline.OnFinished -= RunAgain;
             //_gameManager.OnGameFinished -= FinishGame;
         }
 
@@ -38,7 +38,7 @@ namespace GamePipeline
         {
             if (_isRunOnFinish)
             {
-                _turnPipeline.Run();
+                _gameplayPipeline.Run();
             }
         }
 

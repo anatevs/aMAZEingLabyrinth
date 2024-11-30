@@ -7,7 +7,7 @@ namespace GameCore
 {
     public class GameManager : IInitializable, IPostStartable, IDisposable
     {
-        private readonly TurnPipeline _turnPipeline;
+        private readonly GameplayPipeline _gameplayPipeline;
 
         private readonly ShiftArrowsService _shiftArrowsService;
 
@@ -15,12 +15,12 @@ namespace GameCore
 
         private readonly EventBus _eventBus;
 
-        public GameManager(TurnPipeline turnPipeline,
+        public GameManager(GameplayPipeline turnPipeline,
             ShiftArrowsService shiftArrowsService,
             CellsLabyrinth cellsLabyrinth,
             EventBus eventBus)
         {
-            _turnPipeline = turnPipeline;
+            _gameplayPipeline = turnPipeline;
             _shiftArrowsService = shiftArrowsService;
             _cellsLabyrinth = cellsLabyrinth;
             _eventBus = eventBus;
@@ -38,7 +38,7 @@ namespace GameCore
 
         void IPostStartable.PostStart()
         {
-            _turnPipeline.Run();
+            _gameplayPipeline.Run();
         }
 
         private void ArrowClick(int row, int col)

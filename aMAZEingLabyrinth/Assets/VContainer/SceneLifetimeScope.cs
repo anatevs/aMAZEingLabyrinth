@@ -54,7 +54,7 @@ public class SceneLifetimeScope : LifetimeScope
 
         builder.RegisterComponent(_playersList);
 
-        builder.Register<TurnPipeline>(Lifetime.Singleton);
+        builder.Register<GamePipeline>(Lifetime.Singleton);
 
         builder.RegisterEntryPoint<PipelineInstaller>(Lifetime.Singleton);
     }

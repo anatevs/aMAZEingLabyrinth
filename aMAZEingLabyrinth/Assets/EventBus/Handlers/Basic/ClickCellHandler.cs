@@ -48,15 +48,24 @@ namespace EventBusNamespace
 
                         player.ReleaseReward();
 
+                        if (player.RemainTargetsCount == 0)
+                        {
+                            Debug.Log($"this game is end, the winner is {player.name} player");
+                            //end game
+                        }
+                        else
+                        {
+                            //next player
+                        }
+
                         break;
                     }
                 }
 
-                //raise event of remain cards check?
-
-                //handle reward if exist
-
                 //next player
+                //_playersList.SetNextPlayer();
+                //_shiftArrowsService.EnableAllActiveArrows();
+                //_cellHighlight.SetActive(true);
             }
             else
             {
