@@ -11,24 +11,21 @@ namespace GameUI
         public event Action<PlayerType> OnPlayerSelected;
 
         [SerializeField]
-        private GameObject _window;
-
-        [SerializeField]
         private TMP_Dropdown _dropdown;
 
         [SerializeField]
-        private Button _button;
+        private Button _okButton;
 
         private void Awake()
         {
             InitDropdown();
 
-            _button.onClick.AddListener(MakeSelection);
+            _okButton.onClick.AddListener(MakeSelection);
         }
 
         private void OnDisable()
         {
-            _button.onClick.RemoveAllListeners();
+            _okButton.onClick.RemoveAllListeners();
         }
 
         private void InitDropdown()
@@ -43,12 +40,12 @@ namespace GameUI
 
         public void Show()
         {
-            _window.SetActive(true);
+            gameObject.SetActive(true);
         }
 
-        public void Hide()
+        private void Hide()
         {
-            _window.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         private void MakeSelection()
