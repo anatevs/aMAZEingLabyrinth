@@ -20,9 +20,14 @@ namespace GameUI
             _player.sprite = sprite;
         }
 
-        public void SetCurrentReward(Sprite sprite)
+        public void SetCurrentRewardSprite(Sprite sprite)
         {
             _currentRewardImage.sprite = sprite;
+        }
+
+        public void SetNoReward()
+        {
+            _currentRewardImage.sprite = null;
         }
 
         public void SetRemainTargets(int remain)

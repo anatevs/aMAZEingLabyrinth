@@ -46,6 +46,8 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterComponent(_shiftArrowsService);
         builder.RegisterComponent(_cellsLabyrinth);
         builder.RegisterComponent(_cellHighlight);
+
+        builder.RegisterEntryPoint<ShiftArrowsController>(Lifetime.Singleton);
     }
 
     private void RegisterPipeline(IContainerBuilder builder)

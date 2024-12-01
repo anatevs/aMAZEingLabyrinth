@@ -37,8 +37,15 @@ namespace GameUI
 
         public void SetTargetsInfo(Player player, RewardsConfig rewardsConfig)
         {
-            _playersInfo[player.Type].SetCurrentReward(
-                rewardsConfig.GetRewardSprite(player.CurrentTarget));
+            try
+            {
+                _playersInfo[player.Type].SetCurrentRewardSprite(
+                    rewardsConfig.GetRewardSprite(player.CurrentTarget));
+            }
+            catch
+            {
+                _playersInfo[player.Type].SetNoReward();
+            }
 
             _playersInfo[player.Type].SetRemainTargets(
                 Mathf.Max(0, player.RemainTargetsCount - 1));

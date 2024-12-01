@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameCore
 {
-    public class ShiftArrowsService : MonoBehaviour
+    public sealed class ShiftArrowsService : MonoBehaviour
     {
         public event Action<int, int> OnClick;
 

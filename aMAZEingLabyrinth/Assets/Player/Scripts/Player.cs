@@ -84,7 +84,11 @@ namespace GameCore
             }
 
             Debug.Log(str);
-            Debug.Log($"current target: {CurrentTarget}");
+            try
+            {
+                Debug.Log($"current target: {CurrentTarget}");
+            }
+            catch { Debug.Log("no more targets"); }
         }
     }
 }

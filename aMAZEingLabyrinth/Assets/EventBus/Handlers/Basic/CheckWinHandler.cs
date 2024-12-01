@@ -1,7 +1,4 @@
-﻿using EventBusNamespace;
-using GameCore;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace EventBusNamespace
 {
@@ -20,7 +17,7 @@ namespace EventBusNamespace
 
             if (player.RemainTargetsCount == 0)
             {
-                Debug.Log($"this game is end, the winner is {player.name} player");
+                Debug.Log($"this game is end, the winner is {player.Type} player");
                 //end game
             }
             else

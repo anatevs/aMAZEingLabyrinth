@@ -1,11 +1,10 @@
 using GamePipeline;
-using System;
 using VContainer.Unity;
 using EventBusNamespace;
 
 namespace GameCore
 {
-    public class GameManager : IInitializable, IPostStartable, IDisposable
+    public class GameManager : IPostStartable
     {
         private readonly GameplayPipeline _gameplayPipeline;
 
@@ -26,25 +25,9 @@ namespace GameCore
             _eventBus = eventBus;
         }
 
-        void IInitializable.Initialize()
-        {
-            _shiftArrowsService.OnClick += ArrowClick;
-        }
-
-        void IDisposable.Dispose()
-        {
-            _shiftArrowsService.OnClick -= ArrowClick;
-        }
-
         void IPostStartable.PostStart()
         {
             _gameplayPipeline.Run();
-        }
-
-        private void ArrowClick(int row, int col)
-        {
-            _eventBus.RaiseEvent(new MakeShiftEvent(
-                _shiftArrowsService, _cellsLabyrinth, row, col));
         }
     }
 }

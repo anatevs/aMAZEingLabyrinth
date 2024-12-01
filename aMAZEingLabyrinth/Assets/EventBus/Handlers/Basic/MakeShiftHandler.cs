@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EventBusNamespace
 {
-    public class MakeShiftHandler : BaseHandler<MakeShiftEvent>
+    public sealed class MakeShiftHandler : BaseHandler<MakeShiftEvent>
     {
         public MakeShiftHandler(EventBus eventBus) : base(eventBus)
         {
