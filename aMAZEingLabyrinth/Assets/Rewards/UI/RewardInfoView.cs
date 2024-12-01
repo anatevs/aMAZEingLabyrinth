@@ -32,6 +32,12 @@ namespace GameUI
 
         public void SetRemainTargets(int remain)
         {
+            if (remain == 0)
+            {
+                _remainCardsText.text = "";
+                return;
+            }
+
             _remainCardsText.text = remain.ToString();
         }
     }

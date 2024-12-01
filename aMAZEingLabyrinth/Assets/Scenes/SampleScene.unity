@@ -6652,7 +6652,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerSelector: {fileID: 1329740840}
   _noPathMessageWindow: {fileID: 809425669}
-  _endGame: {fileID: 0}
+  _endGame: {fileID: 779705252}
 --- !u!1 &705915806
 GameObject:
   m_ObjectHideFlags: 0

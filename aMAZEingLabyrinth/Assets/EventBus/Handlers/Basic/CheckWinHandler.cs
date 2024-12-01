@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿using GameUI;
+using UnityEngine;
 
 namespace EventBusNamespace
 {
     public sealed class CheckWinHandler : BaseHandler<CheckWinEvent>
     {
-        public CheckWinHandler(EventBus eventBus) : base(eventBus)
+        private MenusService _menus;
+
+        public CheckWinHandler(EventBus eventBus, MenusService menus) : base(eventBus)
         {
-            
+            _menus = menus;
         }
 
         protected override void RaiseEvent(CheckWinEvent evnt)
@@ -17,8 +20,8 @@ namespace EventBusNamespace
 
             if (player.RemainTargetsCount == 0)
             {
-                Debug.Log($"this game is end, the winner is {player.Type} player");
-                //end game
+                _menus.EndGame.SetWinner(player.Type.ToString());
+                _menus.EndGame.Show();
             }
             else
             {
