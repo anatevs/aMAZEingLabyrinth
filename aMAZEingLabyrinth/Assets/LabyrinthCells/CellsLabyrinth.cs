@@ -39,6 +39,8 @@ namespace GameCore
         private readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
         private readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
+        private (int Row, int Col)[] _movableCellsRowCol;
+
 
         //[Header("Rotation test")]
         //[SerializeField]
@@ -77,6 +79,7 @@ namespace GameCore
 
         private void Awake()
         {
+            InitMovableIndexes();
             //_arrowsService.OnClick += MakeShift;
         }
 
@@ -105,7 +108,8 @@ namespace GameCore
             InitAllMovableCrossType();
         }
 
-        private void InitMovableCellsNewGame()
+
+        private void InitMovableIndexes()
         {
             var movableAmount = _size.Rows * _size.Cols + 1 - _fixedCells.Length;
 
@@ -114,7 +118,7 @@ namespace GameCore
                 throw new System.Exception("Movable cells count in config and in collection must be equal!");
             }
 
-            (int Row, int Col)[] movableIndexes =
+            _movableCellsRowCol =
                 new (int Row, int Col)[movableAmount - 1];
 
             int count = 0;
@@ -122,7 +126,7 @@ namespace GameCore
             {
                 for (int j = 0; j < _size.Cols; j++)
                 {
-                    movableIndexes[count] = (i, j);
+                    _movableCellsRowCol[count] = (i, j);
                     count++;
                 }
             }
@@ -131,19 +135,22 @@ namespace GameCore
             {
                 foreach (var j in _movableRowCols)
                 {
-                    movableIndexes[count] = (i, j);
+                    _movableCellsRowCol[count] = (i, j);
                     count++;
                 }
             }
+        }
 
+        private void InitMovableCellsNewGame()
+        {
             var indexList = new List<int>(Enumerable
-                .Range(0, movableAmount));
+                .Range(0, _movableCellsRowCol.Length + 1));
 
             int[] rotations = new int[4] { 0, 90, 180, 270 };
 
             var spawner = new CellSpawner(_cellPrefabsConfig);
 
-            foreach (var (Row, Col) in movableIndexes)
+            foreach (var (Row, Col) in _movableCellsRowCol)
             {
                 var rotation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
 
@@ -169,43 +176,14 @@ namespace GameCore
 
         private void InitAllMovableCrossType()
         {
-            var movableAmount = _size.Rows * _size.Cols + 1 - _fixedCells.Length;
-
-            if (_movableCellsConfig.Count != movableAmount)
-            {
-                throw new System.Exception("Movable cells count in config and in collection must be equal!");
-            }
-
-            (int Row, int Col)[] movableIndexes =
-                new (int Row, int Col)[movableAmount - 1];
-
-            int count = 0;
-            foreach (var i in _movableRowCols)
-            {
-                for (int j = 0; j < _size.Cols; j++)
-                {
-                    movableIndexes[count] = (i, j);
-                    count++;
-                }
-            }
-
-            foreach (var i in _fixedRowCols)
-            {
-                foreach (var j in _movableRowCols)
-                {
-                    movableIndexes[count] = (i, j);
-                    count++;
-                }
-            }
-
             var cellGeometry = CellGeometry.Cross;
 
             var indexList = new List<int>(Enumerable
-                .Range(0, movableAmount));
+                .Range(0, _movableCellsRowCol.Length + 1));
 
             var spawner = new CellSpawner(_cellPrefabsConfig);
 
-            foreach (var (Row, Col) in movableIndexes)
+            foreach (var (Row, Col) in _movableCellsRowCol)
             {
                 var rotation = 0;
 
