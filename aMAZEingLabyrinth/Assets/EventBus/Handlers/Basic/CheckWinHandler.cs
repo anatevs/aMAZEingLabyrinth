@@ -5,7 +5,7 @@ namespace EventBusNamespace
 {
     public sealed class CheckWinHandler : BaseHandler<CheckWinEvent>
     {
-        private MenusService _menus;
+        private readonly MenusService _menus;
 
         public CheckWinHandler(EventBus eventBus, MenusService menus) : base(eventBus)
         {

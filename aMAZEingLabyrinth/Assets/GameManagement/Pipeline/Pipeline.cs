@@ -23,7 +23,10 @@ namespace GamePipeline
 
         public void Run()
         {
-            _tasks[_currentIndex].Run(OnTaskFinished);
+            if (_tasks.Count > 0)
+            {
+                _tasks[_currentIndex].Run(OnTaskFinished);
+            }
         }
 
         public void OnTaskFinished()

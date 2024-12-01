@@ -32,8 +32,7 @@ namespace GameCore
 
         private void ArrowClick(int row, int col)
         {
-            _eventBus.RaiseEvent(new MakeShiftEvent(
-                _arrowsService, _cellsLabyrinth, row, col));
+            _eventBus.RaiseEvent(new MakeShiftEvent(row, col));
         }
     }
 }

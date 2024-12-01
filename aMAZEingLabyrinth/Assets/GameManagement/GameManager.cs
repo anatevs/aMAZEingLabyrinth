@@ -6,7 +6,7 @@ namespace GameCore
 {
     public class GameManager : IPostStartable
     {
-        private readonly GameplayPipeline _gameplayPipeline;
+        private readonly TurnPipeline _gameplayPipeline;
 
         private readonly ShiftArrowsService _shiftArrowsService;
 
@@ -14,7 +14,7 @@ namespace GameCore
 
         private readonly EventBus _eventBus;
 
-        public GameManager(GameplayPipeline turnPipeline,
+        public GameManager(TurnPipeline turnPipeline,
             ShiftArrowsService shiftArrowsService,
             CellsLabyrinth cellsLabyrinth,
             EventBus eventBus)

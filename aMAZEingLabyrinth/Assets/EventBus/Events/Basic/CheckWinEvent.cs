@@ -1,6 +1,4 @@
 ﻿using GameCore;
-using System.Collections;
-using UnityEngine;
 
 namespace EventBusNamespace
 {

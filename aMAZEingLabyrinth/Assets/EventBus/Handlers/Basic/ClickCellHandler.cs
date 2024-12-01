@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EventBusNamespace
 {
-    public class ClickCellHandler : BaseHandler<ClickCellEvent>
+    public sealed class ClickCellHandler : BaseHandler<ClickCellEvent>
     {
         private readonly PlayersList _playersList;
         private readonly CellsLabyrinth _cellsLabyrinth;
