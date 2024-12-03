@@ -31,10 +31,10 @@ namespace GameCore
                 origin.X, origin.Y, parentTransform);
         }
 
-        //public CardCell SpawnCell(OneCellData cellData, (int X, int Y) origin, Transform parentTransform)
-        //{
-        //    return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
-        //        origin.X, origin.Y, parentTransform);
-        //}
+        public CardCell SpawnCell(OneCellData cellData, Transform parentTransform)
+        {
+            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
+                cellData.Origin.X, cellData.Origin.Y, parentTransform);
+        }
     }
 }

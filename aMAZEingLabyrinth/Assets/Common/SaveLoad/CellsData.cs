@@ -17,7 +17,7 @@ namespace SaveLoadNamespace
             set => _playableCellData = value;
         }
 
-        private List<OneCellData> _movableCellsData;
+        private List<OneCellData> _movableCellsData = new();
 
         private OneCellData _playableCellData;
 

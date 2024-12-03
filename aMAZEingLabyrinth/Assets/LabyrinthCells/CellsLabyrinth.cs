@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using SaveLoadNamespace;
+using VContainer;
 
 namespace GameCore
 {
@@ -41,10 +42,10 @@ namespace GameCore
 
         private CardCell[,] _cardCells;
 
-        private (int Rows, int Cols) _size = LabyrinthParams.Size;
+        private (int Rows, int Cols) _size = LabyrinthMath.Size;
 
-        private readonly int[] _fixedRowCols = LabyrinthParams.FixedRowCols;
-        private readonly int[] _movableRowCols = LabyrinthParams.MovableRowCols;
+        private readonly int[] _fixedRowCols = LabyrinthMath.FixedRowCols;
+        private readonly int[] _movableRowCols = LabyrinthMath.MovableRowCols;
 
         private (int Row, int Col)[] _movableCellsRowCol;
 
@@ -84,6 +85,14 @@ namespace GameCore
         //[SerializeField]
         //private bool _shiftCell;
 
+        private MovableCellsManager _movableCellsManager;
+
+        [Inject]
+        public void Construct(MovableCellsManager movableCellsManager)
+        {
+            _movableCellsManager = movableCellsManager;
+        }
+
         private void Awake()
         {
             _cellSpawner = new CellSpawner(_cellPrefabsConfig);
@@ -105,7 +114,7 @@ namespace GameCore
 
             foreach (var cell in _fixedCells)
             {
-                var (iCell, jCell) = GetCellIndex(((int)cell.transform.localPosition.x,
+                var (iCell, jCell) = LabyrinthMath.GetCellIndex(((int)cell.transform.localPosition.x,
                     (int)cell.transform.localPosition.y));
 
                 cell.InitCellValues();
@@ -113,8 +122,8 @@ namespace GameCore
                 SetCellsToLabyrinth(cell, iCell, jCell);
             }
 
-            //InitMovableCellsDefault();
-            InitAllMovableCrossType();
+            InitMovableCellsDefault();
+            //InitAllMovableCrossType();
         }
 
 
@@ -152,36 +161,38 @@ namespace GameCore
 
         private void InitMovableCellsDefault()
         {
-            var indexList = new List<int>(Enumerable
-                .Range(0, _movableCellsRowCol.Length + 1));
+            InitMovableCellsLoad(_movableCellsManager.InitCellsData);
 
-            int[] rotations = new int[4] { 0, 90, 180, 270 };
+            //var indexList = new List<int>(Enumerable
+            //    .Range(0, _movableCellsRowCol.Length + 1));
 
-            foreach (var (Row, Col) in _movableCellsRowCol)
-            {
-                var rotation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
+            //int[] rotations = new int[4] { 0, 90, 180, 270 };
 
-                var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
+            //foreach (var (Row, Col) in _movableCellsRowCol)
+            //{
+            //    var rotation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
 
-                var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
+            //    var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
 
-                indexList.Remove(randomIndex);
+            //    var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
+
+            //    indexList.Remove(randomIndex);
 
 
-                var (X, Y) = GetXYOrigin(Row, Col);
+            //    var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
 
-                var cell = _cellSpawner.SpawnCell(cellType.Geometry, cellType.Reward,
-                    rotation, X, Y, _movableParentTransform);
+            //    var cell = _cellSpawner.SpawnCell(cellType.Geometry, cellType.Reward,
+            //        rotation, X, Y, _movableParentTransform);
 
-                SetCellsToLabyrinth(cell, Row, Col);
-            }
+            //    SetCellsToLabyrinth(cell, Row, Col);
+            //}
 
-            var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
+            //var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            var playableCellCard = _cellSpawner.SpawnCell(plCellType.Geometry,
-                plCellType.Reward, 0, 0, 0, _movableParentTransform);
+            //var playableCellCard = _cellSpawner.SpawnCell(plCellType.Geometry,
+            //    plCellType.Reward, 0, 0, 0, _movableParentTransform);
 
-            _playableCell.ReplacePlayableCell(playableCellCard, out _);
+            //_playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
 
         private void InitMovableCellsLoad(CellsData cellsData)
@@ -196,18 +207,16 @@ namespace GameCore
 
         private void InitLabyrinthCellFromData(OneCellData cellData, Transform parentTransform)
         {
-            var origin = GetXYOrigin(cellData.Index.Row, cellData.Index.Col);
+            var cell = _cellSpawner.SpawnCell(cellData, parentTransform);
 
-            var cell = _cellSpawner.SpawnCell(cellData, origin, parentTransform);
+            var (Row, Col) = LabyrinthMath.GetCellIndex(cellData.Origin);
 
-            SetCellsToLabyrinth(cell, cellData.Index.Row, cellData.Index.Col);
+            SetCellsToLabyrinth(cell, Row, Col);
         }
 
         private void InitPlayebleCellFromData(OneCellData cellData, Transform parentTransform)
         {
-            var origin = GetXYOrigin(cellData.Index.Row, cellData.Index.Col);
-
-            var playableCell = _cellSpawner.SpawnCell(cellData, origin, parentTransform);
+            var playableCell = _cellSpawner.SpawnCell(cellData, parentTransform);
 
             _playableCell.ReplacePlayableCell(playableCell, out _);
         }
@@ -232,9 +241,14 @@ namespace GameCore
                 indexList.Remove(randomIndex);
 
 
-                var (X, Y) = GetXYOrigin(Row, Col);
+                var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
+
+                Debug.Log($"original rowcol: {(Row, Col)}");
+                Debug.Log($"xy: {(X, Y)}");
 
                 var cell = spawner.SpawnCell(cellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
+
+                Debug.Log($"calc rowcol: {LabyrinthMath.GetCellIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y))}");
 
                 SetCellsToLabyrinth(cell, Row, Col);
             }
@@ -242,6 +256,7 @@ namespace GameCore
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
             var playableCellCard = spawner.SpawnCell(cellGeometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
+
             _playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
 
@@ -285,7 +300,7 @@ namespace GameCore
 
         public Vector3 GetCellCenterCoordinates(Vector3 pos)
         {
-            (int i, int j) = GetCellIndex(((int)(pos.x - transform.position.x),
+            (int i, int j) = LabyrinthMath.GetCellIndex(((int)(pos.x - transform.position.x),
                 (int)(pos.y - transform.position.y)));
 
             return _cardCells[i, j].transform.position;
@@ -370,7 +385,7 @@ namespace GameCore
 
         public bool HasCellReward((int x, int y) localXY, RewardName reward)
         {
-            var (i, j) = GetCellIndex(localXY);
+            var (i, j) = LabyrinthMath.GetCellIndex(localXY);
 
             return _cardCells[i, j].Reward == reward;
         }
@@ -415,8 +430,8 @@ namespace GameCore
 
         private bool FindPathRowCol((int i, int j) startRowCol, (int i, int j) endRowCol, out List<(int x, int y)> resultXY)
         {
-            var start = GetXYCenter(startRowCol.i, startRowCol.j);
-            var end = GetXYCenter(endRowCol.i, endRowCol.j);
+            var start = LabyrinthMath.GetXYCenter(startRowCol.i, startRowCol.j);
+            var end = LabyrinthMath.GetXYCenter(endRowCol.i, endRowCol.j);
 
             return FindPath(start, end, out resultXY);
         }
@@ -429,7 +444,7 @@ namespace GameCore
 
             if (setTransformPos)
             {
-                var (x, y) = GetXYOrigin(i, j);
+                var (x, y) = LabyrinthMath.GetXYOrigin(i, j);
                 cell.transform.localPosition = new Vector3(x, y, cell.transform.position.z);
             }
         }
@@ -442,44 +457,11 @@ namespace GameCore
             {
                 for (int jc = 0; jc < card.Size; jc++)
                 {
-                    var xy = GetXY((i, j), (ic, jc));
+                    var xy = LabyrinthMath.GetXY((i, j), (ic, jc));
 
                     _grid.SetValue(card.GetValue(ic, jc), xy);
                 }
             }
         }
-
-        private (int X, int Y) GetXYCenter(int row, int col)
-        {
-            return GetXY((row, col), (1, 1));
-        }
-
-        private (int X, int Y) GetXYOrigin(int row, int col)
-        {
-            return GetXY((row, col), (2, 0));
-        }
-
-        private (int X, int Y) GetXY((int i, int j) cellIndex, (int ic, int jc) elementIndex)
-        {
-            var x = cellIndex.j * _cellSize + elementIndex.jc;
-            var y = _size.Rows * _cellSize - 1 - (cellIndex.i * _cellSize + elementIndex.ic);
-            return (x, y);
-        }
-
-        private (int iCell, int jCell) GetCellIndex((int x, int y) coordinates)
-        {
-            int i = _size.Rows - 1 - coordinates.y / _cellSize;
-            int j = coordinates.x / _cellSize;
-
-            return (i, j);
-        }
-
-        //private (int iElement, int jElement) GetCardElementIndex((int x, int y) coordinates)
-        //{
-        //    int ic = _cellSize - 1 - coordinates.y % _cellSize;
-        //    int jc = coordinates.x % _cellSize;
-
-        //    return (ic, jc);
-        //}
     }
 }

@@ -2,50 +2,28 @@
 using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
+using VContainer;
 
 namespace SaveLoadNamespace
 {
     public class SaveLoadCheck : MonoBehaviour
     {
-        private CellsData _cellsData;
 
-        private CellsData _loadedCellsData;
+        private MovableCellsManager _mngr;
+        private MovingCellsSaveLoad _svld;
 
-        private readonly string _saveCheck = "CheckData";
-
-        private void Start ()
+        [Inject]
+        public void Construct(MovableCellsManager mngr, MovingCellsSaveLoad svld)
         {
-            var data = new OneCellData(CellGeometry.Line, RewardName.Map, 0, (1, 10));
-            _cellsData = new CellsData(data);
-
-            _loadedCellsData = Load();
-
-            if (_loadedCellsData != null)
-            {
-                
-            }
-
-            Save();
+            _mngr = mngr;
+            _svld = svld;
         }
 
-        private void Save()
+        private void Awake()
         {
-            string json = JsonConvert.SerializeObject(_cellsData);
-            PlayerPrefs.SetString(_saveCheck, json);
+            _svld.TestLoadDefault();
         }
 
-        private CellsData Load()
-        {
-            if (PlayerPrefs.HasKey(_saveCheck))
-            {
-                string json = PlayerPrefs.GetString(_saveCheck);
-                return JsonConvert.DeserializeObject<CellsData>(json);
-            }
-            else
-            {
-                Debug.Log("no data in prefs");
-                return null;
-            }
-        }
+
     }
 }

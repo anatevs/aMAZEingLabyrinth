@@ -14,7 +14,7 @@ namespace GameCore
 
         public CellsData InitCellsData => _initCellsData;
 
-        private CellsData _initCellsData;
+        private CellsData _initCellsData = new();
 
         private readonly List<CardCell> _movableCells = new();
 
@@ -28,6 +28,11 @@ namespace GameCore
         public void SetPlayableData(OneCellData cellData)
         {
             _initCellsData.SetPlayableCell(cellData);
+        }
+
+        public void ClearMovableData()
+        {
+            _initCellsData.ClearMovableData();
         }
 
         public void SetPlayable(CardCell playableCell)

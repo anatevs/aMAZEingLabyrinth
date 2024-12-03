@@ -1,26 +1,35 @@
 using GameCore;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using VContainer;
 
 namespace SaveLoadNamespace
 {
     public class MovingCellsSaveLoad : SaveLoader<CellsData, MovableCellsManager>
     {
-        private CellPrefabsConfig _cellPrefabsConfig;
-
-        private MovableCellsConfig _movableCellsConfig;
-
-        private (int Rows, int Cols) _size = LabyrinthParams.Size;
-
-        private readonly int[] _fixedRowCols = LabyrinthParams.FixedRowCols;
-        private readonly int[] _movableRowCols = LabyrinthParams.MovableRowCols;
-
-        private int _fixedAmount = LabyrinthParams.FixedAmount;
+        private readonly MovableCellsConfig _movableCellsConfig;
 
         private (int Row, int Col)[] _movableCellsRowCol;
 
-        
+
+
+        private IObjectResolver _objectResolver;
+
+        public MovingCellsSaveLoad(MovableCellsConfig movableCellsConfig, IObjectResolver objectResolver)
+        {
+            _movableCellsConfig = movableCellsConfig;
+
+
+
+            _objectResolver = objectResolver;
+        }
+
+
+        public void TestLoadDefault()
+        {
+            LoadDefault(_objectResolver);
+        }
 
         protected override CellsData ConvertDataToParams(MovableCellsManager movableCellsManager)
         {
@@ -28,6 +37,14 @@ namespace SaveLoadNamespace
 
             var movableCells = movableCellsManager.MovableCells;
             var playableCell = movableCellsManager.PlayableCell;
+
+            foreach ( var cell in movableCells )
+            {
+                var data = FromCellToData(cell);
+                result.AddMovableCell(data);
+            }
+
+            result.PlayableCellData = FromCellToData(playableCell);
 
             return result;
         }
@@ -39,36 +56,42 @@ namespace SaveLoadNamespace
             GenerateMovableCellsDefault(movableManager);
         }
 
-        protected override void SetupParamsData(CellsData paramsData, IObjectResolver context)
+        protected override void SetupParamsData(CellsData cellsData, IObjectResolver context)
         {
-            
+            var movableManager = context.Resolve<MovableCellsManager>();
+            movableManager.ClearMovableData();
+
+            foreach (var data in cellsData.MovableCellsData)
+            {
+                movableManager.AddMovableData(data);
+            }
+
+            movableManager.SetPlayableData(cellsData.PlayableCellData);
         }
 
         private void InitMovableIndexes()
         {
-            var movableAmount = _size.Rows * _size.Cols + 1 - _fixedAmount;
-
-            if (_movableCellsConfig.Count != movableAmount)
+            if (_movableCellsConfig.Count != LabyrinthMath.UnfixedAmount)
             {
                 throw new System.Exception("Movable cells count in config and in collection must be equal!");
             }
 
             _movableCellsRowCol =
-                new (int Row, int Col)[movableAmount - 1];
+                new (int Row, int Col)[LabyrinthMath.UnfixedAmount - 1];
 
             int count = 0;
-            foreach (var i in _movableRowCols)
+            foreach (var i in LabyrinthMath.MovableRowCols)
             {
-                for (int j = 0; j < _size.Cols; j++)
+                for (int j = 0; j < LabyrinthMath.Size.Cols; j++)
                 {
                     _movableCellsRowCol[count] = (i, j);
                     count++;
                 }
             }
 
-            foreach (var i in _fixedRowCols)
+            foreach (var i in LabyrinthMath.FixedRowCols)
             {
-                foreach (var j in _movableRowCols)
+                foreach (var j in LabyrinthMath.MovableRowCols)
                 {
                     _movableCellsRowCol[count] = (i, j);
                     count++;
@@ -85,6 +108,8 @@ namespace SaveLoadNamespace
 
             int[] rotations = new int[4] { 0, 90, 180, 270 };
 
+            movableCellsManager.ClearMovableData();
+
             foreach (var (Row, Col) in _movableCellsRowCol)
             {
                 var rotation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
@@ -95,7 +120,9 @@ namespace SaveLoadNamespace
 
                 indexList.Remove(randomIndex);
 
-                var cellData = new OneCellData(cellType.Geometry, cellType.Reward, rotation, (Row, Col));
+                var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
+
+                var cellData = new OneCellData(cellType.Geometry, cellType.Reward, rotation, (X, Y));
 
                 movableCellsManager.AddMovableData(cellData);
             }
@@ -110,7 +137,9 @@ namespace SaveLoadNamespace
         private OneCellData FromCellToData(CardCell cell)
         {
             var data = new OneCellData(cell.Geometry, cell.Reward,
-                (int)cell.transform.eulerAngles.z, (0, 0));
+                (int)cell.transform.eulerAngles.z,
+                ((int)cell.transform.localPosition.x,
+                (int)cell.transform.localPosition.y));
 
             return data;
         }

@@ -6,6 +6,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using GameManagement;
+using SaveLoadNamespace;
 
 public class SceneLifetimeScope : LifetimeScope
 {
@@ -24,6 +25,10 @@ public class SceneLifetimeScope : LifetimeScope
     [SerializeField]
     private CellHighlight _cellHighlight;
 
+
+    [SerializeField]
+    private MovableCellsConfig _movableCellsConfig;
+
     protected override void Configure(IContainerBuilder builder)
     {
         RegisterEventBus(builder);
@@ -35,6 +40,11 @@ public class SceneLifetimeScope : LifetimeScope
         RegisterGameManagement(builder);
 
         RegisterHandlers(builder);
+
+
+        builder.Register<MovableCellsManager>(Lifetime.Singleton);
+        builder.Register<MovingCellsSaveLoad>(Lifetime.Singleton)
+            .WithParameter(_movableCellsConfig);
     }
 
     private void RegisterEventBus(IContainerBuilder builder)
