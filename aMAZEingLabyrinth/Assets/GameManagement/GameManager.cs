@@ -1,8 +1,9 @@
 using GamePipeline;
 using VContainer.Unity;
 using EventBusNamespace;
+using GameCore;
 
-namespace GameCore
+namespace GameManagement
 {
     public class GameManager : IPostStartable
     {

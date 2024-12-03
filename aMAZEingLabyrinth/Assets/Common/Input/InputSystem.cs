@@ -1,7 +1,6 @@
-using Assets.Common;
 using UnityEngine;
 
-namespace GameCore
+namespace GameModules
 {
     public sealed class InputSystem : IInput
     {

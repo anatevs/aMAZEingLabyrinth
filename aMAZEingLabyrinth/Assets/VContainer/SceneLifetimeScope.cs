@@ -5,6 +5,7 @@ using GamePipeline;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using GameManagement;
 
 public class SceneLifetimeScope : LifetimeScope
 {

@@ -369,6 +369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 95123913}
   - component: {fileID: 95123914}
+  - component: {fileID: 95123915}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -413,6 +414,18 @@ MonoBehaviour:
   _shiftArrowsService: {fileID: 1480633124}
   _cellsLabyrinth: {fileID: 293525262}
   _cellHighlight: {fileID: 1322003525}
+--- !u!114 &95123915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95123911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db65b62509c0ea479bf2491a999db5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &103270157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7734168399856699471, guid: 251daed78c4c39a4f8a6fce458ecca85, type: 3}
@@ -6621,7 +6634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &699056893
 Transform:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using System;
+using SaveLoadNamespace;
 
 namespace GameCore
 {
@@ -25,8 +26,14 @@ namespace GameCore
         [SerializeField]
         private PlayableCell _playableCell;
 
-        [SerializeField]
-        private PlayersList _players;
+
+
+
+        private CellSpawner _cellSpawner;
+
+
+
+
 
         private LabyrinthGrid _grid;
 
@@ -34,10 +41,10 @@ namespace GameCore
 
         private CardCell[,] _cardCells;
 
-        private (int Rows, int Cols) _size = (7, 7);
+        private (int Rows, int Cols) _size = LabyrinthParams.Size;
 
-        private readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
-        private readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
+        private readonly int[] _fixedRowCols = LabyrinthParams.FixedRowCols;
+        private readonly int[] _movableRowCols = LabyrinthParams.MovableRowCols;
 
         private (int Row, int Col)[] _movableCellsRowCol;
 
@@ -79,6 +86,8 @@ namespace GameCore
 
         private void Awake()
         {
+            _cellSpawner = new CellSpawner(_cellPrefabsConfig);
+
             InitMovableIndexes();
             //_arrowsService.OnClick += MakeShift;
         }
@@ -104,7 +113,7 @@ namespace GameCore
                 SetCellsToLabyrinth(cell, iCell, jCell);
             }
 
-            //InitMovableCellsNewGame();
+            //InitMovableCellsDefault();
             InitAllMovableCrossType();
         }
 
@@ -141,14 +150,12 @@ namespace GameCore
             }
         }
 
-        private void InitMovableCellsNewGame()
+        private void InitMovableCellsDefault()
         {
             var indexList = new List<int>(Enumerable
                 .Range(0, _movableCellsRowCol.Length + 1));
 
             int[] rotations = new int[4] { 0, 90, 180, 270 };
-
-            var spawner = new CellSpawner(_cellPrefabsConfig);
 
             foreach (var (Row, Col) in _movableCellsRowCol)
             {
@@ -163,15 +170,46 @@ namespace GameCore
 
                 var (X, Y) = GetXYOrigin(Row, Col);
 
-                var cell = spawner.SpawnCell(cellType.Geometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
+                var cell = _cellSpawner.SpawnCell(cellType.Geometry, cellType.Reward,
+                    rotation, X, Y, _movableParentTransform);
 
                 SetCellsToLabyrinth(cell, Row, Col);
             }
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            var playableCellCard = spawner.SpawnCell(plCellType.Geometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
+            var playableCellCard = _cellSpawner.SpawnCell(plCellType.Geometry,
+                plCellType.Reward, 0, 0, 0, _movableParentTransform);
+
             _playableCell.ReplacePlayableCell(playableCellCard, out _);
+        }
+
+        private void InitMovableCellsLoad(CellsData cellsData)
+        {
+            foreach (var cellData in cellsData.MovableCellsData)
+            {
+                InitLabyrinthCellFromData(cellData, _movableParentTransform);
+            }
+
+            InitPlayebleCellFromData(cellsData.PlayableCellData, _movableParentTransform);
+        }
+
+        private void InitLabyrinthCellFromData(OneCellData cellData, Transform parentTransform)
+        {
+            var origin = GetXYOrigin(cellData.Index.Row, cellData.Index.Col);
+
+            var cell = _cellSpawner.SpawnCell(cellData, origin, parentTransform);
+
+            SetCellsToLabyrinth(cell, cellData.Index.Row, cellData.Index.Col);
+        }
+
+        private void InitPlayebleCellFromData(OneCellData cellData, Transform parentTransform)
+        {
+            var origin = GetXYOrigin(cellData.Index.Row, cellData.Index.Col);
+
+            var playableCell = _cellSpawner.SpawnCell(cellData, origin, parentTransform);
+
+            _playableCell.ReplacePlayableCell(playableCell, out _);
         }
 
         private void InitAllMovableCrossType()

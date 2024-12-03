@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SaveLoadNamespace;
+using UnityEngine;
 
 namespace GameCore
 {
@@ -24,9 +25,16 @@ namespace GameCore
             return cell;
         }
 
-        public CardCell SpawnCell(CellData cellData, Transform parentTransform)
+        public CardCell SpawnCell(OneCellData cellData, (int X, int Y) origin, Transform parentTransform)
         {
-            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg, cellData.X, cellData.Y, parentTransform);
+            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
+                origin.X, origin.Y, parentTransform);
         }
+
+        //public CardCell SpawnCell(OneCellData cellData, (int X, int Y) origin, Transform parentTransform)
+        //{
+        //    return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
+        //        origin.X, origin.Y, parentTransform);
+        //}
     }
 }
