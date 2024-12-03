@@ -6,13 +6,9 @@ namespace SaveLoadNamespace
 {
     public class GameRepository : IGameRepository
     {
-        public Dictionary<string, string> objectsPresentations = new Dictionary<string, string>();
+        public Dictionary<string, string> objectsPresentations = new();
 
         private const string SAVE_KEY = "SaveLoadGameData";
-
-        private readonly string _password = "hw4";
-
-        private readonly byte[] _salt = new byte[] { 10, 39, 80, 240, 90, 3, 74, 67, 173 };
 
         public void SetData<T>(T value)
         {
@@ -46,8 +42,6 @@ namespace SaveLoadNamespace
         {
             string gameData = JsonConvert.SerializeObject(objectsPresentations);
 
-            //string encryptedData = AESCryptographicSystem.Encrypt(gameData, _password, _salt);
-
             PlayerPrefs.SetString(SAVE_KEY, gameData);
         }
 
@@ -56,8 +50,6 @@ namespace SaveLoadNamespace
             if (PlayerPrefs.HasKey(SAVE_KEY))
             {
                 string gameData = PlayerPrefs.GetString(SAVE_KEY);
-
-                //string gameData = AESCryptographicSystem.Decrypt(encryptedData, _password, _salt);
 
                 objectsPresentations = JsonConvert.DeserializeObject<Dictionary<string, string>>(gameData);
             }

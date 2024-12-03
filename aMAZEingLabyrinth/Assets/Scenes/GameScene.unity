@@ -405,10 +405,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: 
+    TypeName: RootLifetimeScope
   autoRun: 1
   autoInjectGameObjects:
   - {fileID: 1322003521}
+  - {fileID: 293525260}
+  - {fileID: 95123911}
   _menuWindowsService: {fileID: 699056894}
   _playersList: {fileID: 1276336701}
   _shiftArrowsService: {fileID: 1480633124}
@@ -1383,7 +1385,6 @@ MonoBehaviour:
   _cellPrefabsConfig: {fileID: 11400000, guid: 558c606f47b532d4183982dcd1809463, type: 2}
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
   _playableCell: {fileID: 252792296}
-  _players: {fileID: 1276336701}
   _startRowCol: 0000000000000000
   _printRowCol: 0000000000000000
   _printCell: 0
@@ -6634,7 +6635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &699056893
 Transform:
   m_ObjectHideFlags: 0

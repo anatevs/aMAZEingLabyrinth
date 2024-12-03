@@ -38,7 +38,7 @@ namespace SaveLoadNamespace
             {
                 loader.Save(_gameRepository, _context);
             }
-            _gameRepository.SaveState();
+            //_gameRepository.SaveState();
         }
     }
 }

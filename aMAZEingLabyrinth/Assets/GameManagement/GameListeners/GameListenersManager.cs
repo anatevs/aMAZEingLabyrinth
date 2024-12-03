@@ -5,9 +5,9 @@ namespace GameManagement
 {
     public class GameListenersManager : MonoBehaviour
     {
-        private readonly List<IGameListener> gameListeners = new List<IGameListener>();
+        private readonly List<IGameListener> _gameListeners = new();
 
-        private readonly List<IAppQuitListener> appQuitListeners = new List<IAppQuitListener>();
+        private readonly List<IAppQuitListener> _appQuitListeners = new();
 
         public void AddListeners(IEnumerable<IGameListener> listeners)
         {
@@ -19,17 +19,17 @@ namespace GameManagement
 
         public void AddListener(IGameListener listener)
         {
-            gameListeners.Add(listener);
+            _gameListeners.Add(listener);
 
             if (listener is IAppQuitListener awakeQuitListener)
             {
-                appQuitListeners.Add(awakeQuitListener);
+                _appQuitListeners.Add(awakeQuitListener);
             }
         }
 
         public void OnApplicationQuit()
         {
-            foreach (var listener in appQuitListeners)
+            foreach (var listener in _appQuitListeners)
             {
                 listener.OnAppQuit();
             }

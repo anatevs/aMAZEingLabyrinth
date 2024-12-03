@@ -8,22 +8,14 @@ namespace SaveLoadNamespace
 {
     public class SaveLoadCheck : MonoBehaviour
     {
-
-        private MovableCellsManager _mngr;
         private MovingCellsSaveLoad _svld;
 
-        [Inject]
-        public void Construct(MovableCellsManager mngr, MovingCellsSaveLoad svld)
+        //[Inject]
+        public void Construct(MovingCellsSaveLoad svld)
         {
-            _mngr = mngr;
             _svld = svld;
-        }
 
-        private void Awake()
-        {
             _svld.TestLoadDefault();
         }
-
-
     }
 }

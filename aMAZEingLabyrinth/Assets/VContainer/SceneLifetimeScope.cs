@@ -25,9 +25,8 @@ public class SceneLifetimeScope : LifetimeScope
     [SerializeField]
     private CellHighlight _cellHighlight;
 
-
     [SerializeField]
-    private MovableCellsConfig _movableCellsConfig;
+    private GameListenersManager _gameListenersManager;
 
     protected override void Configure(IContainerBuilder builder)
     {
@@ -40,11 +39,6 @@ public class SceneLifetimeScope : LifetimeScope
         RegisterGameManagement(builder);
 
         RegisterHandlers(builder);
-
-
-        builder.Register<MovableCellsManager>(Lifetime.Singleton);
-        builder.Register<MovingCellsSaveLoad>(Lifetime.Singleton)
-            .WithParameter(_movableCellsConfig);
     }
 
     private void RegisterEventBus(IContainerBuilder builder)
@@ -84,5 +78,12 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<ClickCellHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<CheckWinHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<NextPlayerHandler>(Lifetime.Singleton);
+    }
+
+    private void RegisterGameListeners(IContainerBuilder builder)
+    {
+        builder.RegisterComponent(_gameListenersManager);
+
+        builder.RegisterEntryPoint<GameListenersInstaller>(Lifetime.Singleton);
     }
 }

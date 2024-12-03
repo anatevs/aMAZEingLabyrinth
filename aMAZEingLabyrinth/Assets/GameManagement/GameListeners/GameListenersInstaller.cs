@@ -5,9 +5,9 @@ namespace GameManagement
 {
     public class GameListenersInstaller : IInitializable
     {
-        private GameListenersManager _listenersManager;
+        private readonly GameListenersManager _listenersManager;
 
-        private IEnumerable<IGameListener> _listeners;
+        private readonly IEnumerable<IGameListener> _listeners;
 
         public GameListenersInstaller(GameListenersManager gameListenersManager, IEnumerable<IGameListener> gameListeners)
         {
