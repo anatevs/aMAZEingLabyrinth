@@ -41,6 +41,8 @@ namespace GameCore
             _isPlaying = data.IsPlaying;
 
             SetCoordinate((data.LabyrinthCoordinateStruct.x, data.LabyrinthCoordinateStruct.y));
+
+            SetupRewards(data.RewardTargets);
         }
 
         public void SetIsPlaying(bool isPlaying)
@@ -79,9 +81,16 @@ namespace GameCore
             _rewardTargets.Dequeue();
 
             OnTargetChanged?.Invoke(this);
+        }
 
-            Debug.Log("last reward released");
-            //PrintTargets();
+        public void SetupRewards(RewardName[] rewardNames)
+        {
+            _rewardTargets.Clear();
+
+            foreach (var rewardName in rewardNames)
+            {
+                _rewardTargets.Enqueue(rewardName);
+            }
         }
 
         public void PrintTargets()

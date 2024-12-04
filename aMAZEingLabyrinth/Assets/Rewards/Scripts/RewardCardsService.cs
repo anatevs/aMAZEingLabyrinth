@@ -13,7 +13,7 @@ namespace GameCore
         [SerializeField]
         private RewardsInfoViews _targetsUI;
 
-        public void DealOutCards(Player[] players)
+        public void DealOutDefaultCards(Player[] players)
         {
             var indexes = new List<int>(Enumerable
                 .Range(0, _rewardsConfig.RewardsCount));
@@ -40,13 +40,28 @@ namespace GameCore
 
                 SetTargetUIInfo(players[i_player]);
 
-                players[i_player].OnTargetChanged += SetTargetUIInfo;
+                SubscribePlayer(players[i_player]);
+            }
+        }
+
+        public void DealOutLoadedCards(Player[] players)
+        {
+            foreach (var player in players)
+            {
+                SetTargetUIInfo(player);
+
+                SubscribePlayer(player);
             }
         }
 
         public void SetActivePlayerHighlight(PlayerType playerType)
         {
             _targetsUI.SetActiveHighlight(playerType);
+        }
+
+        private void SubscribePlayer(Player player)
+        {
+            player.OnTargetChanged += SetTargetUIInfo;
         }
 
         public void UnsubscribePlayers(Player player)

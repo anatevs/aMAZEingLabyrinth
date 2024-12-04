@@ -43,23 +43,7 @@ namespace GameCore
         {
             for (int i = 0; i < _players.Length; i++)
             {
-                //var player = InitPlayer(i);
-
-                var player = _players[i];
-
-
-
-                var data = _playersDataConnector.Data.GetPlayerData(player.Type);
-
-                Debug.Log(data.LabyrinthCoordinateStruct.x);
-                Debug.Log(data.LabyrinthCoordinateStruct.y);
-
-
-
-                player.Init(_playersDataConnector.Data.GetPlayerData(player.Type));
-
-                player.OnSetPlaying +=
-                    _rewardCardsService.SetActivePlayerHighlight;
+                var player = InitPlayer(i);
 
                 if (firstPlayer == player.Type)
                 {
@@ -69,7 +53,7 @@ namespace GameCore
                 }
             }
 
-            _rewardCardsService.DealOutCards(_players);
+            _rewardCardsService.DealOutDefaultCards(_players);
         }
 
         public void InitPlayers()
@@ -86,7 +70,7 @@ namespace GameCore
                 }
             }
 
-            _rewardCardsService.DealOutCards(_players);
+            _rewardCardsService.DealOutLoadedCards(_players);
         }
 
         private Player InitPlayer(int i)

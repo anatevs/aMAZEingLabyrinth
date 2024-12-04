@@ -4,7 +4,7 @@ using System;
 
 namespace GameUI
 {
-    public class StartGameMenu : MonoBehaviour
+    public sealed class StartGameMenu : MonoBehaviour
     {
         public event Action OnNewGameClicked;
         public event Action OnLoadGameClicked;
