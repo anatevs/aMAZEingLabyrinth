@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class GameListenersManager : MonoBehaviour
+    public sealed class GameListenersManager : MonoBehaviour
     {
         private readonly List<IGameListener> _gameListeners = new();
 

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine;
 using VContainer.Unity;
 
 namespace GameManagement
 {
-    public class GameListenersInstaller : IInitializable
+    public sealed class GameListenersInstaller : IInitializable
     {
         private readonly GameListenersManager _listenersManager;
 

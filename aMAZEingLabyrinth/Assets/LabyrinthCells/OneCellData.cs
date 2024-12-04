@@ -13,18 +13,14 @@ namespace GameCore
 
         public (int X, int Y) Origin;
 
-        //public (int Row, int Col) Index;
-
         public OneCellData(CellGeometry geometry,
             RewardName reward, int rotationDeg,
-            (int X, int Y) origin)//,
-            //(int Row, int Col) index)
+            (int X, int Y) origin)
         {
             Geometry = geometry;
             Reward = reward;
             RotationDeg = rotationDeg;
             Origin = origin;
-            //Index = index;
         }
     }
 }
