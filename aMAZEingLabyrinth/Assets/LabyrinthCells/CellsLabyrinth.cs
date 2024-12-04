@@ -9,6 +9,8 @@ namespace GameCore
 {
     public sealed class CellsLabyrinth : MonoBehaviour
     {
+        private event Action<CardCell> OnSetCellToLabyrinth;
+
         [SerializeField]
         private CardCell[] _fixedCells;
 
@@ -47,29 +49,6 @@ namespace GameCore
         private readonly int[] _fixedRowCols = LabyrinthMath.FixedRowCols;
         private readonly int[] _movableRowCols = LabyrinthMath.MovableRowCols;
 
-        private (int Row, int Col)[] _movableCellsRowCol;
-
-
-        //[Header("Rotation test")]
-        //[SerializeField]
-        //private int _angleDeg = 90;
-
-        //[SerializeField]
-        //private int[] _rotateCardIndex = new int[2];
-
-        //[SerializeField]
-        //private bool _checkRotation = false;
-
-
-        [Header("Find path test")]
-        [SerializeField]
-        private int[] _startRowCol = new int[2];
-
-        //[SerializeField]
-        //private int[] _endRowCol = new int[2];
-
-        //[SerializeField]
-        //private bool _findPath;
 
         [Header("Print cell test")]
         [SerializeField]
@@ -77,13 +56,6 @@ namespace GameCore
 
         [SerializeField]
         private bool _printCell;
-
-        //[Header("Shift by playable cell test")]
-        //[SerializeField]
-        //private int[] _shiftRowCol = new int[2];
-
-        //[SerializeField]
-        //private bool _shiftCell;
 
         private MovableCellsManager _movableCellsManager;
 
@@ -93,18 +65,6 @@ namespace GameCore
             _movableCellsManager = movableCellsManager;
         }
 
-        private void Awake()
-        {
-            _cellSpawner = new CellSpawner(_cellPrefabsConfig);
-
-            InitMovableIndexes();
-            //_arrowsService.OnClick += MakeShift;
-        }
-
-        private void OnDisable()
-        {
-            //_arrowsService.OnClick -= MakeShift;
-        }
 
         private void Start()
         {
@@ -122,77 +82,33 @@ namespace GameCore
                 SetCellsToLabyrinth(cell, iCell, jCell);
             }
 
-            InitMovableCellsDefault();
+            _cellSpawner = new CellSpawner(_cellPrefabsConfig);
+
+            InitMovableCells();
             //InitAllMovableCrossType();
+
+            _movableCellsManager.OnCellsRequested += SendCellsToManager;
         }
 
-
-        private void InitMovableIndexes()
+        private void OnDisable()
         {
-            var movableAmount = _size.Rows * _size.Cols + 1 - _fixedCells.Length;
-
-            if (_movableCellsConfig.Count != movableAmount)
-            {
-                throw new System.Exception("Movable cells count in config and in collection must be equal!");
-            }
-
-            _movableCellsRowCol =
-                new (int Row, int Col)[movableAmount - 1];
-
-            int count = 0;
-            foreach (var i in _movableRowCols)
-            {
-                for (int j = 0; j < _size.Cols; j++)
-                {
-                    _movableCellsRowCol[count] = (i, j);
-                    count++;
-                }
-            }
-
-            foreach (var i in _fixedRowCols)
-            {
-                foreach (var j in _movableRowCols)
-                {
-                    _movableCellsRowCol[count] = (i, j);
-                    count++;
-                }
-            }
+            _movableCellsManager.OnCellsRequested -= SendCellsToManager;
         }
 
-        private void InitMovableCellsDefault()
+        private void SendCellsToManager()
+        {
+            foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
+            {
+                var cell = _cardCells[Row, Col];
+                _movableCellsManager.AddMovable(cell);
+            }
+
+            _movableCellsManager.SetPlayable(_playableCell.CardCell);
+        }
+
+        private void InitMovableCells()
         {
             InitMovableCellsLoad(_movableCellsManager.InitCellsData);
-
-            //var indexList = new List<int>(Enumerable
-            //    .Range(0, _movableCellsRowCol.Length + 1));
-
-            //int[] rotations = new int[4] { 0, 90, 180, 270 };
-
-            //foreach (var (Row, Col) in _movableCellsRowCol)
-            //{
-            //    var rotation = rotations[UnityEngine.Random.Range(0, rotations.Length)];
-
-            //    var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
-
-            //    var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
-
-            //    indexList.Remove(randomIndex);
-
-
-            //    var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
-
-            //    var cell = _cellSpawner.SpawnCell(cellType.Geometry, cellType.Reward,
-            //        rotation, X, Y, _movableParentTransform);
-
-            //    SetCellsToLabyrinth(cell, Row, Col);
-            //}
-
-            //var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
-
-            //var playableCellCard = _cellSpawner.SpawnCell(plCellType.Geometry,
-            //    plCellType.Reward, 0, 0, 0, _movableParentTransform);
-
-            //_playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
 
         private void InitMovableCellsLoad(CellsData cellsData)
@@ -226,11 +142,11 @@ namespace GameCore
             var cellGeometry = CellGeometry.Cross;
 
             var indexList = new List<int>(Enumerable
-                .Range(0, _movableCellsRowCol.Length + 1));
+                .Range(0, LabyrinthMath.MovableCellsRowCol.Length + 1));
 
             var spawner = new CellSpawner(_cellPrefabsConfig);
 
-            foreach (var (Row, Col) in _movableCellsRowCol)
+            foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
             {
                 var rotation = 0;
 
@@ -263,17 +179,6 @@ namespace GameCore
 
         private void Update()
         {
-            //if (_checkRotation)
-            //{
-            //    var rotatedCell = _cardCells[_rotateCardIndex[0], _rotateCardIndex[1]].CellValues;
-
-            //    rotatedCell.Rotate(_angleDeg);
-
-            //    SetCardToGridValues(_rotateCardIndex[0], _rotateCardIndex[1]);
-
-            //    _checkRotation = false;
-            //}
-
             if (_printCell)
             {
                 var cell = _cardCells[_printRowCol[0], _printRowCol[1]].CellValues;
@@ -288,13 +193,6 @@ namespace GameCore
 
                 _printCell = false;
             }
-
-            //if (_shiftCell)
-            //{
-            //    MakeShift(_shiftRowCol[0], _shiftRowCol[1]);
-
-            //    _shiftCell = false;
-            //}
         }
 
 

@@ -11,6 +11,8 @@
         public static int FixedAmount => _fixedAmount;
         public static int UnfixedAmount => _unfixedAmount;
 
+        public static (int, int)[] MovableCellsRowCol => _movableCellsRowCol;
+
         private static readonly int _cellSize = 3;
 
         private static readonly (int Rows, int Cols) _size = (7, 7);
@@ -18,8 +20,19 @@
         private static readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
         private static readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
-        private static readonly int _fixedAmount = _fixedRowCols.Length * _fixedRowCols.Length;
-        private static readonly int _unfixedAmount = _size.Rows * _size.Cols + 1 - _fixedAmount;
+        private static readonly (int, int)[] _movableCellsRowCol;
+
+        private static readonly int _fixedAmount;
+        private static readonly int _unfixedAmount;
+
+        static LabyrinthMath()
+        {
+            _fixedAmount = _fixedRowCols.Length * _fixedRowCols.Length;
+            _unfixedAmount = _size.Rows * _size.Cols + 1 - _fixedAmount;
+
+            _movableCellsRowCol = new (int Row, int Col)[_unfixedAmount - 1];
+            InitMovableIndexes();
+        }
 
         public static (int X, int Y) GetXYCenter(int row, int col)
         {
@@ -44,6 +57,28 @@
             int j = coordinates.x / _cellSize;
 
             return (i, j);
+        }
+
+        private static void InitMovableIndexes()
+        {
+            int count = 0;
+            foreach (var i in _movableRowCols)
+            {
+                for (int j = 0; j < _size.Cols; j++)
+                {
+                    _movableCellsRowCol[count] = (i, j);
+                    count++;
+                }
+            }
+
+            foreach (var i in _fixedRowCols)
+            {
+                foreach (var j in _movableRowCols)
+                {
+                    _movableCellsRowCol[count] = (i, j);
+                    count++;
+                }
+            }
         }
     }
 }

@@ -39,6 +39,8 @@ public class SceneLifetimeScope : LifetimeScope
         RegisterGameManagement(builder);
 
         RegisterHandlers(builder);
+
+        RegisterGameListeners(builder);
     }
 
     private void RegisterEventBus(IContainerBuilder builder)

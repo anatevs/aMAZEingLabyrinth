@@ -47,11 +47,11 @@ namespace GameCore
 
             _rewardCardsService.DealOutCards(_players);///////////////somewhere else?
 
-            Debug.Log("init rewards:");
-            foreach (var player in _players)
-            {
-                player.PrintTargets();
-            }
+            //Debug.Log("init rewards:");
+            //foreach (var player in _players)
+            //{
+            //    player.PrintTargets();
+            //}
         }
 
         public void SetNextPlayer()

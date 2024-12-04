@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameCore
 {
     public class PlayableCell : MonoBehaviour
     {
+        public CardCell CardCell => _playableCell;
+
         [SerializeField]
         private Transform _playableCardTransform;
 

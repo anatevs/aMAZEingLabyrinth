@@ -70,7 +70,7 @@ namespace GameCore
             OnTargetChanged?.Invoke(this);
 
             Debug.Log("last reward released");
-            PrintTargets();
+            //PrintTargets();
         }
 
         public void PrintTargets()

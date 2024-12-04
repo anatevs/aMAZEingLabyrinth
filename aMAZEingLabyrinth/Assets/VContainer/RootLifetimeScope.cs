@@ -18,9 +18,10 @@ public class RootLifetimeScope : LifetimeScope
     {
         builder.Register<GameRepository>(Lifetime.Singleton);
 
-        builder.Register<MovableCellsManager>(Lifetime.Singleton);
+        builder.Register<MovableCellsManager>(Lifetime.Singleton)
+            .WithParameter(_movableCellsConfig);
+
         builder.Register<MovingCellsSaveLoad>(Lifetime.Singleton)
-            .WithParameter(_movableCellsConfig)
             .AsImplementedInterfaces();
 
         builder.RegisterEntryPoint<SaveLoadManager>(Lifetime.Singleton);
