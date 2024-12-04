@@ -10,6 +10,8 @@ namespace GameCore
 
         public event Action<Player> OnTargetChanged;
 
+        public event Action<PlayerType> OnSetPlaying;
+
         public PlayerType Type => _playerType;
 
         public (int, int) Coordinate => _coordinate;
@@ -40,6 +42,11 @@ namespace GameCore
         public void SetIsPlaying(bool isPlaying)
         {
             _isPlaying = isPlaying;
+
+            if (_isPlaying)
+            {
+                OnSetPlaying?.Invoke(_playerType);
+            }
         }
 
         public void SetCoordinate((int x, int y) coordinate)

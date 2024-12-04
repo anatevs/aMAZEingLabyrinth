@@ -44,6 +44,11 @@ namespace GameCore
             }
         }
 
+        public void SetActivePlayerHighlight(PlayerType playerType)
+        {
+            _targetsUI.SetActiveHighlight(playerType);
+        }
+
         public void UnsubscribePlayers(Player player)
         {
             player.OnTargetChanged -= SetTargetUIInfo;

@@ -22,8 +22,10 @@ namespace GameCore
         {
             foreach (var player in _players)
             {
-                //player.OnMoved -= SetNextPlayer;
                 _rewardCardsService.UnsubscribePlayers(player);
+
+                player.OnSetPlaying -=
+                    _rewardCardsService.SetActivePlayerHighlight;
             }
         }
 
@@ -35,7 +37,8 @@ namespace GameCore
 
                 player.Init(_dataConfig.GetData(player.Type));
 
-                //player.OnMoved += SetNextPlayer;
+                player.OnSetPlaying +=
+                    _rewardCardsService.SetActivePlayerHighlight;
 
                 if (firstPlayer == player.Type)
                 {
@@ -45,13 +48,7 @@ namespace GameCore
                 }
             }
 
-            _rewardCardsService.DealOutCards(_players);///////////////somewhere else?
-
-            //Debug.Log("init rewards:");
-            //foreach (var player in _players)
-            //{
-            //    player.PrintTargets();
-            //}
+            _rewardCardsService.DealOutCards(_players);
         }
 
         public void SetNextPlayer()

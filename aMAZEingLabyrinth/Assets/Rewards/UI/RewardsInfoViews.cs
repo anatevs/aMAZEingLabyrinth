@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameUI
 {
@@ -13,7 +14,12 @@ namespace GameUI
         [SerializeField]
         private PlayerTypesConfig _playerTypesConfig;
 
+        [SerializeField]
+        private Image _activePlayerHighlight;
+
         private readonly Dictionary<PlayerType, RewardInfoView> _playersInfo = new();
+
+        private readonly Dictionary<PlayerType, Vector3> _highlightPositions = new();
 
         private void Awake()
         {
@@ -32,6 +38,12 @@ namespace GameUI
                     _playerTypesConfig.GetPlayerSprite(playerType));
 
                 _playersInfo.Add(playerType, _views[i]);
+
+                var highlightPos = new Vector3(_activePlayerHighlight.transform.localPosition.x,
+                    _views[i].transform.localPosition.y,
+                    _activePlayerHighlight.transform.localPosition.z);
+
+                _highlightPositions.Add(playerType, highlightPos);
             }
         }
 
@@ -49,6 +61,12 @@ namespace GameUI
 
             _playersInfo[player.Type].SetRemainTargets(
                 Mathf.Max(0, player.RemainTargetsCount - 1));
+        }
+
+        public void SetActiveHighlight(PlayerType playerType)
+        {
+            _activePlayerHighlight.transform.localPosition =
+                _highlightPositions[playerType];
         }
     }
 }

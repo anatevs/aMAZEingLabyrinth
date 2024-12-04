@@ -410,12 +410,12 @@ MonoBehaviour:
   autoInjectGameObjects:
   - {fileID: 1322003521}
   - {fileID: 293525260}
-  - {fileID: 95123911}
   _menuWindowsService: {fileID: 699056894}
   _playersList: {fileID: 1276336701}
   _shiftArrowsService: {fileID: 1480633124}
   _cellsLabyrinth: {fileID: 293525262}
   _cellHighlight: {fileID: 1322003525}
+  _gameListenersManager: {fileID: 95123915}
 --- !u!114 &95123915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 95123911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7db65b62509c0ea479bf2491a999db5b, type: 3}
+  m_Script: {fileID: 11500000, guid: ac10badbbed2ac94c9c94ac0b5a677c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &103270157 stripped
@@ -1385,7 +1385,6 @@ MonoBehaviour:
   _cellPrefabsConfig: {fileID: 11400000, guid: 558c606f47b532d4183982dcd1809463, type: 2}
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
   _playableCell: {fileID: 252792296}
-  _startRowCol: 0000000000000000
   _printRowCol: 0000000000000000
   _printCell: 0
 --- !u!1 &316739504
