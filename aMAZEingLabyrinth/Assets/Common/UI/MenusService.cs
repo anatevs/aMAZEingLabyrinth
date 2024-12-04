@@ -9,6 +9,8 @@ namespace GameUI
 
         public EndGameMenu EndGame => _endGame;
 
+        public StartGameMenu StartGame => _startGame;
+
         [SerializeField]
         private PlayerSelector _playerSelector;
 
@@ -17,5 +19,8 @@ namespace GameUI
 
         [SerializeField]
         private EndGameMenu _endGame;
+
+        [SerializeField]
+        private StartGameMenu _startGame;
     }
 }

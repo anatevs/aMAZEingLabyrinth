@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCore
 {
     public sealed class PlayerView : MonoBehaviour
     {
-        //public event Action OnPathSet;
-
         [SerializeField]
         private Transform _transform;
 
@@ -17,8 +14,6 @@ namespace GameCore
             {
                 MoveToPoint(path[i]);
             }
-
-            //OnPathSet?.Invoke();
         }
 
         public void MoveToPoint((int x, int y) point)

@@ -14,9 +14,13 @@ namespace GameCore
 
         public PlayerType Type => _playerType;
 
-        public (int, int) Coordinate => _coordinate;
+        public (int X, int Y) Coordinate => _coordinate;
 
         public RewardName CurrentTarget => _rewardTargets.Peek();
+
+        public bool IsPlaying => _isPlaying;
+
+        public Queue<RewardName> RemainTargets => _rewardTargets;
 
         public int RemainTargetsCount => _rewardTargets.Count;
 
@@ -32,11 +36,11 @@ namespace GameCore
 
         private readonly Queue<RewardName> _rewardTargets = new();
 
-        public void Init(PlayerData data)
+        public void Init(OnePlayerData data)
         {
             _isPlaying = data.IsPlaying;
 
-            SetCoordinate((data.LabyrinthCoordinate.x, data.LabyrinthCoordinate.y));
+            SetCoordinate((data.LabyrinthCoordinateStruct.x, data.LabyrinthCoordinateStruct.y));
         }
 
         public void SetIsPlaying(bool isPlaying)

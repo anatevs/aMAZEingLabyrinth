@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameCore
 {
@@ -9,22 +8,21 @@ namespace GameCore
         )]
     public sealed class PlayersDataConfig : ScriptableObject
     {
-        [SerializeField]
-        private PlayerData[] _playersData = new PlayerData[4];
+        public PlayersData Data => _data;
 
-        private readonly Dictionary<PlayerType, PlayerData> _dataDict = new();
+        [SerializeField]
+        private OnePlayerData[] _dataArray = new OnePlayerData[4];
+
+        private readonly PlayersData _data = new();
 
         private void OnEnable()
         {
-            for (int i = 0; i < _playersData.Length; i++)
-            {
-                _dataDict.Add(_playersData[i].Type, _playersData[i]);
-            }
+            _data.SetPlayersData(_dataArray);
         }
 
-        public PlayerData GetData(PlayerType type)
+        public OnePlayerData GetData(PlayerType type)
         {
-            return _dataDict[type];
+            return _data.GetPlayerData(type);
         }
     }
 }

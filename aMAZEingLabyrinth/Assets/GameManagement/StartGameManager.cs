@@ -24,17 +24,28 @@ namespace GameCore
 
         void IInitializable.Initialize()
         {
+            _menusService.StartGame.OnLoadGameClicked += SelectLoadGame;
+
             _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
         }
 
         void IDisposable.Dispose()
         {
+            _menusService.StartGame.OnLoadGameClicked -= SelectLoadGame;
+
             _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
         }
 
         private void SelectFirstPlayer(PlayerType firstPlayer)
         {
             _players.InitPlayers(firstPlayer);
+
+            _turnPipeline.Run();
+        }
+
+        private void SelectLoadGame()
+        {
+            _players.InitPlayers();
 
             _turnPipeline.Run();
         }

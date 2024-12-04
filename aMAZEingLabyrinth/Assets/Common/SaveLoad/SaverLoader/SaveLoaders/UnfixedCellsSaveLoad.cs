@@ -3,16 +3,16 @@ using VContainer;
 
 namespace SaveLoadNamespace
 {
-    public class MovingCellsSaveLoad : SaveLoader<CellsData, MovableCellsManager>
+    public class UnfixedCellsSaveLoad : SaveLoad<CellsData, UnfixedCellsDataConnector>
     {
-        protected override CellsData ConvertDataToParams(MovableCellsManager movableCellsManager)
+        protected override CellsData ConvertDataToParams(UnfixedCellsDataConnector unfixedCellsConnector)
         {
             var result = new CellsData();
 
-            movableCellsManager.SetupCells();
+            unfixedCellsConnector.SetupCells();
 
-            var movableCells = movableCellsManager.MovableCells;
-            var playableCell = movableCellsManager.PlayableCell;
+            var movableCells = unfixedCellsConnector.MovableCells;
+            var playableCell = unfixedCellsConnector.PlayableCell;
 
             foreach ( var cell in movableCells )
             {
@@ -27,14 +27,14 @@ namespace SaveLoadNamespace
 
         protected override void LoadDefault(IObjectResolver context)
         {
-            var movableManager = context.Resolve<MovableCellsManager>();
+            var unfixedCellsConnector = context.Resolve<UnfixedCellsDataConnector>();
 
-            movableManager.GenerateMovableCellsDefault();
+            unfixedCellsConnector.GenerateMovableCellsDefault();
         }
 
         protected override void SetupParamsData(CellsData cellsData, IObjectResolver context)
         {
-            var movableManager = context.Resolve<MovableCellsManager>();
+            var movableManager = context.Resolve<UnfixedCellsDataConnector>();
             movableManager.ClearMovableData();
 
             foreach (var data in cellsData.MovableCellsData)

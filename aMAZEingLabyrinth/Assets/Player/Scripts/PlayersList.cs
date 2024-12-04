@@ -1,5 +1,6 @@
-﻿using GameUI;
+﻿using SaveLoadNamespace;
 using UnityEngine;
+using VContainer;
 
 namespace GameCore
 {
@@ -8,15 +9,22 @@ namespace GameCore
         public Player CurrentPlayer => _players[_currentIndex];
 
         [SerializeField]
-        private PlayersDataConfig _dataConfig;
-
-        [SerializeField]
         private Player[] _players;
 
         [SerializeField]
         private RewardCardsService _rewardCardsService;
 
+        private PlayersDataConnector _playersDataConnector;
+
         private int _currentIndex = 0;
+
+        [Inject]
+        public void Construct(PlayersDataConnector playersDataConnector)
+        {
+            _playersDataConnector = playersDataConnector;
+
+            _playersDataConnector.OnPlayersRequested += SendPlayersToConnector;
+        }
 
         private void OnDisable()
         {
@@ -27,15 +35,28 @@ namespace GameCore
                 player.OnSetPlaying -=
                     _rewardCardsService.SetActivePlayerHighlight;
             }
+
+            _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
         }
 
         public void InitPlayers(PlayerType firstPlayer)
         {
             for (int i = 0; i < _players.Length; i++)
             {
+                //var player = InitPlayer(i);
+
                 var player = _players[i];
 
-                player.Init(_dataConfig.GetData(player.Type));
+
+
+                var data = _playersDataConnector.Data.GetPlayerData(player.Type);
+
+                Debug.Log(data.LabyrinthCoordinateStruct.x);
+                Debug.Log(data.LabyrinthCoordinateStruct.y);
+
+
+
+                player.Init(_playersDataConnector.Data.GetPlayerData(player.Type));
 
                 player.OnSetPlaying +=
                     _rewardCardsService.SetActivePlayerHighlight;
@@ -51,6 +72,35 @@ namespace GameCore
             _rewardCardsService.DealOutCards(_players);
         }
 
+        public void InitPlayers()
+        {
+            for (int i = 0; i < _players.Length; i++)
+            {
+                var player = InitPlayer(i);
+
+                if (player.IsPlaying)
+                {
+                    player.SetIsPlaying(true);
+
+                    _currentIndex = i;
+                }
+            }
+
+            _rewardCardsService.DealOutCards(_players);
+        }
+
+        private Player InitPlayer(int i)
+        {
+            var player = _players[i];
+
+            player.Init(_playersDataConnector.Data.GetPlayerData(player.Type));
+
+            player.OnSetPlaying +=
+                _rewardCardsService.SetActivePlayerHighlight;
+
+            return player;
+        }
+
         public void SetNextPlayer()
         {
             CurrentPlayer.SetIsPlaying(false);
@@ -63,6 +113,11 @@ namespace GameCore
         public void ReleasePlayerReward(int plIndex)
         {
             _players[plIndex].ReleaseReward();
+        }
+
+        private void SendPlayersToConnector()
+        {
+            _playersDataConnector.SetPlayers(_players);
         }
     }
 }

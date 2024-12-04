@@ -9,8 +9,6 @@ namespace GameCore
 {
     public sealed class CellsLabyrinth : MonoBehaviour
     {
-        private event Action<CardCell> OnSetCellToLabyrinth;
-
         [SerializeField]
         private CardCell[] _fixedCells;
 
@@ -29,25 +27,11 @@ namespace GameCore
         [SerializeField]
         private PlayableCell _playableCell;
 
-
-
-
         private CellSpawner _cellSpawner;
-
-
-
-
 
         private LabyrinthGrid _grid;
 
-        private readonly int _cellSize = 3;
-
         private CardCell[,] _cardCells;
-
-        private (int Rows, int Cols) _size = LabyrinthMath.Size;
-
-        private readonly int[] _fixedRowCols = LabyrinthMath.FixedRowCols;
-        private readonly int[] _movableRowCols = LabyrinthMath.MovableRowCols;
 
 
         [Header("Print cell test")]
@@ -57,20 +41,22 @@ namespace GameCore
         [SerializeField]
         private bool _printCell;
 
-        private MovableCellsManager _movableCellsManager;
+        private UnfixedCellsDataConnector _unfixedCellsConnector;
 
         [Inject]
-        public void Construct(MovableCellsManager movableCellsManager)
+        public void Construct(UnfixedCellsDataConnector unfixedCellsConnector)
         {
-            _movableCellsManager = movableCellsManager;
+            _unfixedCellsConnector = unfixedCellsConnector;
         }
 
 
         private void Start()
         {
-            _grid = new LabyrinthGrid((_size.Rows * _cellSize, _size.Cols * _cellSize));
+            _grid = new LabyrinthGrid((LabyrinthMath.Size.Rows * LabyrinthMath.CellSize,
+                LabyrinthMath.Size.Cols * LabyrinthMath.CellSize));
 
-            _cardCells = new CardCell[_size.Rows, _size.Cols];
+            _cardCells = new CardCell[LabyrinthMath.Size.Rows,
+                LabyrinthMath.Size.Cols];
 
             foreach (var cell in _fixedCells)
             {
@@ -87,28 +73,28 @@ namespace GameCore
             InitMovableCells();
             //InitAllMovableCrossType();
 
-            _movableCellsManager.OnCellsRequested += SendCellsToManager;
+            _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
         }
 
         private void OnDisable()
         {
-            _movableCellsManager.OnCellsRequested -= SendCellsToManager;
+            _unfixedCellsConnector.OnCellsRequested -= SendCellsToConnector;
         }
 
-        private void SendCellsToManager()
+        private void SendCellsToConnector()
         {
             foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
             {
                 var cell = _cardCells[Row, Col];
-                _movableCellsManager.AddMovable(cell);
+                _unfixedCellsConnector.AddMovable(cell);
             }
 
-            _movableCellsManager.SetPlayable(_playableCell.CardCell);
+            _unfixedCellsConnector.SetPlayable(_playableCell.CardCell);
         }
 
         private void InitMovableCells()
         {
-            InitMovableCellsLoad(_movableCellsManager.InitCellsData);
+            InitMovableCellsLoad(_unfixedCellsConnector.InitCellsData);
         }
 
         private void InitMovableCellsLoad(CellsData cellsData)
@@ -208,8 +194,8 @@ namespace GameCore
         {
             oppositeIndex = (-1, -1);
 
-            bool isRow = _movableRowCols.Contains(shiftRow);
-            bool isCol = _movableRowCols.Contains(shiftCol);
+            bool isRow = LabyrinthMath.MovableRowCols.Contains(shiftRow);
+            bool isCol = LabyrinthMath.MovableRowCols.Contains(shiftCol);
 
             if (isRow == isCol)
             {
@@ -224,7 +210,7 @@ namespace GameCore
 
             if (isRow)
             {
-                iterNumber = _size.Cols - 1;
+                iterNumber = LabyrinthMath.Size.Cols - 1;
                 var startIter = iterNumber;
 
                 iterDirectionRowCol[0] = 0;
@@ -244,7 +230,7 @@ namespace GameCore
 
             if (isCol)
             {
-                iterNumber = _size.Rows - 1;
+                iterNumber = LabyrinthMath.Size.Rows - 1;
                 var startIter = iterNumber;
 
                 iterDirectionRowCol[0] = -1;

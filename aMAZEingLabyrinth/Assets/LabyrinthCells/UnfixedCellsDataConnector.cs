@@ -1,11 +1,11 @@
-﻿using SaveLoadNamespace;
+﻿using GameCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GameCore
+namespace SaveLoadNamespace
 {
-    public class MovableCellsManager
+    public class UnfixedCellsDataConnector
     {
         public event Action OnCellsRequested;
 
@@ -23,7 +23,7 @@ namespace GameCore
 
         private readonly MovableCellsConfig _movableCellsConfig;
 
-        public MovableCellsManager(MovableCellsConfig movableCellsConfig)
+        public UnfixedCellsDataConnector(MovableCellsConfig movableCellsConfig)
         {
             _movableCellsConfig = movableCellsConfig;
         }

@@ -12,28 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31556e92b2c38b14f9adb3e6a5cebcf0, type: 3}
   m_Name: PlayersDataConfig
   m_EditorClassIdentifier: 
-  _playersData:
+  _dataArray:
   - Type: 0
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate:
+    LabyrinthCoordinateStruct:
       x: 1
       y: 1
   - Type: 1
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate:
+    LabyrinthCoordinateStruct:
       x: 1
       y: 19
   - Type: 2
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate:
+    LabyrinthCoordinateStruct:
       x: 19
       y: 19
   - Type: 3
     IsPlaying: 0
     RewardTargets: 
-    LabyrinthCoordinate:
+    LabyrinthCoordinateStruct:
       x: 19
       y: 1

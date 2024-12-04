@@ -49,3 +49,4 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
+  _playersConfig: {fileID: 11400000, guid: 192192badb95c1d46a6b7eb771795978, type: 2}

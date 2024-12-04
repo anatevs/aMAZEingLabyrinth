@@ -11,6 +11,8 @@
         public static int FixedAmount => _fixedAmount;
         public static int UnfixedAmount => _unfixedAmount;
 
+        public static int CellSize => _cellSize;
+
         public static (int, int)[] MovableCellsRowCol => _movableCellsRowCol;
 
         private static readonly int _cellSize = 3;

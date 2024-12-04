@@ -2,7 +2,7 @@ using VContainer;
 
 namespace SaveLoadNamespace
 {
-    public abstract class SaveLoader<TData, TService> : ISaveLoad
+    public abstract class SaveLoad<TData, TService> : ISaveLoad
     {
         public void Load(IGameRepository gameRepository, IObjectResolver context)
         {

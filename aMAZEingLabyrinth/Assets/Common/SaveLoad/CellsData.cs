@@ -21,21 +21,6 @@ namespace SaveLoadNamespace
 
         private OneCellData _playableCellData;
 
-        public CellsData()
-        {
-            
-        }
-
-        public CellsData(OneCellData oneData)
-        {
-            _movableCellsData = new List<OneCellData> { oneData };
-        }
-
-        public void SetMovableCells(List<OneCellData> movableCellsData)
-        {
-            _movableCellsData = movableCellsData;
-        }
-
         public void AddMovableCell(OneCellData oneCellData)
         {
             _movableCellsData.Add(oneCellData);
