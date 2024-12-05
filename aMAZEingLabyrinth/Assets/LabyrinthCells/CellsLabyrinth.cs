@@ -19,9 +19,6 @@ namespace GameCore
         private Transform _movableParentTransform;
 
         [SerializeField]
-        private CellPrefabsConfig _cellPrefabsConfig;
-
-        [SerializeField]
         private MovableCellsConfig _movableCellsConfig;
 
         [SerializeField]
@@ -30,14 +27,6 @@ namespace GameCore
         private LabyrinthGrid _grid;
 
         private CardCell[,] _cardCells;
-
-
-        [Header("Print cell test")]
-        [SerializeField]
-        private int[] _printRowCol = new int[2];
-
-        [SerializeField]
-        private bool _printCell;
 
         private UnfixedCellsDataConnector _unfixedCellsConnector;
 
@@ -52,7 +41,6 @@ namespace GameCore
 
             _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
         }
-
 
         private void Start()
         {
@@ -159,24 +147,6 @@ namespace GameCore
             var playableCellCard = _cellsPool.SpawnFromPool(cellGeometry, plCellType.Reward, 0, 0, 0);
 
             _playableCell.ReplacePlayableCell(playableCellCard, out _);
-        }
-
-        private void Update()
-        {
-            if (_printCell)
-            {
-                var cell = _cardCells[_printRowCol[0], _printRowCol[1]].CellValues;
-                if (cell == null)
-                {
-                    Debug.Log("null cell");
-                }
-                else
-                {
-                    cell.PrintMatrix();
-                }
-
-                _printCell = false;
-            }
         }
 
 

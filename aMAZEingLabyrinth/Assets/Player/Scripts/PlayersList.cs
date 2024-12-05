@@ -1,6 +1,8 @@
 ﻿using SaveLoadNamespace;
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace GameCore
 {
@@ -97,6 +99,40 @@ namespace GameCore
         public void ReleasePlayerReward(int plIndex)
         {
             _players[plIndex].ReleaseReward();
+        }
+
+        public bool IsPlayerAtPointWithX(int x, out List<Player> players)
+        {
+            players = new();
+            bool result = false;
+
+            for (int i =0; i < _players.Length; i++)
+            {
+                if (_players[i].Coordinate.X == x)
+                {
+                    players.Add(_players[i]);
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        public bool IsPlayerAtPointWithY(int y, out List<Player> players)
+        {
+            players = new();
+            bool result = false;
+
+            for (int i = 0; i < _players.Length; i++)
+            {
+                if (_players[i].Coordinate.Y == y)
+                {
+                    players.Add(_players[i]);
+                    result = true;
+                }
+            }
+
+            return result;
         }
 
         private void SendPlayersToConnector()

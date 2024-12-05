@@ -32,7 +32,9 @@ namespace GameCore
 
         private bool _isPlaying;
 
-        private (int x, int j) _coordinate;
+        private (int x, int y) _coordinate;
+
+        private (int x, int y) _defaultCoordinate;
 
         private readonly Queue<RewardName> _rewardTargets = new();
 
@@ -45,6 +47,13 @@ namespace GameCore
             SetupRewards(data.RewardTargets);
         }
 
+        private void Awake()
+        {
+            var pos = _view.transform.localPosition;
+
+            _defaultCoordinate = ((int)pos.x, (int)pos.y);
+        }
+
         public void SetIsPlaying(bool isPlaying)
         {
             _isPlaying = isPlaying;
@@ -53,6 +62,11 @@ namespace GameCore
             {
                 OnSetPlaying?.Invoke(_playerType);
             }
+        }
+
+        public void SetToDefaultPos()
+        {
+            SetCoordinate(_defaultCoordinate);
         }
 
         public void SetCoordinate((int x, int y) coordinate)
