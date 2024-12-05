@@ -35,6 +35,8 @@ public class RootLifetimeScope : LifetimeScope
 
         builder.Register<PlayersDataConnector>(Lifetime.Singleton)
             .WithParameter(_playersConfig);
+
+        builder.Register<ShiftArrowsDataConnector>(Lifetime.Singleton);
     }
 
     private void RegisterSaveLoads(IContainerBuilder builder)
@@ -43,6 +45,9 @@ public class RootLifetimeScope : LifetimeScope
             .AsImplementedInterfaces();
 
         builder.Register<PlayersSaveLoad>(Lifetime.Singleton)
+            .AsImplementedInterfaces();
+
+        builder.Register<ShiftArrowsSaveLoad>(Lifetime.Singleton)
             .AsImplementedInterfaces();
     }
 }

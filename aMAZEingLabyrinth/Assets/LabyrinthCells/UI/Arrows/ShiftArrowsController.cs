@@ -8,15 +8,12 @@ namespace GameCore
     {
         private readonly ShiftArrowsService _arrowsService;
 
-        private readonly CellsLabyrinth _cellsLabyrinth;
-
         private readonly EventBus _eventBus;
 
         public ShiftArrowsController(ShiftArrowsService arrowsService,
-            CellsLabyrinth cellsLabyrinth, EventBus eventBus)
+            EventBus eventBus)
         {
             _arrowsService = arrowsService;
-            _cellsLabyrinth = cellsLabyrinth;
             _eventBus = eventBus;
         }
 

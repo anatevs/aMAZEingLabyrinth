@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SaveLoadNamespace
 {
-    public class UnfixedCellsDataConnector
+    public sealed class UnfixedCellsDataConnector
     {
         public event Action OnCellsRequested;
 

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SaveLoadNamespace;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace GameCore
 {
@@ -11,11 +13,23 @@ namespace GameCore
         [SerializeField]
         private ShiftArrow[] _arrows;
 
-        private (int, int) _initIndex = (-1, -1);
+        private (int, int) _invalidIndex;
 
         private (int, int) _disabledIndex;
 
+        private bool _areActive;
+
         private readonly Dictionary<(int, int), ShiftArrow> _indexArrows = new();
+
+        private ShiftArrowsDataConnector _dataConnector;
+
+        [Inject]
+        public void Construct(ShiftArrowsDataConnector dataConnector)
+        {
+            _dataConnector = dataConnector;
+
+            _dataConnector.OnArrowsInfoRequested += SendArrowsToConnector;
+        }
 
         private void Start()
         {
@@ -26,13 +40,9 @@ namespace GameCore
                 arrow.OnShift += Click;
             }
 
-            StartGameInitArrows();
-        }
+            //StartGameInitArrows();
 
-        private void StartGameInitArrows()
-        {
-            _disabledIndex = _initIndex;
-            DisableAllArrows();
+            InitArrows(_dataConnector.Data);
         }
 
         private void OnDisable()
@@ -41,7 +51,34 @@ namespace GameCore
             {
                 arrow.OnShift -= Click;
             }
+
+            _dataConnector.OnArrowsInfoRequested -= SendArrowsToConnector;
         }
+
+        //private void InitArrows()
+        //{
+        //    _disabledIndex = _initIndex;
+        //    DisableAllArrows();
+        //}
+
+        private void InitArrows(ShiftArrowsData data)
+        {
+            _disabledIndex = data.DisabledIndex;
+
+            _invalidIndex = data.InvalidIndex;
+
+            _areActive = data.AreArrowsActive;
+
+            if (!_areActive)
+            {
+                DisableAllArrows();
+            }
+            else
+            {
+                EnableAllActiveArrows();
+            }
+        }
+
 
         private void Click(int row, int column)
         {
@@ -52,7 +89,7 @@ namespace GameCore
         {
             var newDisabled = _indexArrows[index];
 
-            if (_disabledIndex != _initIndex)
+            if (_disabledIndex != _invalidIndex)
             {
                 var prevDisabled = _indexArrows[_disabledIndex];
                 prevDisabled.ActivateButton();
@@ -69,6 +106,8 @@ namespace GameCore
             {
                 arrow.DisactivateButton();
             }
+
+            _areActive = false;
         }
 
         public void EnableAllActiveArrows()
@@ -79,7 +118,18 @@ namespace GameCore
                 {
                     _indexArrows[index].ActivateButton();
                 }
+                else
+                {
+                    _indexArrows[index].DisactivateButton();
+                }
             }
+
+            _areActive = true;
+        }
+
+        private void SendArrowsToConnector()
+        {
+            _dataConnector.SetArrows(_disabledIndex, _areActive);
         }
     }
 }

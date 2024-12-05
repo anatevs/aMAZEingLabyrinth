@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace SaveLoadNamespace
 {
-    public class GameRepository : IGameRepository
+    public sealed class GameRepository : IGameRepository
     {
-        public Dictionary<string, string> objectsPresentations = new();
+        public Dictionary<string, string> ObjectsPresentations = new();
 
         private const string SAVE_KEY = "SaveLoadGameData";
 
@@ -14,19 +14,19 @@ namespace SaveLoadNamespace
         {
             string keyName = typeof(T).Name;
             string paramsJson = JsonConvert.SerializeObject(value);
-            objectsPresentations[keyName] = paramsJson;
+            ObjectsPresentations[keyName] = paramsJson;
         }
 
         public T GetData<T>()
         {
-            string paramsInJson = objectsPresentations[typeof(T).Name];
+            string paramsInJson = ObjectsPresentations[typeof(T).Name];
             return JsonConvert.DeserializeObject<T>(paramsInJson);
         }
 
         public bool TryGetData<T>(out T value)
         {
             string paramsInJson;
-            if (objectsPresentations.TryGetValue(typeof(T).Name, out paramsInJson))
+            if (ObjectsPresentations.TryGetValue(typeof(T).Name, out paramsInJson))
             {
                 value = JsonConvert.DeserializeObject<T>(paramsInJson);
                 return true;
@@ -40,7 +40,7 @@ namespace SaveLoadNamespace
 
         public void SaveState()
         {
-            string gameData = JsonConvert.SerializeObject(objectsPresentations);
+            string gameData = JsonConvert.SerializeObject(ObjectsPresentations);
 
             PlayerPrefs.SetString(SAVE_KEY, gameData);
         }
@@ -51,7 +51,7 @@ namespace SaveLoadNamespace
             {
                 string gameData = PlayerPrefs.GetString(SAVE_KEY);
 
-                objectsPresentations = JsonConvert.DeserializeObject<Dictionary<string, string>>(gameData);
+                ObjectsPresentations = JsonConvert.DeserializeObject<Dictionary<string, string>>(gameData);
             }
         }
     }
