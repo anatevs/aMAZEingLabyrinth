@@ -26,6 +26,11 @@ namespace GameUI
             _newGameButton.onClick.RemoveAllListeners();
         }
 
+        public void SetLoadButtonActive(bool isActive)
+        {
+            _loadGameButton.interactable = isActive;
+        }
+
         public void Show()
         {
             gameObject.SetActive(true);

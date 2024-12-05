@@ -40,9 +40,7 @@ namespace GameCore
                 arrow.OnShift += Click;
             }
 
-            //StartGameInitArrows();
-
-            InitArrows(_dataConnector.Data);
+            //InitArrows();
         }
 
         private void OnDisable()
@@ -55,14 +53,10 @@ namespace GameCore
             _dataConnector.OnArrowsInfoRequested -= SendArrowsToConnector;
         }
 
-        //private void InitArrows()
-        //{
-        //    _disabledIndex = _initIndex;
-        //    DisableAllArrows();
-        //}
-
-        private void InitArrows(ShiftArrowsData data)
+        public void InitArrows()
         {
+            var data = _dataConnector.Data;
+
             _disabledIndex = data.DisabledIndex;
 
             _invalidIndex = data.InvalidIndex;
@@ -78,7 +72,6 @@ namespace GameCore
                 EnableAllActiveArrows();
             }
         }
-
 
         private void Click(int row, int column)
         {

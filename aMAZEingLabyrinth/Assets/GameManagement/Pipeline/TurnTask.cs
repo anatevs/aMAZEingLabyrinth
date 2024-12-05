@@ -6,8 +6,7 @@ namespace GamePipeline
     {
         private readonly CellHighlight _cellHighlight;
 
-        public TurnTask(ShiftArrowsService shiftArrowsService,
-            CellHighlight cellHighlight)
+        public TurnTask(CellHighlight cellHighlight)
         {
             _cellHighlight = cellHighlight;
         }

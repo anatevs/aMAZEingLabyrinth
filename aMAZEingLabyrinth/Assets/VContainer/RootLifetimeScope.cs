@@ -25,7 +25,8 @@ public class RootLifetimeScope : LifetimeScope
 
         RegisterSaveLoads(builder);
 
-        builder.RegisterEntryPoint<SaveLoadManager>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<SaveLoadManager>(Lifetime.Singleton)
+            .AsSelf();
     }
 
     private void RegisterDataConnectors(IContainerBuilder builder)

@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace SaveLoadNamespace
 {
     public sealed class GameRepository : IGameRepository
     {
+        public event Action OnNoDataFound;
+
         public Dictionary<string, string> ObjectsPresentations = new();
 
         private const string SAVE_KEY = "SaveLoadGameData";
@@ -25,8 +28,7 @@ namespace SaveLoadNamespace
 
         public bool TryGetData<T>(out T value)
         {
-            string paramsInJson;
-            if (ObjectsPresentations.TryGetValue(typeof(T).Name, out paramsInJson))
+            if (ObjectsPresentations.TryGetValue(typeof(T).Name, out string paramsInJson))
             {
                 value = JsonConvert.DeserializeObject<T>(paramsInJson);
                 return true;
@@ -52,6 +54,11 @@ namespace SaveLoadNamespace
                 string gameData = PlayerPrefs.GetString(SAVE_KEY);
 
                 ObjectsPresentations = JsonConvert.DeserializeObject<Dictionary<string, string>>(gameData);
+            }
+
+            else
+            {
+                OnNoDataFound?.Invoke();
             }
         }
     }

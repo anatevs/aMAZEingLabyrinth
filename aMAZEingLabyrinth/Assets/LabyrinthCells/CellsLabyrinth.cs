@@ -47,6 +47,8 @@ namespace GameCore
         public void Construct(UnfixedCellsDataConnector unfixedCellsConnector)
         {
             _unfixedCellsConnector = unfixedCellsConnector;
+
+            _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
         }
 
 
@@ -70,10 +72,8 @@ namespace GameCore
 
             _cellSpawner = new CellSpawner(_cellPrefabsConfig);
 
-            InitMovableCells();
+            //InitMovableCells();
             //InitAllMovableCrossType();
-
-            _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
         }
 
         private void OnDisable()
@@ -92,7 +92,7 @@ namespace GameCore
             _unfixedCellsConnector.SetPlayable(_playableCell.CardCell);
         }
 
-        private void InitMovableCells()
+        public void InitMovableCells()
         {
             InitMovableCellsLoad(_unfixedCellsConnector.InitCellsData);
         }
