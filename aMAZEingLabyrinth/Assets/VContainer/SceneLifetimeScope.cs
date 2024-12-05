@@ -71,6 +71,7 @@ public class SceneLifetimeScope : LifetimeScope
     private void RegisterGameManagement(IContainerBuilder builder)
     {
         builder.RegisterEntryPoint<StartGameManager>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<EndGameManager>(Lifetime.Singleton);
         //builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton);
     }
 

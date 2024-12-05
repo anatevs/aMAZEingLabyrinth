@@ -26,6 +26,11 @@ namespace GameCore
             SetCell(newCell);
         }
 
+        public void Clear()
+        {
+            Destroy(this);
+        }
+
         private void SetCell(CardCell cell)
         {
             UnbindUI();

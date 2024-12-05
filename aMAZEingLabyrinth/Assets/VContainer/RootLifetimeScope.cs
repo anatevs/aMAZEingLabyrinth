@@ -12,9 +12,21 @@ public class RootLifetimeScope : LifetimeScope
     [SerializeField]
     private PlayersDataConfig _playersConfig;
 
+    [SerializeField]
+    private CellPrefabsConfig _cellPrefabsConfig;
+
     protected override void Configure(IContainerBuilder builder)
     {
+        RegisterCellsPool(builder);
+
         RegisterSaveLoadSystem(builder);
+    }
+
+    private void RegisterCellsPool(IContainerBuilder builder)
+    {
+        var cellsPool = new CellsPool(_cellPrefabsConfig, _movableCellsConfig);
+
+        builder.RegisterComponent(cellsPool);
     }
 
     private void RegisterSaveLoadSystem(IContainerBuilder builder)

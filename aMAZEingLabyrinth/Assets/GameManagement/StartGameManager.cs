@@ -3,8 +3,9 @@ using GameUI;
 using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
+using GameCore;
 
-namespace GameCore
+namespace GameManagement
 {
     public class StartGameManager : IInitializable, IDisposable
     {
@@ -41,6 +42,8 @@ namespace GameCore
 
             _menusService.StartGame.OnNewGameClicked += SelectNewGame;
 
+            _menusService.EndGame.OnNewGameClicked += SelectNewGame;
+
             _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
 
 
@@ -55,7 +58,16 @@ namespace GameCore
 
             _menusService.StartGame.OnNewGameClicked -= SelectNewGame;
 
+            _menusService.EndGame.OnNewGameClicked -= SelectNewGame;
+
             _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
+        }
+
+        private void SelectNewGame()
+        {
+            _saveLoadManager.LoadNewGame();
+
+            _menusService.PlayerSelector.Show();
         }
 
         private void SelectFirstPlayer(PlayerType firstPlayer)
@@ -78,13 +90,6 @@ namespace GameCore
             _shiftArrowsService.InitArrows();
 
             _turnPipeline.Run();
-        }
-
-        private void SelectNewGame()
-        {
-            _saveLoadManager.LoadNewGame();
-
-            _menusService.PlayerSelector.Show();
         }
     }
 }

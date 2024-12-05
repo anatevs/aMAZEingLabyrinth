@@ -27,8 +27,6 @@ namespace GameCore
         [SerializeField]
         private PlayableCell _playableCell;
 
-        private CellSpawner _cellSpawner;
-
         private LabyrinthGrid _grid;
 
         private CardCell[,] _cardCells;
@@ -43,9 +41,13 @@ namespace GameCore
 
         private UnfixedCellsDataConnector _unfixedCellsConnector;
 
+        private CellsPool _cellsPool;
+
         [Inject]
-        public void Construct(UnfixedCellsDataConnector unfixedCellsConnector)
+        public void Construct(UnfixedCellsDataConnector unfixedCellsConnector, CellsPool cellsPool)
         {
+            _cellsPool = cellsPool;
+
             _unfixedCellsConnector = unfixedCellsConnector;
 
             _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
@@ -70,7 +72,7 @@ namespace GameCore
                 SetCellsToLabyrinth(cell, iCell, jCell);
             }
 
-            _cellSpawner = new CellSpawner(_cellPrefabsConfig);
+            _cellsPool.PopulatePool(_movableParentTransform);
 
             //InitMovableCells();
             //InitAllMovableCrossType();
@@ -99,17 +101,17 @@ namespace GameCore
 
         private void InitMovableCellsLoad(CellsData cellsData)
         {
+            InitPlayebleCellFromData(cellsData.PlayableCellData, _movableParentTransform);
+
             foreach (var cellData in cellsData.MovableCellsData)
             {
                 InitLabyrinthCellFromData(cellData, _movableParentTransform);
             }
-
-            InitPlayebleCellFromData(cellsData.PlayableCellData, _movableParentTransform);
         }
 
         private void InitLabyrinthCellFromData(OneCellData cellData, Transform parentTransform)
         {
-            var cell = _cellSpawner.SpawnCell(cellData, parentTransform);
+            var cell = _cellsPool.SpawnFromPool(cellData);
 
             var (Row, Col) = LabyrinthMath.GetCellIndex(cellData.Origin);
 
@@ -118,19 +120,22 @@ namespace GameCore
 
         private void InitPlayebleCellFromData(OneCellData cellData, Transform parentTransform)
         {
-            var playableCell = _cellSpawner.SpawnCell(cellData, parentTransform);
+            var playableCell = _cellsPool.SpawnFromPool(cellData);
 
-            _playableCell.ReplacePlayableCell(playableCell, out _);
+            _playableCell.ReplacePlayableCell(playableCell, out var oldPlayable);
+
+            if (oldPlayable != null)
+            {
+                oldPlayable.transform.parent = parentTransform;
+            }
         }
 
-        private void InitAllMovableCrossType()
+        public void InitAllMovableCrossType()
         {
             var cellGeometry = CellGeometry.Cross;
 
             var indexList = new List<int>(Enumerable
                 .Range(0, LabyrinthMath.MovableCellsRowCol.Length + 1));
-
-            var spawner = new CellSpawner(_cellPrefabsConfig);
 
             foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
             {
@@ -142,26 +147,19 @@ namespace GameCore
 
                 indexList.Remove(randomIndex);
 
-
                 var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
 
-                Debug.Log($"original rowcol: {(Row, Col)}");
-                Debug.Log($"xy: {(X, Y)}");
-
-                var cell = spawner.SpawnCell(cellGeometry, cellType.Reward, rotation, X, Y, _movableParentTransform);
-
-                Debug.Log($"calc rowcol: {LabyrinthMath.GetCellIndex(((int)cell.transform.localPosition.x, (int)cell.transform.localPosition.y))}");
+                var cell = _cellsPool.SpawnFromPool(cellGeometry, cellType.Reward, rotation, X, Y);
 
                 SetCellsToLabyrinth(cell, Row, Col);
             }
 
             var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
 
-            var playableCellCard = spawner.SpawnCell(cellGeometry, plCellType.Reward, 0, 0, 0, _movableParentTransform);
+            var playableCellCard = _cellsPool.SpawnFromPool(cellGeometry, plCellType.Reward, 0, 0, 0);
 
             _playableCell.ReplacePlayableCell(playableCellCard, out _);
         }
-
 
         private void Update()
         {
