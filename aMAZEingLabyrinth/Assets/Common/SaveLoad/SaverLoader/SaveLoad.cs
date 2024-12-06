@@ -28,7 +28,10 @@ namespace SaveLoadNamespace
 
             TData paramsData = ConvertDataToParams(service);
 
-            gameRepository.SetData<TData>(paramsData);
+            if (paramsData != null)
+            {
+                gameRepository.SetData<TData>(paramsData);
+            }
         }
 
         public void LoadNewGame(IObjectResolver context)

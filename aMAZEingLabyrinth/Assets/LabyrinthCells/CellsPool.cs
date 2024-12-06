@@ -92,29 +92,40 @@ namespace GameCore
             return cell;
         }
 
-        //public CardCell SpawnCell(CellGeometry geometry, RewardName reward, int rotAngle, int localX, int localY, Transform parent)
-        //{
-        //    var cell = GameObject.Instantiate(_cellPrefabsConfig.GetCardCell(geometry));
 
-        //    cell.transform.SetParent(parent);
+        public void UnspawnPooledCells()
+        {
+            foreach (var cell in _rewardCells.Values)
+            {
+                cell.gameObject.SetActive(false);
+            }
 
-        //    cell.transform.localPosition = new Vector3(localX, localY, cell.transform.position.z);
+            foreach (var (_, cards) in _emptyCells.Values)
+            {
+                foreach (var cell in cards)
+                {
+                    cell.gameObject.SetActive(false);
+                }
+            }
+        }
 
-        //    cell.Init(reward, rotAngle);
+        private CardCell SpawnCell(CellGeometry geometry, RewardName reward, int rotAngle, int localX, int localY, Transform parent)
+        {
+            var cell = GameObject.Instantiate(_cellPrefabsConfig.GetCardCell(geometry));
 
-        //    return cell;
-        //}
+            cell.transform.SetParent(parent);
 
-        //public CardCell SpawnCell(OneCellData cellData, (int X, int Y) origin, Transform parentTransform)
-        //{
-        //    return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
-        //        origin.X, origin.Y, parentTransform);
-        //}
+            cell.transform.localPosition = new Vector3(localX, localY, cell.transform.position.z);
 
-        //public CardCell SpawnCell(OneCellData cellData, Transform parentTransform)
-        //{
-        //    return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
-        //        cellData.Origin.X, cellData.Origin.Y, parentTransform);
-        //}
+            cell.Init(reward, rotAngle);
+
+            return cell;
+        }
+
+        public CardCell SpawnCell(OneCellData cellData, Transform parentTransform)
+        {
+            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
+                cellData.Origin.X, cellData.Origin.Y, parentTransform);
+        }
     }
 }

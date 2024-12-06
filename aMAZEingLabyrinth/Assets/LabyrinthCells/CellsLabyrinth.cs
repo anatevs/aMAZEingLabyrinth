@@ -24,6 +24,9 @@ namespace GameCore
         [SerializeField]
         private PlayableCell _playableCell;
 
+        [SerializeField]
+        private bool _isCrossCells;
+
         private LabyrinthGrid _grid;
 
         private CardCell[,] _cardCells;
@@ -61,9 +64,6 @@ namespace GameCore
             }
 
             _cellsPool.PopulatePool(_movableParentTransform);
-
-            //InitMovableCells();
-            //InitAllMovableCrossType();
         }
 
         private void OnDisable()
@@ -73,31 +73,55 @@ namespace GameCore
 
         private void SendCellsToConnector()
         {
-            foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
+            if (!_isCrossCells)
             {
-                var cell = _cardCells[Row, Col];
-                _unfixedCellsConnector.AddMovable(cell);
+                foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
+                {
+                    var cell = _cardCells[Row, Col];
+                    if (cell == null)
+                    {
+                        Debug.Log("null cell in labyrinth!");
+                        return;
+                    }
+                    _unfixedCellsConnector.AddMovable(cell);
+                }
+                if (_playableCell.CardCell == null)
+                {
+                    Debug.Log("null playable cell!");
+                    return;
+                }
+                _unfixedCellsConnector.SetPlayable(_playableCell.CardCell);
             }
-
-            _unfixedCellsConnector.SetPlayable(_playableCell.CardCell);
         }
 
         public void InitMovableCells()
         {
-            InitMovableCellsLoad(_unfixedCellsConnector.InitCellsData);
+            if (!_isCrossCells)
+            {
+                InitUnfixedCellsLoad(_unfixedCellsConnector.InitCellsData);
+            }
+
+            else
+            {
+                _cellsPool.UnspawnPooledCells();
+
+                _unfixedCellsConnector.GenerateCrossTypeData();
+
+                InitCrossType(_unfixedCellsConnector.CrossedCellsData);
+            }
         }
 
-        private void InitMovableCellsLoad(CellsData cellsData)
+        private void InitUnfixedCellsLoad(CellsData cellsData)
         {
             InitPlayebleCellFromData(cellsData.PlayableCellData, _movableParentTransform);
 
             foreach (var cellData in cellsData.MovableCellsData)
             {
-                InitLabyrinthCellFromData(cellData, _movableParentTransform);
+                InitLabyrinthCellFromData(cellData);
             }
         }
 
-        private void InitLabyrinthCellFromData(OneCellData cellData, Transform parentTransform)
+        private void InitLabyrinthCellFromData(OneCellData cellData)
         {
             var cell = _cellsPool.SpawnFromPool(cellData);
 
@@ -118,35 +142,20 @@ namespace GameCore
             }
         }
 
-        public void InitAllMovableCrossType()
+        private void InitCrossType(CellsData cellsData)
         {
-            var cellGeometry = CellGeometry.Cross;
-
-            var indexList = new List<int>(Enumerable
-                .Range(0, LabyrinthMath.MovableCellsRowCol.Length + 1));
-
-            foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
+            foreach (var cellData in cellsData.MovableCellsData)
             {
-                var rotation = 0;
+                var cell = _cellsPool.SpawnCell(cellData, _movableParentTransform);
 
-                var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
-
-                var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
-
-                indexList.Remove(randomIndex);
-
-                var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
-
-                var cell = _cellsPool.SpawnFromPool(cellGeometry, cellType.Reward, rotation, X, Y);
+                var (Row, Col) = LabyrinthMath.GetCellIndex(cellData.Origin);
 
                 SetCellsToLabyrinth(cell, Row, Col);
             }
 
-            var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
+            var playableCell = _cellsPool.SpawnCell(cellsData.PlayableCellData, _movableParentTransform);
 
-            var playableCellCard = _cellsPool.SpawnFromPool(cellGeometry, plCellType.Reward, 0, 0, 0);
-
-            _playableCell.ReplacePlayableCell(playableCellCard, out _);
+            _playableCell.ReplacePlayableCell(playableCell, out _);
         }
 
 

@@ -6,7 +6,6 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using GameManagement;
-using SaveLoadNamespace;
 
 public class SceneLifetimeScope : LifetimeScope
 {
@@ -72,7 +71,6 @@ public class SceneLifetimeScope : LifetimeScope
     {
         builder.RegisterEntryPoint<StartGameManager>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EndGameManager>(Lifetime.Singleton);
-        //builder.RegisterEntryPoint<GameManager>(Lifetime.Singleton);
     }
 
     private void RegisterHandlers(IContainerBuilder builder)

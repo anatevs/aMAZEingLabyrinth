@@ -11,6 +11,8 @@ namespace GameUI
 
         public StartGameMenu StartGame => _startGame;
 
+        public InGameMenu InGameMenu => _inGameMenu;
+
         [SerializeField]
         private PlayerSelector _playerSelector;
 
@@ -22,5 +24,8 @@ namespace GameUI
 
         [SerializeField]
         private StartGameMenu _startGame;
+
+        [SerializeField]
+        private InGameMenu _inGameMenu;
     }
 }

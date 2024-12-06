@@ -9,22 +9,23 @@ namespace GameManagement
     {
         private readonly MenusService _menusService;
 
-        private readonly GameListenersManager _gameListenersManager;
-
-        public EndGameManager(MenusService menusService, GameListenersManager gameListenersManager)
+        public EndGameManager(MenusService menusService)
         {
             _menusService = menusService;
-            _gameListenersManager = gameListenersManager;
         }
 
         void IInitializable.Initialize()
         {
             _menusService.EndGame.OnExitClicked += QuitGame;
+
+            _menusService.InGameMenu.OnExitClicked += QuitGame;
         }
 
         void IDisposable.Dispose()
         {
             _menusService.EndGame.OnExitClicked -= QuitGame;
+
+            _menusService.InGameMenu.OnExitClicked -= QuitGame;
         }
 
         private void QuitGame()

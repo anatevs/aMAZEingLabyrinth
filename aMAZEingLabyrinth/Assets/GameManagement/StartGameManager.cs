@@ -4,12 +4,15 @@ using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
 using GameCore;
+using UnityEngine;
 
 namespace GameManagement
 {
     public class StartGameManager : IInitializable, IDisposable
     {
         private readonly MenusService _menusService;
+
+        private readonly CellHighlight _cellHighlight;
 
         private readonly PlayersList _players;
 
@@ -22,6 +25,7 @@ namespace GameManagement
         private readonly TurnPipeline _turnPipeline;
 
         public StartGameManager(MenusService menuWindowsService,
+            CellHighlight cellHighlight,
             PlayersList playersList,
             TurnPipeline turnPipeline,
             CellsLabyrinth cellsLabyrinth,
@@ -29,6 +33,7 @@ namespace GameManagement
             SaveLoadManager saveLoadManager)
         {
             _menusService = menuWindowsService;
+            _cellHighlight = cellHighlight;
             _players = playersList;
             _turnPipeline = turnPipeline;
             _cellsLabyrinth = cellsLabyrinth;
@@ -44,8 +49,9 @@ namespace GameManagement
 
             _menusService.EndGame.OnNewGameClicked += SelectNewGame;
 
-            _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
+            _menusService.InGameMenu.OnNewGameClicked += SelectNewGame;
 
+            _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
 
             var isDataInRepository = _saveLoadManager.IsDataInRepository;
 
@@ -60,6 +66,8 @@ namespace GameManagement
 
             _menusService.EndGame.OnNewGameClicked -= SelectNewGame;
 
+            _menusService.InGameMenu.OnNewGameClicked -= SelectNewGame;
+
             _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
         }
 
@@ -67,11 +75,15 @@ namespace GameManagement
         {
             _saveLoadManager.LoadNewGame();
 
+            _cellHighlight.SetActive(false);
+
             _menusService.PlayerSelector.Show();
         }
 
         private void SelectFirstPlayer(PlayerType firstPlayer)
         {
+            Debug.Log("1st pl");
+
             _players.InitPlayers(firstPlayer);
 
             _cellsLabyrinth.InitMovableCells();

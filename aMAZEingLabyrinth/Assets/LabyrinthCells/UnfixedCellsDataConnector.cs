@@ -15,6 +15,10 @@ namespace SaveLoadNamespace
 
         public CellsData InitCellsData => _initCellsData;
 
+        public CellsData CrossedCellsData => _crossedCellsData;
+
+        private readonly CellsData _crossedCellsData = new();
+
         private readonly CellsData _initCellsData = new();
 
         private readonly List<CardCell> _movableCells = new();
@@ -91,6 +95,38 @@ namespace SaveLoadNamespace
             var plCellData = new OneCellData(plCellType.Geometry, plCellType.Reward, 0, (-1, -1));
 
             SetPlayableData(plCellData);
+        }
+
+
+        public void GenerateCrossTypeData()
+        {
+            var cellGeometry = CellGeometry.Cross;
+
+            var indexList = new List<int>(Enumerable
+                .Range(0, LabyrinthMath.MovableCellsRowCol.Length + 1));
+
+            foreach (var (Row, Col) in LabyrinthMath.MovableCellsRowCol)
+            {
+                var rotation = 0;
+
+                var randomIndex = indexList[UnityEngine.Random.Range(0, indexList.Count)];
+
+                var cellType = _movableCellsConfig.GetCardCellType(randomIndex);
+
+                indexList.Remove(randomIndex);
+
+                var (X, Y) = LabyrinthMath.GetXYOrigin(Row, Col);
+
+                var cellData = new OneCellData(cellGeometry, cellType.Reward, rotation, (X, Y));
+
+                _crossedCellsData.AddMovableCell(cellData);
+            }
+
+            var plCellType = _movableCellsConfig.GetCardCellType(indexList[0]);
+
+            var plCellData = new OneCellData(cellGeometry, plCellType.Reward, 0, (-1, -1));
+
+            _crossedCellsData.SetPlayableCell(plCellData);
         }
     }
 }
