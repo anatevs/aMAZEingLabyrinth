@@ -18,6 +18,11 @@ namespace GameUI
 
         private void Awake()
         {
+            OnShow();
+        }
+
+        private void OnShow()
+        {
             InitDropdown();
 
             _okButton.onClick.AddListener(MakeSelection);
@@ -40,6 +45,8 @@ namespace GameUI
 
         public void Show()
         {
+            OnShow();
+
             gameObject.SetActive(true);
         }
 

@@ -5,6 +5,12 @@ namespace GameCore
 {
     public class PathMarkersPool : MonoBehaviour
     {
+        public float SpawnedTime
+        {
+            get => _spawnedTime;
+            set => _spawnedTime = value;
+        }
+
         [SerializeField]
         private Transform _pathMarkersTransform;
 
@@ -13,6 +19,11 @@ namespace GameCore
 
         [SerializeField]
         private GameObject[] _initMarkers;
+
+        [SerializeField]
+        private float _chillTime;
+
+        private float _spawnedTime;
 
         private readonly Queue<GameObject> _pool = new();
 
@@ -30,9 +41,8 @@ namespace GameCore
             var position = new Vector3(xPos, yPos,
                 _pathMarker.transform.position.z);
 
-            GameObject marker;
 
-            if (_pool.TryDequeue(out marker))
+            if (_pool.TryDequeue(out GameObject marker))
             {
                 marker.SetActive(true);
             }
@@ -49,7 +59,18 @@ namespace GameCore
             return marker;
         }
 
-        public void UnspawnAll()
+        private void Update()
+        {
+            if (_spawnedTime > 0)
+            {
+                if (Time.time - _spawnedTime > _chillTime)
+                {
+                    UnspawnAll();
+                }
+            }
+        }
+
+        private void UnspawnAll()
         {
             for (int i = 0; i < _spawnedMarkers.Count; i++)
             {

@@ -270,7 +270,8 @@ namespace GameCore
 
             var resultBool = _grid.TryFindAStarPath(start, end, out List<Vector2Int> resultVector2);
 
-            _pathMarkersPool.UnspawnAll();
+            _pathMarkersPool.SpawnedTime = Time.time;
+
             _pathMarkersPool.Spawn(start.x, start.y);
             _pathMarkersPool.Spawn(end.x, end.y);
 
@@ -287,14 +288,6 @@ namespace GameCore
             Debug.Log($"path found: {resultBool}");
 
             return resultBool;
-        }
-
-        private bool FindPathRowCol((int i, int j) startRowCol, (int i, int j) endRowCol, out List<(int x, int y)> resultXY)
-        {
-            var start = LabyrinthMath.GetXYCenter(startRowCol.i, startRowCol.j);
-            var end = LabyrinthMath.GetXYCenter(endRowCol.i, endRowCol.j);
-
-            return FindPath(start, end, out resultXY);
         }
 
         private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)
