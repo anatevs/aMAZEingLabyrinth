@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using VContainer;
-using VContainer.Unity;
 using GameManagement;
 
 namespace SaveLoadNamespace
 {
     public class SaveLoadManager :
-        IPostInitializable,
         IAppQuitListener
     {
         public bool IsDataInRepository => _isDataInRepository;
@@ -26,7 +24,7 @@ namespace SaveLoadNamespace
             _context = context;
         }
 
-        public void PostInitialize()
+        public void LoadGame()
         {
             _gameRepository.OnNoDataFound += SetNoDataInRepository;
 

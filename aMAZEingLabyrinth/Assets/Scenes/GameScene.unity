@@ -1655,11 +1655,8 @@ MonoBehaviour:
   - {fileID: 541139726}
   _pathMarkersPool: {fileID: 1021813579}
   _movableParentTransform: {fileID: 1275738921}
-  _cellPrefabsConfig: {fileID: 11400000, guid: 558c606f47b532d4183982dcd1809463, type: 2}
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
   _playableCell: {fileID: 252792296}
-  _printRowCol: 0000000000000000
-  _printCell: 0
 --- !u!1 &316739504
 GameObject:
   m_ObjectHideFlags: 0
