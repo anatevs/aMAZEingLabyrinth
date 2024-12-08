@@ -13,7 +13,7 @@
 
         public static int CellSize => _cellSize;
 
-        public static (int, int)[] MovableCellsRowCol => _movableCellsRowCol;
+        public static (int row, int col)[] MovableCellsRowCol => _movableCellsRowCol;
 
         private static readonly int _cellSize = 3;
 
@@ -22,7 +22,7 @@
         private static readonly int[] _fixedRowCols = new int[4] { 0, 2, 4, 6 };
         private static readonly int[] _movableRowCols = new int[3] { 1, 3, 5 };
 
-        private static readonly (int, int)[] _movableCellsRowCol;
+        private static readonly (int row, int col)[] _movableCellsRowCol;
 
         private static readonly int _fixedAmount;
         private static readonly int _unfixedAmount;

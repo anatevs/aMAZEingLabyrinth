@@ -19,7 +19,7 @@ namespace GameCore
 
         private Button _button;
 
-        private void Awake()
+        private void OnEnable()
         {
             _button = GetComponent<Button>();
 

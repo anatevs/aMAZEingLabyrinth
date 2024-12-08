@@ -1,4 +1,5 @@
 using GameCore;
+using GameManagement;
 using SaveLoadNamespace;
 using UnityEngine;
 using VContainer;
@@ -39,6 +40,9 @@ public class RootLifetimeScope : LifetimeScope
 
         builder.RegisterEntryPoint<SaveLoadManager>(Lifetime.Singleton)
             .AsSelf();
+
+        builder.RegisterEntryPoint<LoadingGame>(Lifetime.Singleton)
+            .AsSelf();
     }
 
     private void RegisterDataConnectors(IContainerBuilder builder)
@@ -56,6 +60,9 @@ public class RootLifetimeScope : LifetimeScope
     {
         builder.Register<UnfixedCellsSaveLoad>(Lifetime.Singleton)
             .AsImplementedInterfaces();
+
+        //builder.Register<UnfixedSaveLoad>(Lifetime.Singleton)
+        //    .AsImplementedInterfaces();
 
         builder.Register<PlayersSaveLoad>(Lifetime.Singleton)
             .AsImplementedInterfaces();
