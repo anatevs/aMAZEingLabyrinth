@@ -6,7 +6,7 @@ namespace GameCore
 {
     [CreateAssetMenu(fileName = "PlayerTypesConfig",
         menuName = "Configs/PlayerTypesConfig")]
-    public class PlayerTypesConfig : ScriptableObject
+    public class PlayersSpritesConfig : ScriptableObject
     {
         [SerializeField]
         private PlayerSprite[] _playerTypesConfigs;

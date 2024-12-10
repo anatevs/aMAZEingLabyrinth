@@ -12,7 +12,7 @@ namespace GameUI
         private RewardInfoView[] _views;
 
         [SerializeField]
-        private PlayerTypesConfig _playerTypesConfig;
+        private PlayersSpritesConfig _playerTypesConfig;
 
         [SerializeField]
         private Image _activePlayerHighlight;

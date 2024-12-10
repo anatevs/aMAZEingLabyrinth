@@ -32,11 +32,6 @@ namespace SaveLoadNamespace
             _playersData = playersData;
         }
 
-        public OnePlayerData GetData(PlayerType playerType)
-        {
-            return _playersData.GetPlayerData(playerType);
-        }
-
         public void SetupPlayers()
         {
             OnPlayersRequested?.Invoke();
