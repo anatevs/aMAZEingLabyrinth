@@ -26,7 +26,7 @@ namespace GameCore
             _eventBus = eventBus;
         }
 
-        private void Awake()
+        private void OnEnable()
         {
             _view.OnMouseEnter += SetHighlight;
 

@@ -15,7 +15,7 @@ namespace GameUI
         [SerializeField]
         private Button _loadGameButton;
 
-        private void Awake()
+        private void OnEnable()
         {
             _newGameButton.onClick.AddListener(SetNewGame);
             _loadGameButton.onClick.AddListener(LoadGame);

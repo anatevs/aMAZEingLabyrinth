@@ -4,7 +4,6 @@ using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
 using GameCore;
-using UnityEngine;
 
 namespace GameManagement
 {
@@ -82,8 +81,6 @@ namespace GameManagement
 
         private void SelectFirstPlayer(PlayerType firstPlayer)
         {
-            Debug.Log("1st pl");
-
             _players.InitPlayers(firstPlayer);
 
             _cellsLabyrinth.InitMovableCells();

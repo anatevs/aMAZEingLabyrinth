@@ -20,7 +20,7 @@ namespace GameUI
         [SerializeField]
         private Button _exit;
 
-        private void Awake()
+        private void OnEnable()
         {
             _newGame.onClick.AddListener(SetNewGame);
             _exit.onClick.AddListener(Exit);

@@ -23,5 +23,9 @@ namespace GameModules
         {
             return Input.GetMouseButtonDown(0);
         }
+
+#if UNITY_EDITOR
+        public Vector3 MousePosition => Input.mousePosition;
+#endif
     }
 }

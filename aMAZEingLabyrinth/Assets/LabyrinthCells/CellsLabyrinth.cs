@@ -41,8 +41,16 @@ namespace GameCore
             _cellsPool = cellsPool;
 
             _unfixedCellsConnector = unfixedCellsConnector;
+        }
 
+        private void OnEnable()
+        {
             _unfixedCellsConnector.OnCellsRequested += SendCellsToConnector;
+        }
+
+        private void OnDisable()
+        {
+            _unfixedCellsConnector.OnCellsRequested -= SendCellsToConnector;
         }
 
         private void Start()
@@ -64,11 +72,6 @@ namespace GameCore
             }
 
             _cellsPool.PopulatePool(_movableParentTransform);
-        }
-
-        private void OnDisable()
-        {
-            _unfixedCellsConnector.OnCellsRequested -= SendCellsToConnector;
         }
 
         private void SendCellsToConnector()
