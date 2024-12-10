@@ -16,6 +16,10 @@ namespace GameCore
         [SerializeField]
         private RewardCardsService _rewardCardsService;
 
+
+        //make a List<Player> wich size and content will depend on selected players 
+        //and substitute this list in exept _players in this script
+
         private PlayersDataConnector _playersDataConnector;
 
         private int _currentIndex = 0;

@@ -79,6 +79,10 @@ namespace GameManagement
             _menusService.PlayerSelector.Show();
         }
 
+        //make Init of active players selection
+
+
+
         private void SelectFirstPlayer(PlayerType firstPlayer)
         {
             _players.InitPlayers(firstPlayer);

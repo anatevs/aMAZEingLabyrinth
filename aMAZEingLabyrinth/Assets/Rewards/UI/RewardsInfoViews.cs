@@ -21,8 +21,12 @@ namespace GameUI
 
         private readonly Dictionary<PlayerType, Vector3> _highlightPositions = new();
 
-        private void Awake()
+        private void Awake() //not in awake, maybe public Init method
         {
+            //playersTypes - from initted playersList
+
+            //without checking (maybe only as <=)
+
             var playersTypes = Enum.GetValues(typeof(PlayerType));
 
             if (_views.Length != playersTypes.Length)
@@ -30,9 +34,11 @@ namespace GameUI
                 throw new Exception("rewards info views number doesn't equals player types number");
             }
 
+            //iterate through the number of players from playersList
+
             for (int i = 0; i < _views.Length; i++)
             {
-                var playerType = (PlayerType)i;
+                var playerType = (PlayerType)i; //get from playersList
 
                 _views[i].SetPlayerImage(
                     _playerTypesConfig.GetPlayerSprite(playerType));
@@ -45,6 +51,8 @@ namespace GameUI
 
                 _highlightPositions.Add(playerType, highlightPos);
             }
+
+            //remove non-usable, i.e. disable GO
         }
 
         public void SetTargetsInfo(Player player, RewardsConfig rewardsConfig)
