@@ -13,7 +13,7 @@ namespace SaveLoadNamespace
 
         private PlayersData _playersData = new();
 
-        private Player[] _players = new Player[Enum.GetNames(typeof(PlayerType)).Length];
+        private Player[] _players;
 
         private readonly PlayersDataConfig _dataConfig;
 

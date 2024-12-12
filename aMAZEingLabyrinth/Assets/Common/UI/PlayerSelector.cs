@@ -37,6 +37,8 @@ namespace GameUI
         {
             _dropdown.options = new();
 
+            //make here reference to playersList and init from it
+
             foreach(var playerName in Enum.GetValues(typeof(PlayerType)))
             {
                 _dropdown.options.Add(new(playerName.ToString()));
