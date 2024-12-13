@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using GameCore;
+using System.Collections.Generic;
 
 namespace GameUI
 {
@@ -30,6 +31,27 @@ namespace GameUI
             gameObject.SetActive(true);
         }
 
+        public void Show(HashSet<PlayerType> players)
+        {
+            InitDropdown(players);
+
+            _okButton.onClick.AddListener(MakeSelection);
+
+            gameObject.SetActive(true);
+        }
+
+        public void InitDropdown(HashSet<PlayerType> players)
+        {
+            _dropdown.options.Clear();
+
+            _dropdown.RefreshShownValue();
+
+            foreach (var playerName in players)
+            {
+                _dropdown.options.Add(new(playerName.ToString()));
+            }
+        }
+
         private void Hide()
         {
             gameObject.SetActive(false);
@@ -37,9 +59,9 @@ namespace GameUI
 
         private void InitDropdown()
         {
-            _dropdown.options = new();
+            _dropdown.options.Clear();
 
-            //make here reference to playersList and init from it
+            _dropdown.RefreshShownValue();
 
             foreach (var playerName in Enum.GetValues(typeof(PlayerType)))
             {

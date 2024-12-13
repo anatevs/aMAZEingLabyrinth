@@ -1,4 +1,5 @@
 ﻿using SaveLoadNamespace;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
@@ -7,7 +8,11 @@ namespace GameCore
 {
     public sealed class PlayersList : MonoBehaviour
     {
+        public event Action<HashSet<PlayerType>> OnListChanged;
+
         public Player CurrentPlayer => _players[_currentIndex];
+
+        public HashSet<PlayerType> Players => _activePlayers;
 
         [SerializeField]
         private Player[] _players;
@@ -73,12 +78,7 @@ namespace GameCore
                 _activePlayers.Remove(type);
             }
 
-            var str = "";
-            foreach (var pl in _activePlayers)
-            {
-                str += " " + pl.ToString();
-            }
-            Debug.Log($"active players: {str}");
+            OnListChanged?.Invoke(_activePlayers);
         }
 
         public void InitPlayers(PlayerType firstPlayer)
