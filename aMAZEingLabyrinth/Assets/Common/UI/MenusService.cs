@@ -4,6 +4,8 @@ namespace GameUI
 {
     public sealed class MenusService : MonoBehaviour
     {
+        public ChoosingPlayers ChoosingPlayer => _choosingPlayer;
+
         public PlayerSelector PlayerSelector => _playerSelector;
         public NoPathMessageWindow NoPathMenu => _noPathMessageWindow;
 
@@ -15,6 +17,9 @@ namespace GameUI
 
         [SerializeField]
         private PlayerSelector _playerSelector;
+
+        [SerializeField]
+        private ChoosingPlayers _choosingPlayer;
 
         [SerializeField]
         private NoPathMessageWindow _noPathMessageWindow;

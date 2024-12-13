@@ -16,21 +16,23 @@ namespace GameUI
         [SerializeField]
         private Button _okButton;
 
-        private void Awake()
+        private void OnDisable()
         {
-            OnShow();
+            _okButton.onClick.RemoveAllListeners();
         }
 
-        private void OnShow()
+        public void Show()
         {
             InitDropdown();
 
             _okButton.onClick.AddListener(MakeSelection);
+
+            gameObject.SetActive(true);
         }
 
-        private void OnDisable()
+        private void Hide()
         {
-            _okButton.onClick.RemoveAllListeners();
+            gameObject.SetActive(false);
         }
 
         private void InitDropdown()
@@ -39,22 +41,10 @@ namespace GameUI
 
             //make here reference to playersList and init from it
 
-            foreach(var playerName in Enum.GetValues(typeof(PlayerType)))
+            foreach (var playerName in Enum.GetValues(typeof(PlayerType)))
             {
                 _dropdown.options.Add(new(playerName.ToString()));
             }
-        }
-
-        public void Show()
-        {
-            OnShow();
-
-            gameObject.SetActive(true);
-        }
-
-        private void Hide()
-        {
-            gameObject.SetActive(false);
         }
 
         private void MakeSelection()

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace GameCore
 {
@@ -16,9 +15,13 @@ namespace GameCore
         [SerializeField]
         private RewardCardsService _rewardCardsService;
 
+        private readonly HashSet<PlayerType> _activePlayers = new();
+
+        private readonly Dictionary<PlayerType, Player> _playersDict = new();
+
 
         //make a List<Player> wich size and content will depend on selected players 
-        //and substitute this list in exept _players in this script
+        //and substitute this list in except _players in this script
 
         private PlayersDataConnector _playersDataConnector;
 
@@ -32,6 +35,20 @@ namespace GameCore
             _playersDataConnector.OnPlayersRequested += SendPlayersToConnector;
         }
 
+        private void Awake()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            foreach (var player in _players)
+            {
+                _activePlayers.Add(player.Type);
+                _playersDict.Add(player.Type, player);
+            }
+        }
+
         private void OnDisable()
         {
             foreach (var player in _players)
@@ -43,6 +60,25 @@ namespace GameCore
             }
 
             _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
+        }
+
+        public void SetPlayerToList(PlayerType type, bool isActive)
+        {
+            if (isActive)
+            {
+                _activePlayers.Add(type);
+            }
+            else
+            {
+                _activePlayers.Remove(type);
+            }
+
+            var str = "";
+            foreach (var pl in _activePlayers)
+            {
+                str += " " + pl.ToString();
+            }
+            Debug.Log($"active players: {str}");
         }
 
         public void InitPlayers(PlayerType firstPlayer)

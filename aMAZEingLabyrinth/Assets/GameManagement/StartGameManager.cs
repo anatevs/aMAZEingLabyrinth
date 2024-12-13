@@ -50,6 +50,8 @@ namespace GameManagement
 
             _menusService.InGameMenu.OnNewGameClicked += SelectNewGame;
 
+            _menusService.ChoosingPlayer.OnPlayerToggled += _players.SetPlayerToList;
+
             _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
 
             var isDataInRepository = _saveLoadManager.IsDataInRepository;
@@ -66,6 +68,8 @@ namespace GameManagement
             _menusService.EndGame.OnNewGameClicked -= SelectNewGame;
 
             _menusService.InGameMenu.OnNewGameClicked -= SelectNewGame;
+
+            _menusService.ChoosingPlayer.OnPlayerToggled -= _players.SetPlayerToList;
 
             _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
         }
