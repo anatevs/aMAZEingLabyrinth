@@ -17,42 +17,51 @@ namespace GameUI
         [SerializeField]
         private Image _activePlayerHighlight;
 
+        private Vector3[] _highlightPos;
+
         private readonly Dictionary<PlayerType, RewardInfoView> _playersInfo = new();
 
         private readonly Dictionary<PlayerType, Vector3> _highlightPositions = new();
 
-        private void Awake() //not in awake, maybe public Init method
+        private void Awake()
         {
-            //playersTypes - from initted playersList
-
-            //without checking (maybe only as <=)
-
-            var playersTypes = Enum.GetValues(typeof(PlayerType));
-
-            if (_views.Length != playersTypes.Length)
-            {
-                throw new Exception("rewards info views number doesn't equals player types number");
-            }
-
-            //iterate through the number of players from playersList
+            _highlightPos = new Vector3[_views.Length];
 
             for (int i = 0; i < _views.Length; i++)
             {
-                var playerType = (PlayerType)i; //get from playersList
-
-                _views[i].SetPlayerImage(
-                    _playerTypesConfig.GetPlayerSprite(playerType));
-
-                _playersInfo.Add(playerType, _views[i]);
-
-                var highlightPos = new Vector3(_activePlayerHighlight.transform.localPosition.x,
+                _highlightPos[i] = new Vector3(
+                    _activePlayerHighlight.transform.localPosition.x,
                     _views[i].transform.localPosition.y,
                     _activePlayerHighlight.transform.localPosition.z);
+            }
+        }
 
-                _highlightPositions.Add(playerType, highlightPos);
+        public void InitViews(ICollection<Player> activePlayers)
+        {
+            DisactivateAllViews();
+            _playersInfo.Clear();
+            _highlightPositions.Clear();
+
+            if (_views.Length < activePlayers.Count)
+            {
+                throw new Exception("rewards info views number less " +
+                    "than active players types number");
             }
 
-            //remove non-usable, i.e. disable GO
+            int i = 0;
+            foreach (var playerType in activePlayers)
+            {
+                _views[i].gameObject.SetActive(true);
+
+                _views[i].SetPlayerImage(
+                    _playerTypesConfig.GetPlayerSprite(playerType.Type));
+
+                _playersInfo.Add(playerType.Type, _views[i]);
+
+                _highlightPositions.Add(playerType.Type, _highlightPos[i]);
+
+                i++;
+            }
         }
 
         public void SetTargetsInfo(Player player, RewardsConfig rewardsConfig)
@@ -75,6 +84,14 @@ namespace GameUI
         {
             _activePlayerHighlight.transform.localPosition =
                 _highlightPositions[playerType];
+        }
+
+        private void DisactivateAllViews()
+        {
+            foreach (var view in _views)
+            {
+                view.gameObject.SetActive(false);
+            }
         }
     }
 }

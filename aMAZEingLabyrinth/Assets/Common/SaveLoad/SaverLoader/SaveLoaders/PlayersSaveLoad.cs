@@ -11,9 +11,9 @@ namespace SaveLoadNamespace
 
             var players = dataConnector.Players;
 
-            var dataArray = new OnePlayerData[players.Length];
+            var dataArray = new OnePlayerData[players.Count];
 
-            for (int i = 0; i < players.Length; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 var player = players[i];
 

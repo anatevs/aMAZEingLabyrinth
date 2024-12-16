@@ -1,5 +1,6 @@
 ﻿using GameCore;
 using System;
+using System.Collections.Generic;
 
 namespace SaveLoadNamespace
 {
@@ -9,11 +10,11 @@ namespace SaveLoadNamespace
 
         public PlayersData Data => _playersData;
 
-        public Player[] Players => _players;
+        public List<Player> Players => _players;
 
         private PlayersData _playersData = new();
 
-        private Player[] _players;
+        private List<Player> _players;
 
         private readonly PlayersDataConfig _dataConfig;
 
@@ -37,7 +38,7 @@ namespace SaveLoadNamespace
             OnPlayersRequested?.Invoke();
         }
         
-        public void SetPlayers(Player[] players)
+        public void SetPlayers(List<Player> players)
         {
             _players = players;
         }

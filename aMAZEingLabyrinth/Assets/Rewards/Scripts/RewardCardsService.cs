@@ -13,44 +13,46 @@ namespace GameCore
         [SerializeField]
         private RewardsInfoViews _targetsUI;
 
-        public void DealOutDefaultCards(Player[] players)
+        public void InitRewardsViews(ICollection<Player> players)
         {
-            var indexes = new List<int>(Enumerable
+            _targetsUI.InitViews(players);
+        }
+
+        public void DealOutDefaultCards(ICollection<Player> players)
+        {
+            var rewardIndexes = new List<int>(Enumerable
                 .Range(0, _rewardsConfig.RewardsCount));
 
-            if (indexes.Count % players.Length != 0)
+            if (rewardIndexes.Count % players.Count != 0)
             {
                 throw new System.Exception($"rewards count is not a multiple of player's count");
             }
 
-            var rewardsAmount = _rewardsConfig.RewardsCount / players.Length;
+            var rewardsAmount = _rewardsConfig.RewardsCount / players.Count;
 
-            for (int i_player = 0; i_player < players.Length; i_player++)
+
+            foreach (Player player in players)
             {
                 for (int i = 0; i < rewardsAmount; i++)
                 {
-                    var index = Random.Range(0, indexes.Count);
+                    var index = Random.Range(0, rewardIndexes.Count);
 
-                    var reward = _rewardsConfig.GetRewardInfo(indexes[index]);
+                    var reward = _rewardsConfig.GetRewardInfo(rewardIndexes[index]);
 
-                    indexes.RemoveAt(index);
+                    rewardIndexes.RemoveAt(index);
 
-                    players[i_player].AddReward(reward.Name);
+                    player.AddReward(reward.Name);
                 }
 
-                SetTargetUIInfo(players[i_player]);
-
-                SubscribePlayer(players[i_player]);
+                SetTargetUIInfo(player);
             }
         }
 
-        public void DealOutLoadedCards(Player[] players)
+        public void DealOutLoadedCards(ICollection<Player> players)
         {
             foreach (var player in players)
             {
                 SetTargetUIInfo(player);
-
-                SubscribePlayer(player);
             }
         }
 
@@ -59,7 +61,7 @@ namespace GameCore
             _targetsUI.SetActiveHighlight(playerType);
         }
 
-        private void SubscribePlayer(Player player)
+        public void SubscribePlayer(Player player)
         {
             player.OnTargetChanged += SetTargetUIInfo;
         }

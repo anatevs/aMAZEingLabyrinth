@@ -91,9 +91,9 @@ namespace GameManagement
 
 
 
-        private void SelectFirstPlayer(PlayerType firstPlayer)
+        private void SelectFirstPlayer(int firstPlayerIndex)
         {
-            _players.InitPlayers(firstPlayer);
+            _players.InitPlayers(firstPlayerIndex);
 
             _cellsLabyrinth.InitMovableCells();
 

@@ -1,6 +1,7 @@
 ﻿using SaveLoadNamespace;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VContainer;
 
@@ -8,11 +9,9 @@ namespace GameCore
 {
     public sealed class PlayersList : MonoBehaviour
     {
-        public event Action<HashSet<PlayerType>> OnListChanged;
+        public event Action<ICollection<PlayerType>> OnListChanged;
 
-        public Player CurrentPlayer => _players[_currentIndex];
-
-        public HashSet<PlayerType> Players => _activePlayers;
+        public Player CurrentPlayer => _playersDict[_activeTypes[_currentIndex]];
 
         [SerializeField]
         private Player[] _players;
@@ -20,13 +19,11 @@ namespace GameCore
         [SerializeField]
         private RewardCardsService _rewardCardsService;
 
-        private readonly HashSet<PlayerType> _activePlayers = new();
+        private List<Player> ActivePlayers => _activeTypes.Select(type => _playersDict[type]).ToList();
+
+        private List<PlayerType> _activeTypes = new();
 
         private readonly Dictionary<PlayerType, Player> _playersDict = new();
-
-
-        //make a List<Player> wich size and content will depend on selected players 
-        //and substitute this list in except _players in this script
 
         private PlayersDataConnector _playersDataConnector;
 
@@ -36,25 +33,30 @@ namespace GameCore
         public void Construct(PlayersDataConnector playersDataConnector)
         {
             _playersDataConnector = playersDataConnector;
-
-            _playersDataConnector.OnPlayersRequested += SendPlayersToConnector;
         }
 
         private void Awake()
         {
-            Init();
-        }
-
-        private void Init()
-        {
             foreach (var player in _players)
             {
-                _activePlayers.Add(player.Type);
+                _activeTypes.Add(player.Type);
                 _playersDict.Add(player.Type, player);
             }
         }
 
+        private void OnEnable()
+        {
+            _playersDataConnector.OnPlayersRequested += SendPlayersToConnector;
+        }
+
         private void OnDisable()
+        {
+            DisactivateAll();
+
+            _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
+        }
+
+        private void DisactivateAll()
         {
             foreach (var player in _players)
             {
@@ -62,64 +64,82 @@ namespace GameCore
 
                 player.OnSetPlaying -=
                     _rewardCardsService.SetActivePlayerHighlight;
-            }
 
-            _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
+                player.gameObject.SetActive(false);
+            }
         }
 
         public void SetPlayerToList(PlayerType type, bool isActive)
         {
             if (isActive)
             {
-                _activePlayers.Add(type);
+                _activeTypes.Add(type);
             }
             else
             {
-                _activePlayers.Remove(type);
+                _activeTypes.Remove(type);
             }
 
-            OnListChanged?.Invoke(_activePlayers);
+            OnListChanged?.Invoke(_activeTypes);
         }
 
-        public void InitPlayers(PlayerType firstPlayer)
+        public void InitPlayers(int firstPlayerIndex)
         {
-            for (int i = 0; i < _players.Length; i++)
-            {
-                var player = InitPlayer(i);
+            DisactivateAll();
 
-                if (firstPlayer == player.Type)
+            _rewardCardsService.InitRewardsViews(ActivePlayers);
+
+            for (int i = 0; i < _activeTypes.Count; i++)
+            {
+                var type = _activeTypes[i];
+                var player = InitPlayer(type);
+
+                player.gameObject.SetActive(true);
+
+                if (firstPlayerIndex == i)
                 {
                     player.SetIsPlaying(true);
-
                     _currentIndex = i;
                 }
+
+                _rewardCardsService.SubscribePlayer(player);
             }
 
-            _rewardCardsService.DealOutDefaultCards(_players);
+            _rewardCardsService.DealOutDefaultCards(ActivePlayers);
         }
 
         public void InitPlayers()
         {
-            for (int i = 0; i < _players.Length; i++)
+            _activeTypes = _playersDataConnector.Data.GetActiveTypes().ToList();
+
+            DisactivateAll();
+
+            _rewardCardsService.InitRewardsViews(ActivePlayers);
+
+            for (int i = 0; i < _activeTypes.Count; i++)
             {
-                var player = InitPlayer(i);
+                var type = _activeTypes[i];
+                var player = InitPlayer(type);
+
+                player.gameObject.SetActive(true);
 
                 if (player.IsPlaying)
                 {
                     player.SetIsPlaying(true);
-
                     _currentIndex = i;
                 }
+
+                _rewardCardsService.SubscribePlayer(player);
             }
 
-            _rewardCardsService.DealOutLoadedCards(_players);
+            _rewardCardsService.DealOutLoadedCards(ActivePlayers);
         }
 
-        private Player InitPlayer(int i)
+        private Player InitPlayer(PlayerType type)
         {
-            var player = _players[i];
+            var player = _playersDict[type];
 
-            player.Init(_playersDataConnector.Data.GetPlayerData(player.Type));
+            player.Init(_playersDataConnector.Data.GetPlayerData(type));
 
             player.OnSetPlaying +=
                 _rewardCardsService.SetActivePlayerHighlight;
@@ -131,14 +151,9 @@ namespace GameCore
         {
             CurrentPlayer.SetIsPlaying(false);
 
-            _currentIndex = (_currentIndex + 1) % _players.Length;
+            _currentIndex = (_currentIndex + 1) % _activeTypes.Count;
 
             CurrentPlayer.SetIsPlaying(true);
-        }
-
-        public void ReleasePlayerReward(int plIndex)
-        {
-            _players[plIndex].ReleaseReward();
         }
 
         public bool IsPlayerAtPointWithX(int x, out List<Player> players)
@@ -146,11 +161,11 @@ namespace GameCore
             players = new();
             bool result = false;
 
-            for (int i =0; i < _players.Length; i++)
+            foreach (var type in _activeTypes)
             {
-                if (_players[i].Coordinate.X == x)
+                if (_playersDict[type].Coordinate.X == x)
                 {
-                    players.Add(_players[i]);
+                    players.Add(_playersDict[type]);
                     result = true;
                 }
             }
@@ -163,11 +178,11 @@ namespace GameCore
             players = new();
             bool result = false;
 
-            for (int i = 0; i < _players.Length; i++)
+            foreach (var type in _activeTypes)
             {
-                if (_players[i].Coordinate.Y == y)
+                if (_playersDict[type].Coordinate.Y == y)
                 {
-                    players.Add(_players[i]);
+                    players.Add(_playersDict[type]);
                     result = true;
                 }
             }
@@ -177,7 +192,7 @@ namespace GameCore
 
         private void SendPlayersToConnector()
         {
-            _playersDataConnector.SetPlayers(_players);
+            _playersDataConnector.SetPlayers(ActivePlayers);
         }
     }
 }

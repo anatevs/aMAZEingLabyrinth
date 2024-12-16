@@ -20,5 +20,10 @@ namespace GameCore
         {
             return _playersData[playerType];
         }
+
+        public ICollection<PlayerType> GetActiveTypes()
+        {
+            return _playersData.Keys;
+        }
     }
 }
