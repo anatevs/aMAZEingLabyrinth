@@ -1,5 +1,6 @@
 ﻿using GameUI;
 using System;
+using UnityEditor;
 using UnityEngine;
 using VContainer.Unity;
 
@@ -31,6 +32,11 @@ namespace GameManagement
         private void QuitGame()
         {
             Application.Quit();
+
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#endif
+
         }
     }
 }
