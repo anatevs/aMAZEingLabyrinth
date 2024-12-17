@@ -21,7 +21,7 @@ namespace GameUI
 
         private readonly Dictionary<PlayerType, RewardInfoView> _playersInfo = new();
 
-        private readonly Dictionary<PlayerType, Vector3> _highlightPositions = new();
+        private readonly Dictionary<PlayerType, Vector3> _playableHighlightPos = new();
 
         private void Awake()
         {
@@ -38,9 +38,7 @@ namespace GameUI
 
         public void InitViews(ICollection<Player> activePlayers)
         {
-            DisactivateAllViews();
-            _playersInfo.Clear();
-            _highlightPositions.Clear();
+            RefreshAllViews();
 
             if (_views.Length < activePlayers.Count)
             {
@@ -58,7 +56,7 @@ namespace GameUI
 
                 _playersInfo.Add(playerType.Type, _views[i]);
 
-                _highlightPositions.Add(playerType.Type, _highlightPos[i]);
+                _playableHighlightPos.Add(playerType.Type, _highlightPos[i]);
 
                 i++;
             }
@@ -83,15 +81,18 @@ namespace GameUI
         public void SetActiveHighlight(PlayerType playerType)
         {
             _activePlayerHighlight.transform.localPosition =
-                _highlightPositions[playerType];
+                _playableHighlightPos[playerType];
         }
 
-        private void DisactivateAllViews()
+        private void RefreshAllViews()
         {
             foreach (var view in _views)
             {
                 view.gameObject.SetActive(false);
             }
+
+            _playersInfo.Clear();
+            _playableHighlightPos.Clear();
         }
     }
 }
