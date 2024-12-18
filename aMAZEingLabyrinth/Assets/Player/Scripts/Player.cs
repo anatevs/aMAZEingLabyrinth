@@ -6,8 +6,6 @@ namespace GameCore
 {
     public sealed class Player : MonoBehaviour
     {
-        //public event Action OnMoved;
-
         public event Action<Player> OnTargetChanged;
 
         public event Action<PlayerType> OnSetPlaying;
@@ -81,8 +79,6 @@ namespace GameCore
             _coordinate = path[0];
 
             _view.MoveThroughPath(path);
-
-            //OnMoved?.Invoke();
         }
 
         public void AddReward(RewardName reward)

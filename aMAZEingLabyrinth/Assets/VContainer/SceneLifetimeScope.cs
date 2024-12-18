@@ -64,6 +64,8 @@ public class SceneLifetimeScope : LifetimeScope
 
         builder.Register<TurnPipeline>(Lifetime.Singleton);
 
+        builder.Register<AudioVisualPipeline>(Lifetime.Singleton);
+
         builder.RegisterEntryPoint<PipelineInstaller>(Lifetime.Singleton);
     }
 
