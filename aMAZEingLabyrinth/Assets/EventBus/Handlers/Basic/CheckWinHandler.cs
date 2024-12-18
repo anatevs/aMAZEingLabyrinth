@@ -25,8 +25,6 @@ namespace EventBusNamespace
             }
             else
             {
-                Debug.Log("next player");
-
                 EventBus.RaiseEvent(new NextPlayerEvent());
             }
         }

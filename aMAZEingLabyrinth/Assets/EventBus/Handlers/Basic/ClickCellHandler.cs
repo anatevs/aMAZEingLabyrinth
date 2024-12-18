@@ -1,6 +1,5 @@
 ﻿using GameCore;
 using GameUI;
-using UnityEngine;
 
 namespace EventBusNamespace
 {
@@ -37,23 +36,7 @@ namespace EventBusNamespace
 
             if (result)
             {
-                player.MoveThroughPath(path);
-
-                var target = player.CurrentTarget;
-
-                foreach (var xy in path)
-                {
-                    if (_cellsLabyrinth.HasCellReward(xy, target))
-                    {
-                        Debug.Log($"{player} has {target} on path");
-
-                        EventBus.RaiseEvent(new CheckWinEvent(player));
-
-                        return;
-                    }
-                }
-
-                EventBus.RaiseEvent(new NextPlayerEvent());
+                EventBus.RaiseEvent(new MoveThroughPathEvent(player, path));
             }
             else
             {

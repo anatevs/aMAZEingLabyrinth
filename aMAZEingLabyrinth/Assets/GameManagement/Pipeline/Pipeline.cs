@@ -7,7 +7,7 @@ namespace GamePipeline
     {
         public event Action OnFinished;
 
-        private readonly List<Task> _tasks = new List<Task>();
+        private readonly List<Task> _tasks = new();
 
         private int _currentIndex = 0;
 
