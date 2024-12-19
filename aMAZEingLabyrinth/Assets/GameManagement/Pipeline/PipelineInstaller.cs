@@ -20,7 +20,7 @@ namespace GamePipeline
         void IInitializable.Initialize()
         {
             _turnPipeline.AddTask(ObjectResolverExtension.ResolveInstance<TurnTask>(_objectResolver));
-            //_turnPipeline.AddTask(ObjectResolverExtension.ResolveInstance<HandleVisualPipelineTask>(_objectResolver));
+            _turnPipeline.AddTask(ObjectResolverExtension.ResolveInstance<VisualPipelineTask>(_objectResolver));
         }
 
         void IDisposable.Dispose()

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using static GameCore.OnePlayerData;
+using Cysharp.Threading.Tasks;
 
 namespace GameCore
 {
@@ -27,6 +30,9 @@ namespace GameCore
 
         [SerializeField]
         private PlayerType _playerType;
+
+        [SerializeField]
+        private float _oneMoveDuration = 0.05f;
 
         private bool _isPlaying;
 
@@ -77,8 +83,11 @@ namespace GameCore
         public void MoveThroughPath(List<(int x, int y)> path)
         {
             _coordinate = path[0];
+        }
 
-            _view.MoveThroughPath(path);
+        public async UniTask MoveThroughPathVisual(List<(int x, int y)> path)
+        {
+            await _view.MoveThroughPath(path, _oneMoveDuration);
         }
 
         public void AddReward(RewardName reward)

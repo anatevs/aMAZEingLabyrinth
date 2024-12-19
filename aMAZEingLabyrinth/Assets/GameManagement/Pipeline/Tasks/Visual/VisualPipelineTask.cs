@@ -1,10 +1,10 @@
 namespace GamePipeline
 {
-    public sealed class HandleVisualPipelineTask : Task
+    public sealed class VisualPipelineTask : Task
     {
         private readonly AudioVisualPipeline _visualPipeline;
 
-        public HandleVisualPipelineTask(AudioVisualPipeline visualPipeline)
+        public VisualPipelineTask(AudioVisualPipeline visualPipeline)
         {
             _visualPipeline = visualPipeline;
         }

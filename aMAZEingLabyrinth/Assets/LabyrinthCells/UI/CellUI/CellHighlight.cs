@@ -1,4 +1,5 @@
 ﻿using EventBusNamespace;
+using GamePipeline;
 using UnityEngine;
 using VContainer;
 
@@ -19,11 +20,13 @@ namespace GameCore
         private Vector3 _currentPos = new();
 
         private EventBus _eventBus;
+        private TurnPipeline _turnPipeline;
 
         [Inject]
-        public void Construct(EventBus eventBus)
+        public void Construct(EventBus eventBus, TurnPipeline turnPipeline)
         {
             _eventBus = eventBus;
+            _turnPipeline = turnPipeline;
         }
 
         private void OnEnable()
@@ -67,7 +70,8 @@ namespace GameCore
         {
             if (_isActive)
             {
-                _eventBus.RaiseEvent(new ClickCellEvent(this));
+                _turnPipeline.Run();
+                //_eventBus.RaiseEvent(new ClickCellEvent(this));
             }
         }
     }

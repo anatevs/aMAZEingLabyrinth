@@ -99,7 +99,9 @@ namespace GameManagement
 
             _shiftArrowsService.InitArrows();
 
-            _turnPipeline.Run();
+            _cellHighlight.SetActive(true);
+
+            //_turnPipeline.Run();
         }
 
         private void SelectLoadGame()
@@ -110,7 +112,9 @@ namespace GameManagement
 
             _shiftArrowsService.InitArrows();
 
-            _turnPipeline.Run();
+            _cellHighlight.SetActive(true);
+
+            //_turnPipeline.Run();
         }
     }
 }

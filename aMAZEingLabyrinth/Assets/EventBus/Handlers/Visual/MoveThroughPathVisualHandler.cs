@@ -1,18 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameCore;
+using GamePipeline;
 
 namespace EventBusNamespace
 {
     public sealed class MoveThroughPathVisualHandler : BaseHandler<MoveThroughPathEvent>
     {
-        public MoveThroughPathVisualHandler(EventBus eventBus) : base(eventBus)
+        private readonly AudioVisualPipeline _visualPipeline;
+        private readonly CellHighlight _cellHighlight;
+
+        public MoveThroughPathVisualHandler(EventBus eventBus,
+            AudioVisualPipeline visualPipeline,
+            CellHighlight cellHighlight) : base(eventBus)
         {
+            _visualPipeline = visualPipeline;
+            _cellHighlight = cellHighlight;
         }
 
         protected override void RaiseEvent(MoveThroughPathEvent evnt)
         {
-            //async evnt.Player.MovePath add to visual pipeline
+            _visualPipeline.AddTask(new MoveThroughPathVisualTask
+                (evnt.Player, evnt.Path, _cellHighlight));
         }
     }
 }

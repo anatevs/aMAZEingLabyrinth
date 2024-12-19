@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 8647646802009362486}
   _playerType: 2
+  _oneMoveDuration: 0.05
 --- !u!1 &7734168400232201232
 GameObject:
   m_ObjectHideFlags: 0
