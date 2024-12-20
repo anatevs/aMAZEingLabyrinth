@@ -1,12 +1,16 @@
+using GameCore;
+
 namespace GamePipeline
 {
     public sealed class VisualPipelineTask : Task
     {
         private readonly AudioVisualPipeline _visualPipeline;
+        private readonly CellHighlight _cellHighlight;
 
-        public VisualPipelineTask(AudioVisualPipeline visualPipeline)
+        public VisualPipelineTask(AudioVisualPipeline visualPipeline, CellHighlight cellHighlight)
         {
             _visualPipeline = visualPipeline;
+            _cellHighlight = cellHighlight;
         }
 
         protected override void OnRun()
@@ -24,7 +28,10 @@ namespace GamePipeline
         private void OnFinishVisualPipelineTask()
         {
             _visualPipeline.Clear();
+
             Finish();
+
+            _cellHighlight.SetActive(true);
         }
     }
 }
