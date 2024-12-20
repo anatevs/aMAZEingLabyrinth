@@ -10,7 +10,7 @@ namespace GameCore
         [SerializeField]
         private Transform _transform;
 
-        public async UniTask MoveThroughPath(List<(int x, int y)> path, float duration = 0.1f)
+        public async UniTask MoveThroughPath(List<(int x, int y)> path, float duration)
         {
             for (int i = path.Count - 1; i >= 0; i--)
             {
