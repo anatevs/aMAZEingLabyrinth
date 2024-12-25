@@ -4,6 +4,9 @@ using System.Linq;
 using System;
 using SaveLoadNamespace;
 using VContainer;
+using DG.Tweening;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json.Schema;
 
 namespace GameCore
 {
@@ -170,81 +173,125 @@ namespace GameCore
             return _cardCells[i, j].transform.position;
         }
 
-        public void MakeShift(int shiftRow, int shiftCol, out (int row, int col) oppositeIndex)
-        {
-            oppositeIndex = (-1, -1);
 
+        public (int row, int col, int iterNumber) CalcShiftParams(int shiftRow, int shiftCol)
+        {
             bool isRow = LabyrinthMath.MovableRowCols.Contains(shiftRow);
             bool isCol = LabyrinthMath.MovableRowCols.Contains(shiftCol);
 
             if (isRow == isCol)
             {
-                Debug.Log($"trying to move a fixed row or column with edge element index ({shiftRow}, {shiftCol})");
-                return;
+                throw new Exception($"trying to move a fixed row or column with edge element index ({shiftRow}, {shiftCol})");
             }
 
-            int[] iterDirectionRowCol = { 0, -1 };
             int iterNumber = 1;
-            int row = 0;
-            int col = 0;
+            int opRow = 0;
+            int opCol = 0;
 
             if (isRow)
             {
                 iterNumber = LabyrinthMath.Size.Cols - 1;
-                var startIter = iterNumber;
-
-                iterDirectionRowCol[0] = 0;
-                iterDirectionRowCol[1] = -1;
+                opCol = iterNumber;
 
                 if (shiftCol == iterNumber)
                 {
-                    iterDirectionRowCol[0] = 0;
-                    iterDirectionRowCol[1] = 1;
-
-                    startIter = 0;
+                    opCol = 0;
                 }
 
-                col = startIter;
-                row = shiftRow ;
+                opRow = shiftRow;
             }
 
             if (isCol)
             {
                 iterNumber = LabyrinthMath.Size.Rows - 1;
-                var startIter = iterNumber;
-
-                iterDirectionRowCol[0] = -1;
-                iterDirectionRowCol[1] = 0;
+                opRow = iterNumber;
 
                 if (shiftRow == iterNumber)
                 {
-                    iterDirectionRowCol[0] = 1;
-                    iterDirectionRowCol[1] = 0;
-
-                    startIter = 0;
+                    opRow = 0;
                 }
 
-                row = startIter;
-                col = shiftCol;
+                opCol = shiftCol;
             }
 
-            oppositeIndex = (row, col);
+            return (opRow, opCol, iterNumber);
+        }
 
-            _playableCell.ReplacePlayableCell(_cardCells[row, col], out var oldPlayable);
+
+        private List<Transform> _shiftedTransforms = new();
+        private Vector3Int _shiftDirection;
+
+        public void MakeShift(int shiftRow, int shiftCol, out (int row, int col, Vector3Int direction) shiftParams)
+        {
+            var calcParams = CalcShiftParams(shiftRow, shiftCol);
+
+            var (opRow, opCol) = (calcParams.row, calcParams.col);
+            var iterNumber = calcParams.iterNumber;
+
+
+            int[] iterDirectionRowCol = new int[2];
+            iterDirectionRowCol[0] = (shiftRow - opRow) / (LabyrinthMath.Size.Rows - 1);
+            iterDirectionRowCol[1] = (shiftCol - opCol) / (LabyrinthMath.Size.Cols - 1);
+
+            var iterDirectionXY = LabyrinthMath.GetXYDirection((-iterDirectionRowCol[0], -iterDirectionRowCol[1]));
+            _shiftDirection = new Vector3Int(iterDirectionXY.xDir, iterDirectionXY.yDir);
+
+            shiftParams = (opRow, opCol, _shiftDirection);
+
+            var newPlayable = _cardCells[opRow, opCol];
+
+            var oldPlayable = _playableCell.CardCell;
+
+            oldPlayable.transform.SetParent(_movableParentTransform);
+            var preshiftXY = LabyrinthMath.GetXYOrigin(
+                shiftRow + iterDirectionRowCol[0],
+                shiftCol + iterDirectionRowCol[1]);
+
+            oldPlayable.transform.localPosition = new Vector2(preshiftXY.X, preshiftXY.Y);
+
+            _shiftedTransforms.Clear();
+            _shiftedTransforms.Add(oldPlayable.transform);
+            _shiftedTransforms.Add(newPlayable.transform);
 
             for (int i = 0; i < iterNumber; i++)
             {
-                row += iterDirectionRowCol[0];
-                col += iterDirectionRowCol[1];
+                opRow += iterDirectionRowCol[0];
+                opCol += iterDirectionRowCol[1];
 
-                var cell = _cardCells[row, col];
+                var cell = _cardCells[opRow, opCol];
 
-                SetCellsToLabyrinth(cell, row - iterDirectionRowCol[0],
-                    col - iterDirectionRowCol[1], setTransformPos: true);
+                var newRow = opRow - iterDirectionRowCol[0];
+                var newCol = opCol - iterDirectionRowCol[1];
+
+                SetCellsToLabyrinth(cell, newRow, newCol);
+
+                _shiftedTransforms.Add(cell.transform);
             }
 
-            oldPlayable.transform.SetParent(_movableParentTransform);
-            SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol, setTransformPos: true);
+            SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol);
+
+            _playableCell.SetCell(newPlayable);
+
+
+            //var sequence = MakeShiftViews();
+            //sequence.Play();
+        }
+
+
+        public Sequence PrepareShiftViews(float duration, out Vector3Int shiftDirection)
+        {
+            var sequence = DOTween.Sequence().Pause();
+
+            foreach (var transform in _shiftedTransforms)
+            {
+                sequence.Join(transform.DOLocalMove(transform.localPosition + _shiftDirection, duration));
+            }
+
+
+            _playableCell.SetCellView();
+
+            shiftDirection = _shiftDirection;
+            return sequence;
         }
 
         public bool HasCellReward((int x, int y) localXY, RewardName reward)
@@ -293,17 +340,22 @@ namespace GameCore
             return resultBool;
         }
 
-        private void SetCellsToLabyrinth(CardCell cell, int i, int j, bool setTransformPos = false)
+        private void SetCellsToLabyrinth(CardCell cell, int i, int j)
         {
-            _cardCells[i, j] = cell;
-
-            SetCardToGridValues(i, j);
-
-            if (setTransformPos)
+            if (i < LabyrinthMath.Size.Rows && j < LabyrinthMath.Size.Cols
+                && i > -1 && j > -1)
             {
-                var (x, y) = LabyrinthMath.GetXYOrigin(i, j);
-                cell.transform.localPosition = new Vector3(x, y, cell.transform.position.z);
+                _cardCells[i, j] = cell;
+
+                SetCardToGridValues(i, j);
             }
+        }
+
+        private Vector3 GetCellViewXY(CardCell cell, int i, int j)
+        {
+            var (x, y) = LabyrinthMath.GetXYOrigin(i, j);
+
+            return new Vector3(x, y, cell.transform.position.z);
         }
 
         private void SetCardToGridValues(int i, int j)

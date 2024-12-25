@@ -22,10 +22,14 @@ namespace GamePipeline
 
         void IInitializable.Initialize()
         {
+            var visualPipelineTask = ObjectResolverExtension.ResolveInstance<VisualPipelineTask>(_objectResolver);
+
             _makeShiftPipeline.AddTask(ObjectResolverExtension.ResolveInstance<MakeShiftTask>(_objectResolver));
+            _makeShiftPipeline.AddTask(visualPipelineTask);
+
 
             _turnPipeline.AddTask(ObjectResolverExtension.ResolveInstance<TurnTask>(_objectResolver));
-            _turnPipeline.AddTask(ObjectResolverExtension.ResolveInstance<VisualPipelineTask>(_objectResolver));
+            _turnPipeline.AddTask(visualPipelineTask);
         }
 
         void IDisposable.Dispose()

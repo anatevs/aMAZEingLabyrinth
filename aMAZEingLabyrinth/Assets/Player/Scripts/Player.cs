@@ -46,7 +46,7 @@ namespace GameCore
         {
             _isPlaying = data.IsPlaying;
 
-            SetCoordinate((data.LabyrinthCoordinateStruct.x, data.LabyrinthCoordinateStruct.y));
+            SetCoordinateAndView((data.LabyrinthCoordinateStruct.x, data.LabyrinthCoordinateStruct.y));
 
             SetupRewards(data.RewardTargets);
         }
@@ -70,10 +70,20 @@ namespace GameCore
 
         public void SetToDefaultPos()
         {
-            SetCoordinate(_defaultCoordinate);
+            SetCoordinateAndView(_defaultCoordinate);
         }
 
-        public void SetCoordinate((int x, int y) coordinate)
+        public void SetCoordinateToDefaultPos()
+        {
+            _coordinate = _defaultCoordinate;
+        }
+
+        public void SetViewToDefaultPos()
+        {
+            _view.MoveToPoint(_defaultCoordinate);
+        }
+
+        public void SetCoordinateAndView((int x, int y) coordinate)
         {
             _coordinate = coordinate;
 
@@ -88,6 +98,16 @@ namespace GameCore
         public async UniTask MoveThroughPathVisual(List<(int x, int y)> path)
         {
             await _view.MoveThroughPath(path, _oneMoveDuration);
+        }
+
+        public void ShiftCoordinate(Vector3Int direction)
+        {
+            _coordinate = (_coordinate.x + direction.x, _coordinate.y + direction.y);
+        }
+
+        public Tween PrepareViewShift(Vector3Int direction, float duration)
+        {
+            return _view.PrepareMoveToPoint(direction, duration);
         }
 
         public void AddReward(RewardName reward)

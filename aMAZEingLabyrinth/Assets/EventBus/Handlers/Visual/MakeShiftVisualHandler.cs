@@ -1,29 +1,20 @@
-﻿using GameCore;
-using GamePipeline;
+﻿using GamePipeline;
 
 namespace EventBusNamespace
 {
-    public class MakeShiftVisualHandler : BaseHandler<MakeShiftEvent>
+    public class MakeShiftVisualHandler : BaseHandler<MakeShiftVisualEvent>
     {
-        private readonly CellsLabyrinth _cellsLabyrinth;
-        private readonly PlayersList _players;
         private readonly AudioVisualPipeline _visualPipeline;
 
         public MakeShiftVisualHandler(EventBus eventBus,
-            CellsLabyrinth cellsLabyrinth,
-            PlayersList players,
             AudioVisualPipeline visualPipeline) : base(eventBus)
         {
-            _cellsLabyrinth = cellsLabyrinth;
-            _players = players;
             _visualPipeline = visualPipeline;
         }
 
-        protected override void RaiseEvent(MakeShiftEvent evnt)
+        protected override void RaiseEvent(MakeShiftVisualEvent evnt)
         {
-            //_visualPipeline.AddTask(new MakeShiftVisualTask(
-            //    _cellsLabyrinth, _players,
-            //    (evnt.Row, evnt.Col)));
+            _visualPipeline.AddTask(new MakeShiftVisualTask(evnt.ShiftSequence));
         }
     }
 }

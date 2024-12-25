@@ -53,6 +53,14 @@
             return (x, y);
         }
 
+        public static (int xDir, int yDir) GetXYDirection((int i, int j) directionRowCol)
+        {
+            var x = directionRowCol.j * _cellSize;
+            var y = - directionRowCol.i * _cellSize;
+
+            return (x, y);
+        }
+
         public static (int iCell, int jCell) GetCellIndex((int x, int y) coordinates)
         {
             int i = _size.Rows - 1 - coordinates.y / _cellSize;

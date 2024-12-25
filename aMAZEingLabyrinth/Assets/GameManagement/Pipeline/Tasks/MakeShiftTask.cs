@@ -17,9 +17,7 @@ namespace GamePipeline
 
         protected override void OnRun()
         {
-            _eventBus.RaiseEvent(new MakeShiftEvent(
-                _shiftArrows.ClickedIndex.row,
-                _shiftArrows.ClickedIndex.col));
+            _eventBus.RaiseEvent(new MakeShiftEvent(_shiftArrows.ClickedIndex));
 
             Finish();
         }

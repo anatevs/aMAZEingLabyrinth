@@ -23,6 +23,16 @@ namespace GameCore
             _transform.localPosition = new Vector2(point.x, point.y);
         }
 
+        public Tween PrepareMoveToPoint(Vector3Int direction, float duration)
+        {
+            var tween = _transform.DOLocalMove(
+                (_transform.localPosition + direction),
+                duration)
+                .Pause();
+
+            return tween;
+        }
+
         public async UniTask MoveToPoint((int x, int y) point, float duration)
         {
             var tween = _transform.DOLocalMove(new Vector2(point.x, point.y), duration);

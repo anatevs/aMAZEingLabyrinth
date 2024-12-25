@@ -22,7 +22,7 @@ namespace GameCore
         {
             oldCell = _playableCell;
 
-            SetCell(newCell);
+            SetCellAndView(newCell);
         }
 
         public void Clear()
@@ -30,15 +30,25 @@ namespace GameCore
             Destroy(this);
         }
 
-        private void SetCell(CardCell cell)
+        public void SetCellAndView(CardCell cell)
+        {
+            SetCell(cell);
+            SetCellView();
+        }
+
+        public void SetCell(CardCell cell)
         {
             UnbindUI();
 
-            cell.transform.parent = _playableCardTransform;
-            cell.transform.localPosition = Vector3.zero;
-
             _playableCell = cell;
+
             BindUI();
+        }
+
+        public void SetCellView()
+        {
+            _playableCell.transform.SetParent(_playableCardTransform);
+            _playableCell.transform.localPosition = Vector3.zero;
         }
 
         private void BindUI()
