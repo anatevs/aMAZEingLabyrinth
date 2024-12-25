@@ -11,7 +11,8 @@ namespace EventBusNamespace
         private readonly CellsLabyrinth _cellsLabyrinth;
         private readonly PlayersList _players;
 
-        private float _shiftDuration = 0.5f;
+        private float _shiftDuration = 1f;
+        private float _postShiftDuration = 2f;
 
         public MakeShiftHandler(EventBus eventBus,
             ShiftArrowsService shiftArrowsService,
@@ -30,82 +31,74 @@ namespace EventBusNamespace
 
             var shiftSequence = _cellsLabyrinth.PrepareShiftViews(_shiftDuration, out _);
 
+            var postShiftSequence = DOTween.Sequence().Pause();
 
-            MakePlayersShift((evnt.Row, evnt.Col), oppositeIndex, shiftParams.direction, shiftSequence);
+            MakePlayersShift((evnt.Row, evnt.Col), oppositeIndex, shiftParams.direction, shiftSequence, postShiftSequence);
 
             _shiftArrowsService.ChangeDisabledArrow(oppositeIndex);
 
             _shiftArrowsService.DisableAllArrows();
 
 
-            EventBus.RaiseEvent(new MakeShiftVisualEvent(shiftSequence));
+            var playableTween = _cellsLabyrinth.PreparePlayableSet(_postShiftDuration);
+
+            postShiftSequence.Join(playableTween);
+
+
+            EventBus.RaiseEvent(new MakeShiftVisualEvent(shiftSequence, postShiftSequence));
         }
 
 
         private void MakePlayersShift((int row, int col) shiftIndex,
             (int row, int col) oppositeIndex, Vector3Int shiftVector,
-            Sequence shiftSequence)
+            Sequence shiftSequence, Sequence postShift)
         {
             var (X, Y) = LabyrinthMath.GetXYCenter(shiftIndex.row, shiftIndex.col);
 
             var (opX, opY) = LabyrinthMath.GetXYCenter(oppositeIndex.row, oppositeIndex.col);
 
-            //if (X == opX)
             if (shiftVector.x == 0)
             {
                 if (_players.IsPlayerAtPointWithX(X, out var players))
                 {
-                    //var direction = Math.Sign(opY - Y);
-                    //var shift = direction * LabyrinthMath.CellSize;
-
                     foreach (var player in players)
                     {
-                        //visual shift anyway
                         shiftSequence.Join(player.PrepareViewShift(shiftVector, _shiftDuration));
 
                         if (player.Coordinate.Y != opY)
                         {
                             player.ShiftCoordinate(shiftVector);
-
-                            //player.SetCoordinateAndView((player.Coordinate.X, player.Coordinate.Y + shiftVector.y));
                         }
                         else
                         {
-                            //player.SetToDefaultPos();
-
                             player.SetCoordinateToDefaultPos();
 
-                            //raise visual event ReturnPlayerToDefault
+                            var plDefaultTween = player.PrepareViewSetToDefault(_postShiftDuration);
+
+                            postShift.Join(plDefaultTween);
                         }
                     }
                 }
             }
-            else if (shiftVector.y == 0)//(Y == opY)
+            else if (shiftVector.y == 0)
             {
                 if (_players.IsPlayerAtPointWithY(Y, out var players))
                 {
-                    //var direction = Math.Sign(opX - X);
-                    //var shift = direction * LabyrinthMath.CellSize;
-
                     foreach (var player in players)
                     {
-                        //visual shift anyway
                         shiftSequence.Join(player.PrepareViewShift(shiftVector, _shiftDuration));
 
                         if (player.Coordinate.X != opX)
                         {
                             player.ShiftCoordinate(shiftVector);
-
-                            //player.SetCoordinateAndView((player.Coordinate.X + shiftVector.x, player.Coordinate.Y));
                         }
                         else
                         {
-                            //player.SetToDefaultPos();
-
-
                             player.SetCoordinateToDefaultPos();
 
-                            //raise visual event ReturnPlayerToDefault
+                            var plDefaultTween = player.PrepareViewSetToDefault(_postShiftDuration);
+
+                            postShift.Join(plDefaultTween);
                         }
                     }
                 }

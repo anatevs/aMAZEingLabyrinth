@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GameCore;
 
 namespace EventBusNamespace
 {
@@ -6,9 +7,11 @@ namespace EventBusNamespace
     {
         public readonly Sequence ShiftSequence;
 
-        public MakeShiftVisualEvent(Sequence shiftSequence)
+        public readonly Sequence PostSequence;
+        public MakeShiftVisualEvent(Sequence shiftSequence, Sequence postSequence)
         {
             ShiftSequence = shiftSequence;
+            PostSequence = postSequence;
         }
     }
 }

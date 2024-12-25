@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameCore
@@ -22,42 +23,51 @@ namespace GameCore
         {
             oldCell = _playableCell;
 
-            SetCellAndView(newCell);
+            SetValuesAndView(newCell);
         }
 
-        public void Clear()
+        private void SetValuesAndView(CardCell cell)
         {
-            Destroy(this);
+            SetCellValues(cell);
+            SetupView();
         }
 
-        public void SetCellAndView(CardCell cell)
+        public void SetCellValues(CardCell cell)
         {
-            SetCell(cell);
-            SetCellView();
-        }
-
-        public void SetCell(CardCell cell)
-        {
-            UnbindUI();
+            UnsubscribeUI();
 
             _playableCell = cell;
 
-            BindUI();
+            SubscribeUI();
         }
 
-        public void SetCellView()
+        private void SetupView()
         {
             _playableCell.transform.SetParent(_playableCardTransform);
             _playableCell.transform.localPosition = Vector3.zero;
         }
 
-        private void BindUI()
+        public Tween PrepareViewSet(float duration)
+        {
+            var tween = _playableCell.transform.DOMove(_playableCardTransform.position, duration)
+                .OnPlay(SetParentTransform)
+                .Pause();
+
+            return tween;
+        }
+
+        private void SetParentTransform()
+        {
+            _playableCell.transform.SetParent(_playableCardTransform);
+        }
+
+        private void SubscribeUI()
         {
             _clockwise.onClick.AddListener(RotateClockwise);
             _anticlockwise.onClick.AddListener(RotateAnticlockwise);
         }
 
-        private void UnbindUI()
+        private void UnsubscribeUI()
         {
             _clockwise.onClick.RemoveListener(RotateClockwise);
             _anticlockwise.onClick.RemoveListener(RotateAnticlockwise);

@@ -83,6 +83,11 @@ namespace GameCore
             _view.MoveToPoint(_defaultCoordinate);
         }
 
+        public Tween PrepareViewSetToDefault(float duration)
+        {
+            return _view.PrepareMoveToPoint(_defaultCoordinate, duration);
+        }
+
         public void SetCoordinateAndView((int x, int y) coordinate)
         {
             _coordinate = coordinate;
@@ -107,7 +112,7 @@ namespace GameCore
 
         public Tween PrepareViewShift(Vector3Int direction, float duration)
         {
-            return _view.PrepareMoveToPoint(direction, duration);
+            return _view.PrepareShift(direction, duration);
         }
 
         public void AddReward(RewardName reward)

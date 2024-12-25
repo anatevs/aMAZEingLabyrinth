@@ -12,6 +12,8 @@ namespace GameCore
 {
     public sealed class CellsLabyrinth : MonoBehaviour
     {
+        public PlayableCell PlCell => _playableCell;
+
         [SerializeField]
         private CardCell[] _fixedCells;
 
@@ -270,7 +272,7 @@ namespace GameCore
 
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol);
 
-            _playableCell.SetCell(newPlayable);
+            _playableCell.SetCellValues(newPlayable);
 
 
             //var sequence = MakeShiftViews();
@@ -287,11 +289,13 @@ namespace GameCore
                 sequence.Join(transform.DOLocalMove(transform.localPosition + _shiftDirection, duration));
             }
 
-
-            _playableCell.SetCellView();
-
             shiftDirection = _shiftDirection;
             return sequence;
+        }
+
+        public Tween PreparePlayableSet(float duration)
+        {
+            return _playableCell.PrepareViewSet(duration);
         }
 
         public bool HasCellReward((int x, int y) localXY, RewardName reward)
