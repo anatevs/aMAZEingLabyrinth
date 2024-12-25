@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace GameUI
 {
@@ -10,25 +11,13 @@ namespace GameUI
         [SerializeField]
         private float _activeTime;
 
-        private float _counter = 0;
-
-        public void SetActive()
+        public async UniTask SetActiveTask()
         {
             _window.SetActive(true);
-        }
 
-        private void Update()
-        {
-            if (_window.activeSelf)
-            {
-                _counter += Time.deltaTime;
+            await UniTask.WaitForSeconds(_activeTime);
 
-                if (_counter >= _activeTime)
-                {
-                    _counter = 0;
-                    _window.SetActive(false);
-                }
-            }
+            _window.SetActive(false);
         }
     }
 }

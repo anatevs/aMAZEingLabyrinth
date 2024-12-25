@@ -11,9 +11,9 @@ namespace GamePipeline
             _noPathWindow = noPathWindow;
         }
 
-        protected override void OnRun()
+        protected override async void OnRun()
         {
-            _noPathWindow.SetActive();
+            await _noPathWindow.SetActiveTask();
 
             Finish();
         }
