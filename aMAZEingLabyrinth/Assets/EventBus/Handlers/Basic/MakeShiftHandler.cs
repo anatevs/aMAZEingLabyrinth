@@ -1,6 +1,5 @@
 using DG.Tweening;
 using GameCore;
-using System;
 using UnityEngine;
 
 namespace EventBusNamespace
@@ -11,8 +10,8 @@ namespace EventBusNamespace
         private readonly CellsLabyrinth _cellsLabyrinth;
         private readonly PlayersList _players;
 
-        private float _shiftDuration = 1f;
-        private float _postShiftDuration = 2f;
+        private float _shiftDuration;
+        private float _postShiftDuration;
 
         public MakeShiftHandler(EventBus eventBus,
             ShiftArrowsService shiftArrowsService,
@@ -29,7 +28,9 @@ namespace EventBusNamespace
 
             var oppositeIndex = (shiftParams.row, shiftParams.col);
 
-            var shiftSequence = _cellsLabyrinth.PrepareShiftViews(_shiftDuration, out _);
+            var shiftSequence = _cellsLabyrinth.PrepareShiftViews();
+
+            _shiftDuration = shiftSequence.Duration();
 
             var postShiftSequence = DOTween.Sequence().Pause();
 
@@ -40,7 +41,9 @@ namespace EventBusNamespace
             _shiftArrowsService.DisableAllArrows();
 
 
-            var playableTween = _cellsLabyrinth.PreparePlayableSet(_postShiftDuration);
+            var playableTween = _cellsLabyrinth.PreparePlayableSet();
+
+            _postShiftDuration = playableTween.Duration();
 
             postShiftSequence.Join(playableTween);
 

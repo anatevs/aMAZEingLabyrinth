@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace GameCore
 {
-    public class PlayableCell : MonoBehaviour
+    public sealed class PlayableCell : MonoBehaviour
     {
         public CardCell CardCell => _playableCell;
 

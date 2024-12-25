@@ -5,15 +5,11 @@ using System;
 using SaveLoadNamespace;
 using VContainer;
 using DG.Tweening;
-using Cysharp.Threading.Tasks;
-using Newtonsoft.Json.Schema;
 
 namespace GameCore
 {
     public sealed class CellsLabyrinth : MonoBehaviour
     {
-        public PlayableCell PlCell => _playableCell;
-
         [SerializeField]
         private CardCell[] _fixedCells;
 
@@ -31,6 +27,12 @@ namespace GameCore
 
         [SerializeField]
         private bool _isCrossCells;
+
+        [SerializeField]
+        private float _shiftDuration = 0.5f;
+
+        [SerializeField]
+        private float _postShiftDuration = 0.5f;
 
         private LabyrinthGrid _grid;
 
@@ -273,29 +275,24 @@ namespace GameCore
             SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol);
 
             _playableCell.SetCellValues(newPlayable);
-
-
-            //var sequence = MakeShiftViews();
-            //sequence.Play();
         }
 
 
-        public Sequence PrepareShiftViews(float duration, out Vector3Int shiftDirection)
+        public Sequence PrepareShiftViews()
         {
             var sequence = DOTween.Sequence().Pause();
 
             foreach (var transform in _shiftedTransforms)
             {
-                sequence.Join(transform.DOLocalMove(transform.localPosition + _shiftDirection, duration));
+                sequence.Join(transform.DOLocalMove(transform.localPosition + _shiftDirection, _shiftDuration));
             }
 
-            shiftDirection = _shiftDirection;
             return sequence;
         }
 
-        public Tween PreparePlayableSet(float duration)
+        public Tween PreparePlayableSet()
         {
-            return _playableCell.PrepareViewSet(duration);
+            return _playableCell.PrepareViewSet(_postShiftDuration);
         }
 
         public bool HasCellReward((int x, int y) localXY, RewardName reward)
