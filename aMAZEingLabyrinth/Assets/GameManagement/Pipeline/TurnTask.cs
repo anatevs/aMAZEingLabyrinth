@@ -20,8 +20,6 @@ namespace GamePipeline
         {
             _eventBus.RaiseEvent(new ClickCellEvent(_cellHighlight));
 
-            _cellHighlight.SetActive(false);
-
             Finish();
         }
 

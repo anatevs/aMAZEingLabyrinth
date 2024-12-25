@@ -40,7 +40,8 @@ namespace EventBusNamespace
             }
             else
             {
-                _menusService.NoPathMenu.SetActive();
+                //_menusService.NoPathMenu.SetActive();
+                EventBus.RaiseEvent(new ShowNoPathVisualEvent(_menusService.NoPathMenu));
                 evnt.CellHighlight.SetActive(true);
             }
         }

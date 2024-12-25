@@ -19,13 +19,11 @@ namespace GameCore
 
         private Vector3 _currentPos = new();
 
-        private EventBus _eventBus;
         private TurnPipeline _turnPipeline;
 
         [Inject]
-        public void Construct(EventBus eventBus, TurnPipeline turnPipeline)
+        public void Construct(TurnPipeline turnPipeline)
         {
-            _eventBus = eventBus;
             _turnPipeline = turnPipeline;
         }
 
@@ -71,7 +69,6 @@ namespace GameCore
             if (_isActive)
             {
                 _turnPipeline.Run();
-                //_eventBus.RaiseEvent(new ClickCellEvent(this));
             }
         }
     }

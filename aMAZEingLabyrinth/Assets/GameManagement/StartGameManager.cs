@@ -21,12 +21,9 @@ namespace GameManagement
 
         private readonly SaveLoadManager _saveLoadManager;
 
-        private readonly TurnPipeline _turnPipeline;
-
         public StartGameManager(MenusService menuWindowsService,
             CellHighlight cellHighlight,
             PlayersList playersList,
-            TurnPipeline turnPipeline,
             CellsLabyrinth cellsLabyrinth,
             ShiftArrowsService shiftArrowsService,
             SaveLoadManager saveLoadManager)
@@ -34,7 +31,6 @@ namespace GameManagement
             _menusService = menuWindowsService;
             _cellHighlight = cellHighlight;
             _players = playersList;
-            _turnPipeline = turnPipeline;
             _cellsLabyrinth = cellsLabyrinth;
             _shiftArrowsService = shiftArrowsService;
             _saveLoadManager = saveLoadManager;

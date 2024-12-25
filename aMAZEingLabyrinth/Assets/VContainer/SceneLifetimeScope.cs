@@ -88,6 +88,7 @@ public class SceneLifetimeScope : LifetimeScope
 
         builder.RegisterEntryPoint<MakeShiftVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<MoveThroughPathVisualHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<ShowNoPathVisualHandler>(Lifetime.Singleton);
     }
 
     private void RegisterGameListeners(IContainerBuilder builder)
