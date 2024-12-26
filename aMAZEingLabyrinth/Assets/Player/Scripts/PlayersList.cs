@@ -51,12 +51,12 @@ namespace GameCore
 
         private void OnDisable()
         {
-            DisactivateAll();
+            UnsubscribeAll();
 
             _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
         }
 
-        private void DisactivateAll()
+        private void UnsubscribeAll()
         {
             foreach (var player in _players)
             {
@@ -85,7 +85,7 @@ namespace GameCore
 
         public void InitPlayers(int firstPlayerIndex)
         {
-            DisactivateAll();
+            UnsubscribeAll();
 
             _rewardCardsService.InitRewardsViews(ActivePlayers);
 
@@ -112,7 +112,7 @@ namespace GameCore
         {
             _activeTypes = _playersDataConnector.Data.GetActiveTypes().ToList();
 
-            DisactivateAll();
+            UnsubscribeAll();
 
             _rewardCardsService.InitRewardsViews(ActivePlayers);
 

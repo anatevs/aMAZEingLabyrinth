@@ -1,5 +1,4 @@
 ﻿using GameCore;
-using UnityEngine;
 
 namespace EventBusNamespace
 {
@@ -28,8 +27,6 @@ namespace EventBusNamespace
             {
                 if (_cellsLabyrinth.HasCellReward(xy, target))
                 {
-                    Debug.Log($"{player} has {target} on path");
-
                     EventBus.RaiseEvent(new CheckWinEvent(player));
 
                     return;

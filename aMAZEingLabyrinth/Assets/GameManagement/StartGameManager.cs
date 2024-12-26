@@ -1,5 +1,4 @@
-﻿using GamePipeline;
-using GameUI;
+﻿using GameUI;
 using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
@@ -83,9 +82,6 @@ namespace GameManagement
             _menusService.PlayerSelector.Show();
         }
 
-        //make Init of active players selection
-
-
 
         private void SelectFirstPlayer(int firstPlayerIndex)
         {
@@ -96,8 +92,6 @@ namespace GameManagement
             _shiftArrowsService.InitArrows();
 
             _cellHighlight.SetActive(true);
-
-            //_turnPipeline.Run();
         }
 
         private void SelectLoadGame()
@@ -109,8 +103,6 @@ namespace GameManagement
             _shiftArrowsService.InitArrows();
 
             _cellHighlight.SetActive(true);
-
-            //_turnPipeline.Run();
         }
     }
 }
