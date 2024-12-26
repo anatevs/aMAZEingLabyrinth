@@ -10,6 +10,8 @@ namespace GameCore
 {
     public sealed class CellsLabyrinth : MonoBehaviour
     {
+        public float ShiftDuration => _shiftDuration;
+
         [SerializeField]
         private CardCell[] _fixedCells;
 
@@ -32,7 +34,7 @@ namespace GameCore
         private float _shiftDuration = 0.5f;
 
         [SerializeField]
-        private float _postShiftDuration = 0.5f;
+        private float _playableMoveDuration = 0.5f;
 
         private LabyrinthGrid _grid;
 
@@ -237,8 +239,8 @@ namespace GameCore
             iterDirectionRowCol[0] = (shiftRow - opRow) / (LabyrinthMath.Size.Rows - 1);
             iterDirectionRowCol[1] = (shiftCol - opCol) / (LabyrinthMath.Size.Cols - 1);
 
-            var iterDirectionXY = LabyrinthMath.GetXYDirection((-iterDirectionRowCol[0], -iterDirectionRowCol[1]));
-            _shiftDirection = new Vector3Int(iterDirectionXY.xDir, iterDirectionXY.yDir);
+            var (xDir, yDir) = LabyrinthMath.GetXYDirection((-iterDirectionRowCol[0], -iterDirectionRowCol[1]));
+            _shiftDirection = new Vector3Int(xDir, yDir);
 
             shiftParams = (opRow, opCol, _shiftDirection);
 
@@ -246,12 +248,12 @@ namespace GameCore
 
             var oldPlayable = _playableCell.CardCell;
 
-            oldPlayable.transform.SetParent(_movableParentTransform);
-            var preshiftXY = LabyrinthMath.GetXYOrigin(
-                shiftRow + iterDirectionRowCol[0],
-                shiftCol + iterDirectionRowCol[1]);
+            //oldPlayable.transform.SetParent(_movableParentTransform);
+            //var preshiftXY = LabyrinthMath.GetXYOrigin(
+            //    shiftRow + iterDirectionRowCol[0],
+            //    shiftCol + iterDirectionRowCol[1]);
 
-            oldPlayable.transform.localPosition = new Vector2(preshiftXY.X, preshiftXY.Y);
+            //oldPlayable.transform.localPosition = new Vector2(preshiftXY.X, preshiftXY.Y);
 
             _shiftedTransforms.Clear();
             _shiftedTransforms.Add(oldPlayable.transform);
@@ -277,6 +279,17 @@ namespace GameCore
             _playableCell.SetCellValues(newPlayable);
         }
 
+        public Tween PreshiftOldPlayableView()
+        {
+            var oldPlTransform = _shiftedTransforms[0];
+            var firstShiftedPos = _shiftedTransforms[_shiftedTransforms.Count - 1].localPosition;
+
+            oldPlTransform.SetParent(_movableParentTransform);
+
+            return oldPlTransform.DOLocalMove(
+                firstShiftedPos - _shiftDirection, _playableMoveDuration)
+                .Pause();
+        }
 
         public Sequence PrepareShiftViews()
         {
@@ -284,7 +297,8 @@ namespace GameCore
 
             foreach (var transform in _shiftedTransforms)
             {
-                sequence.Join(transform.DOLocalMove(transform.localPosition + _shiftDirection, _shiftDuration));
+                sequence.Join(transform.DOLocalMove(
+                    transform.localPosition + _shiftDirection, _shiftDuration));
             }
 
             return sequence;
@@ -292,7 +306,7 @@ namespace GameCore
 
         public Tween PreparePlayableSet()
         {
-            return _playableCell.PrepareViewSet(_postShiftDuration);
+            return _playableCell.PrepareViewSet(_playableMoveDuration);
         }
 
         public bool HasCellReward((int x, int y) localXY, RewardName reward)

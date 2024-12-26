@@ -1,15 +1,21 @@
 using DG.Tweening;
+using GameCore;
 
 namespace EventBusNamespace
 {
     public readonly struct MakeShiftVisualEvent : IEvent
     {
-        public readonly Sequence ShiftSequence;
+        public readonly CellsLabyrinth CellsLabyrinth;
+
+        public readonly Sequence PlayersViewsShift;
 
         public readonly Sequence PostSequence;
-        public MakeShiftVisualEvent(Sequence shiftSequence, Sequence postSequence)
+
+        public MakeShiftVisualEvent(CellsLabyrinth cellsLabyrinth,
+            Sequence playersViewsShift, Sequence postSequence)
         {
-            ShiftSequence = shiftSequence;
+            CellsLabyrinth = cellsLabyrinth;
+            PlayersViewsShift = playersViewsShift;
             PostSequence = postSequence;
         }
     }

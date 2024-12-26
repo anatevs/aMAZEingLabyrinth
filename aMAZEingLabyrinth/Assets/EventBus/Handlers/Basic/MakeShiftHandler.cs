@@ -10,7 +10,6 @@ namespace EventBusNamespace
         private readonly CellsLabyrinth _cellsLabyrinth;
         private readonly PlayersList _players;
 
-        private float _shiftDuration;
         private float _postShiftDuration;
 
         public MakeShiftHandler(EventBus eventBus,
@@ -28,18 +27,9 @@ namespace EventBusNamespace
 
             var oppositeIndex = (shiftParams.row, shiftParams.col);
 
-            var shiftSequence = _cellsLabyrinth.PrepareShiftViews();
-
-            _shiftDuration = shiftSequence.Duration();
-
             var postShiftSequence = DOTween.Sequence().Pause();
 
-            MakePlayersShift((evnt.Row, evnt.Col), oppositeIndex, shiftParams.direction, shiftSequence, postShiftSequence);
-
-            _shiftArrowsService.ChangeDisabledArrow(oppositeIndex);
-
-            _shiftArrowsService.DisableAllArrows();
-
+            var plViewsShift = MakePlayersShift((evnt.Row, evnt.Col), oppositeIndex, shiftParams.direction, postShiftSequence);
 
             var playableTween = _cellsLabyrinth.PreparePlayableSet();
 
@@ -48,17 +38,24 @@ namespace EventBusNamespace
             postShiftSequence.Join(playableTween);
 
 
-            EventBus.RaiseEvent(new MakeShiftVisualEvent(shiftSequence, postShiftSequence));
+            _shiftArrowsService.ChangeDisabledArrow(oppositeIndex);
+
+            _shiftArrowsService.DisableAllArrows();
+
+
+            EventBus.RaiseEvent(new MakeShiftVisualEvent(_cellsLabyrinth, plViewsShift, postShiftSequence));
         }
 
 
-        private void MakePlayersShift((int row, int col) shiftIndex,
+        private Sequence MakePlayersShift((int row, int col) shiftIndex,
             (int row, int col) oppositeIndex, Vector3Int shiftVector,
-            Sequence shiftSequence, Sequence postShift)
+            Sequence postShift)
         {
             var (X, Y) = LabyrinthMath.GetXYCenter(shiftIndex.row, shiftIndex.col);
 
             var (opX, opY) = LabyrinthMath.GetXYCenter(oppositeIndex.row, oppositeIndex.col);
+
+            var playersViewShift = DOTween.Sequence().Pause();
 
             if (shiftVector.x == 0)
             {
@@ -66,7 +63,7 @@ namespace EventBusNamespace
                 {
                     foreach (var player in players)
                     {
-                        shiftSequence.Join(player.PrepareViewShift(shiftVector, _shiftDuration));
+                        playersViewShift.Join(player.PrepareViewShift(shiftVector, _cellsLabyrinth.ShiftDuration));
 
                         if (player.Coordinate.Y != opY)
                         {
@@ -89,7 +86,7 @@ namespace EventBusNamespace
                 {
                     foreach (var player in players)
                     {
-                        shiftSequence.Join(player.PrepareViewShift(shiftVector, _shiftDuration));
+                        playersViewShift.Join(player.PrepareViewShift(shiftVector, _cellsLabyrinth.ShiftDuration));
 
                         if (player.Coordinate.X != opX)
                         {
@@ -106,6 +103,8 @@ namespace EventBusNamespace
                     }
                 }
             }
+
+            return playersViewShift;
         }
     }
 }

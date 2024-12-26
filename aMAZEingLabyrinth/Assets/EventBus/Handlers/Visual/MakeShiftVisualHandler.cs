@@ -14,7 +14,8 @@ namespace EventBusNamespace
 
         protected override void RaiseEvent(MakeShiftVisualEvent evnt)
         {
-            _visualPipeline.AddTask(new PlaySequenceVisualTask(evnt.ShiftSequence));
+            _visualPipeline.AddTask(new PlayTweenVisualTask(evnt.CellsLabyrinth.PreshiftOldPlayableView()));
+            _visualPipeline.AddTask(new MakeShiftVisualTask(evnt.CellsLabyrinth));
             _visualPipeline.AddTask(new PlaySequenceVisualTask(evnt.PostSequence));
         }
     }
