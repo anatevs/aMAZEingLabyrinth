@@ -9,9 +9,11 @@ namespace GamePipeline
 
         private readonly Sequence _playersViewsShift;
 
-        public MakeShiftVisualTask(CellsLabyrinth cellsLabyrinth)
+        public MakeShiftVisualTask(CellsLabyrinth cellsLabyrinth,
+            Sequence playersViewsShift)
         {
             _cellsLabyrinth = cellsLabyrinth;
+            _playersViewsShift = playersViewsShift;
         }
 
         protected override async void OnRun()
