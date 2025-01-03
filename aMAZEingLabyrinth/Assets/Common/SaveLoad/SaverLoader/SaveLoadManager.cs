@@ -5,6 +5,8 @@ using GameManagement;
 namespace SaveLoadNamespace
 {
     public class SaveLoadManager :
+        IStartGameListener,
+        IEndGameListener,
         IAppQuitListener
     {
         public bool IsDataInRepository => _isDataInRepository;
@@ -36,17 +38,6 @@ namespace SaveLoadNamespace
             }
         }
 
-        public void OnAppQuit()
-        {
-            foreach (var loader in _saveLoads)
-            {
-                loader.Save(_gameRepository, _context);
-            }
-            _gameRepository.SaveState();
-
-            _gameRepository.OnNoDataFound += SetNoDataInRepository;
-        }
-
         public void LoadNewGame()
         {
             foreach (var loader in _saveLoads)
@@ -58,6 +49,27 @@ namespace SaveLoadNamespace
         public void SetNoDataInRepository()
         {
             _isDataInRepository = false;
+        }
+
+        public void StartGame()
+        {
+            _gameRepository.SetCanSave(true);
+        }
+
+        public void EndGame()
+        {
+            _gameRepository.SetCanSave(false);
+        }
+
+        public void OnAppQuit()
+        {
+            foreach (var loader in _saveLoads)
+            {
+                loader.Save(_gameRepository, _context);
+            }
+            _gameRepository.SaveState();
+
+            _gameRepository.OnNoDataFound += SetNoDataInRepository;
         }
     }
 }

@@ -1808,6 +1808,8 @@ MonoBehaviour:
   _movableCellsConfig: {fileID: 11400000, guid: 774bc55cff90674428dc37c798fe2278, type: 2}
   _playableCell: {fileID: 252792296}
   _isCrossCells: 0
+  _shiftDuration: 0.5
+  _playableMoveDuration: 0.5
 --- !u!1 &316739504
 GameObject:
   m_ObjectHideFlags: 0

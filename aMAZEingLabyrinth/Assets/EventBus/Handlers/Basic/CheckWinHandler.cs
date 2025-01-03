@@ -20,8 +20,7 @@ namespace EventBusNamespace
 
             if (player.RemainTargetsCount == 0)
             {
-                _menus.EndGame.SetWinner(player.Type.ToString());
-                _menus.EndGame.Show();
+                EventBus.RaiseEvent(new EndGameEvent(player));
             }
             else
             {

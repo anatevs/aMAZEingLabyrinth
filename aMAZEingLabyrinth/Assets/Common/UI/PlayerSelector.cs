@@ -4,13 +4,12 @@ using UnityEngine.UI;
 using TMPro;
 using GameCore;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GameUI
 {
     public sealed class PlayerSelector : MonoBehaviour
     {
-        public event Action<int> OnPlayerSelected;
+        public event Action<int> OnOkClicked;
 
         [SerializeField]
         private TMP_Dropdown _dropdown;
@@ -26,15 +25,6 @@ namespace GameUI
         public void Show()
         {
             InitDropdown();
-
-            _okButton.onClick.AddListener(MakeSelection);
-
-            gameObject.SetActive(true);
-        }
-
-        public void Show(ICollection<PlayerType> players)
-        {
-            InitDropdown(players);
 
             _okButton.onClick.AddListener(MakeSelection);
 
@@ -72,7 +62,7 @@ namespace GameUI
 
         private void MakeSelection()
         {
-            OnPlayerSelected?.Invoke(_dropdown.value);
+            OnOkClicked?.Invoke(_dropdown.value);
 
             Hide();
         }

@@ -6,11 +6,11 @@ using VContainer.Unity;
 
 namespace GameManagement
 {
-    public class EndGameManager : IInitializable, IDisposable
+    public class ExitGameManager : IInitializable, IDisposable
     {
         private readonly MenusService _menusService;
 
-        public EndGameManager(MenusService menusService)
+        public ExitGameManager(MenusService menusService)
         {
             _menusService = menusService;
         }

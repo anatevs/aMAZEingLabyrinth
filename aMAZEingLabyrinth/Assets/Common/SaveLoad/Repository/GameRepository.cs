@@ -13,6 +13,8 @@ namespace SaveLoadNamespace
 
         private const string SAVE_KEY = "SaveLoadGameData";
 
+        private bool _canSave = true;
+
         public void SetData<T>(T value)
         {
             string keyName = typeof(T).Name;
@@ -42,9 +44,18 @@ namespace SaveLoadNamespace
 
         public void SaveState()
         {
-            string gameData = JsonConvert.SerializeObject(ObjectsPresentations);
+            Debug.Log($"can save: {_canSave}");
 
-            PlayerPrefs.SetString(SAVE_KEY, gameData);
+            if (_canSave)
+            {
+                string gameData = JsonConvert.SerializeObject(ObjectsPresentations);
+
+                PlayerPrefs.SetString(SAVE_KEY, gameData);
+            }
+            else
+            {
+                PlayerPrefs.DeleteKey(SAVE_KEY);
+            }
         }
 
         public void LoadState()
@@ -60,6 +71,11 @@ namespace SaveLoadNamespace
             {
                 OnNoDataFound?.Invoke();
             }
+        }
+
+        public void SetCanSave(bool canSave)
+        {
+            _canSave = canSave;
         }
     }
 }

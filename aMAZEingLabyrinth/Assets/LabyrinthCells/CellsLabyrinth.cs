@@ -248,13 +248,6 @@ namespace GameCore
 
             var oldPlayable = _playableCell.CardCell;
 
-            //oldPlayable.transform.SetParent(_movableParentTransform);
-            //var preshiftXY = LabyrinthMath.GetXYOrigin(
-            //    shiftRow + iterDirectionRowCol[0],
-            //    shiftCol + iterDirectionRowCol[1]);
-
-            //oldPlayable.transform.localPosition = new Vector2(preshiftXY.X, preshiftXY.Y);
-
             _shiftedTransforms.Clear();
             _shiftedTransforms.Add(oldPlayable.transform);
             _shiftedTransforms.Add(newPlayable.transform);
@@ -304,7 +297,7 @@ namespace GameCore
             return sequence;
         }
 
-        public Tween PreparePlayableSet()
+        public Tween PostshiftPlayableView()
         {
             return _playableCell.PrepareViewSet(_playableMoveDuration);
         }
@@ -364,13 +357,6 @@ namespace GameCore
 
                 SetCardToGridValues(i, j);
             }
-        }
-
-        private Vector3 GetCellViewXY(CardCell cell, int i, int j)
-        {
-            var (x, y) = LabyrinthMath.GetXYOrigin(i, j);
-
-            return new Vector3(x, y, cell.transform.position.z);
         }
 
         private void SetCardToGridValues(int i, int j)

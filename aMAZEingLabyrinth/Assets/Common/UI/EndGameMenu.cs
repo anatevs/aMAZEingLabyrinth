@@ -11,6 +11,8 @@ namespace GameUI
 
         public event Action OnExitClicked;
 
+        public event Action OnGameEnded;
+
         [SerializeField]
         private TMP_Text _winner;
 
@@ -39,6 +41,8 @@ namespace GameUI
 
         public void Show()
         {
+            OnGameEnded?.Invoke();
+
             gameObject.SetActive(true);
         }
 

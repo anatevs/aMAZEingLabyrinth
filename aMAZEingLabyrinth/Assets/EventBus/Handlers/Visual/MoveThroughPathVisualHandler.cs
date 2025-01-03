@@ -24,7 +24,7 @@ namespace EventBusNamespace
             _visualPipeline.AddTask(new MoveThroughPathVisualTask
                 (evnt.Player, evnt.Path));
 
-            _visualPipeline.AddTask(new ActivateGameUITask(
+            _visualPipeline.AddTask(new ActivateBoardUITask(
                 _shiftArrows, _cellHighlight));
         }
     }

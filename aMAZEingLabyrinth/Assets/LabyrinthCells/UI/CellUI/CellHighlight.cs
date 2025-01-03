@@ -1,5 +1,4 @@
-﻿using EventBusNamespace;
-using GamePipeline;
+﻿using GamePipeline;
 using UnityEngine;
 using VContainer;
 

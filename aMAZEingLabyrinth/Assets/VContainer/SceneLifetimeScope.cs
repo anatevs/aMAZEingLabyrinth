@@ -74,8 +74,8 @@ public class SceneLifetimeScope : LifetimeScope
 
     private void RegisterGameManagement(IContainerBuilder builder)
     {
-        builder.RegisterEntryPoint<StartGameManager>(Lifetime.Singleton);
-        builder.RegisterEntryPoint<EndGameManager>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<MenuGameManager>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<ExitGameManager>(Lifetime.Singleton);
     }
 
     private void RegisterHandlers(IContainerBuilder builder)
@@ -85,10 +85,13 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<MoveThroughPathHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<CheckWinHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<NextPlayerHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<EndGameHandler>(Lifetime.Singleton);
+
 
         builder.RegisterEntryPoint<MakeShiftVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<MoveThroughPathVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ShowNoPathVisualHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<EndGameVisualHandler>(Lifetime.Singleton);
     }
 
     private void RegisterGameListeners(IContainerBuilder builder)

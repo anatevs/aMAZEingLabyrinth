@@ -31,7 +31,7 @@ namespace EventBusNamespace
 
             var plViewsShift = MakePlayersShift((evnt.Row, evnt.Col), oppositeIndex, shiftParams.direction, postShiftSequence);
 
-            var playableTween = _cellsLabyrinth.PreparePlayableSet();
+            var playableTween = _cellsLabyrinth.PostshiftPlayableView();
 
             _postShiftDuration = playableTween.Duration();
 

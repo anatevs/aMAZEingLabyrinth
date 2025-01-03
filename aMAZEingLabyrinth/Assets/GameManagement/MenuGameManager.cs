@@ -3,10 +3,11 @@ using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
 using GameCore;
+using UnityEngine;
 
 namespace GameManagement
 {
-    public class StartGameManager : IInitializable, IDisposable
+    public class MenuGameManager : IInitializable, IDisposable
     {
         private readonly MenusService _menusService;
 
@@ -20,12 +21,15 @@ namespace GameManagement
 
         private readonly SaveLoadManager _saveLoadManager;
 
-        public StartGameManager(MenusService menuWindowsService,
+        private readonly GameListenersManager _gameListenersManager;
+
+        public MenuGameManager(MenusService menuWindowsService,
             CellHighlight cellHighlight,
             PlayersList playersList,
             CellsLabyrinth cellsLabyrinth,
             ShiftArrowsService shiftArrowsService,
-            SaveLoadManager saveLoadManager)
+            SaveLoadManager saveLoadManager,
+            GameListenersManager gameListenersManager)
         {
             _menusService = menuWindowsService;
             _cellHighlight = cellHighlight;
@@ -33,6 +37,7 @@ namespace GameManagement
             _cellsLabyrinth = cellsLabyrinth;
             _shiftArrowsService = shiftArrowsService;
             _saveLoadManager = saveLoadManager;
+            _gameListenersManager = gameListenersManager;
         }
 
         void IInitializable.Initialize()
@@ -49,11 +54,13 @@ namespace GameManagement
 
             _players.OnListChanged += _menusService.PlayerSelector.InitDropdown;
 
-            _menusService.PlayerSelector.OnPlayerSelected += SelectFirstPlayer;
+            _menusService.PlayerSelector.OnOkClicked += InitNewGame;
 
             var isDataInRepository = _saveLoadManager.IsDataInRepository;
 
             _menusService.StartGame.SetLoadButtonActive(isDataInRepository);
+
+            _menusService.EndGame.OnGameEnded += OnEndGameShow;
         }
 
         void IDisposable.Dispose()
@@ -70,21 +77,25 @@ namespace GameManagement
 
             _players.OnListChanged -= _menusService.PlayerSelector.InitDropdown;
 
-            _menusService.PlayerSelector.OnPlayerSelected -= SelectFirstPlayer;
+            _menusService.PlayerSelector.OnOkClicked -= InitNewGame;
+
+            _menusService.EndGame.OnGameEnded -= OnEndGameShow;
         }
 
         private void SelectNewGame()
         {
             _saveLoadManager.LoadNewGame();
 
-            _cellHighlight.SetActive(false);
-
             _menusService.PlayerSelector.Show();
+
+            _cellHighlight.SetActive(false);
         }
 
 
-        private void SelectFirstPlayer(int firstPlayerIndex)
+        private void InitNewGame(int firstPlayerIndex)
         {
+            _gameListenersManager.OnStartGame();
+
             _players.InitPlayers(firstPlayerIndex);
 
             _cellsLabyrinth.InitMovableCells();
@@ -103,6 +114,11 @@ namespace GameManagement
             _shiftArrowsService.InitArrows();
 
             _cellHighlight.SetActive(true);
+        }
+
+        private void OnEndGameShow()
+        {
+            _cellHighlight.SetActive(false);
         }
     }
 }
