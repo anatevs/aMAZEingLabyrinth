@@ -15,7 +15,7 @@ namespace GameCore
         private Transform _cellTransform;
 
         [SerializeField]
-        private float _rotateDuration = 0.3f;
+        private float _rotateDuration = 0.2f;
 
         [SerializeField]
         private CellGeometry _cellGeometry;

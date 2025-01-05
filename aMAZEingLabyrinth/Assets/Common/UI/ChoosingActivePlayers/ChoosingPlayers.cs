@@ -11,6 +11,8 @@ namespace GameUI
         [SerializeField]
         private PlayerTypeToggleView[] _toggleViews;
 
+        private int _selectedAmount;
+
         private void Awake()
         {
             var playerNames = Enum.GetValues(typeof(PlayerType));
@@ -26,6 +28,8 @@ namespace GameUI
             {
                 _toggleViews[i].SetPlayer((PlayerType)i);
             }
+
+            _selectedAmount = _toggleViews.Length;
         }
 
         private void OnEnable()
@@ -34,6 +38,8 @@ namespace GameUI
             {
                 _toggleViews[i].OnToggleChanged += ChooseToggle;
             }
+
+            _selectedAmount = _toggleViews.Length;
         }
 
         private void OnDisable()
@@ -46,6 +52,20 @@ namespace GameUI
 
         private void ChooseToggle(PlayerType playerType, bool isActive)
         {
+            if (!isActive)
+            {
+                _selectedAmount--;
+
+                if (_selectedAmount <= 0)
+                {
+                    _toggleViews[(int)playerType].SetTrue();
+                }
+            }
+            else
+            {
+                _selectedAmount++;
+            }
+
             OnPlayerToggled?.Invoke(playerType, isActive);
         }
     }

@@ -27,21 +27,21 @@ namespace GameUI
             _toggle.onValueChanged.RemoveAllListeners();
         }
 
-        public void SetToggle(bool value)
-        {
-            OnToggleChanged?.Invoke(_playerType, value);
-        }
-
-        public void SetLabel(string label)
-        {
-            _label.text = label;
-        }
-
         public void SetPlayer(PlayerType playerType)
         {
             _playerType = playerType;
 
-            SetLabel(playerType.ToString());
+            _label.text = playerType.ToString();
+        }
+
+        public void SetTrue()
+        {
+            _toggle.isOn = true;
+        }
+
+        private void SetToggle(bool value)
+        {
+            OnToggleChanged?.Invoke(_playerType, value);
         }
     }
 }
