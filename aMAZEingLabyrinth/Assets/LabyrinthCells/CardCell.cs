@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace GameCore
@@ -12,6 +13,9 @@ namespace GameCore
 
         [SerializeField]
         private Transform _cellTransform;
+
+        [SerializeField]
+        private float _rotateDuration = 0.3f;
 
         [SerializeField]
         private CellGeometry _cellGeometry;
@@ -34,12 +38,13 @@ namespace GameCore
 
         private void OnDisable()
         {
-            _cellValues.OnRotated -= SetRotation90;
+            _cellValues.OnRotated -= RotateView;
         }
 
         public void Init(RewardName rewardName, int initAngleDeg)
         {
             _rewardName = rewardName;
+
             SetRewardSprite();
 
             SetAngleRotation(CellRotationInfo.CalculateQuaternion(initAngleDeg));
@@ -53,14 +58,18 @@ namespace GameCore
 
             _cellValues = cellValues;
 
-            _cellValues.OnRotated += SetRotation90;
+            _cellValues.OnRotated += RotateView;
 
             return _cellValues;
         }
 
-        private void SetRotation90(int angleDeg)
+        public void RotateView(int angleDeg)
         {
-            SetAngleRotation(CellRotationInfo.GetQuaternion90(angleDeg));
+            var newAngle = new Vector3(transform.eulerAngles.x,
+                transform.eulerAngles.y,
+                transform.eulerAngles.z + angleDeg);
+
+            transform.DORotate(newAngle, _rotateDuration);
         }
 
         private void SetAngleRotation(Quaternion angleQuaternion)

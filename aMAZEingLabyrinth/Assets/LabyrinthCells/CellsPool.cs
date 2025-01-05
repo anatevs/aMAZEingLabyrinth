@@ -36,7 +36,7 @@ namespace GameCore
                 {
                     if (_emptyCells.ContainsKey(cellType.Geometry))
                     {
-                        _emptyCells[cellType.Geometry].Item2.Add(cell);
+                        _emptyCells[cellType.Geometry].cards.Add(cell);
                     }
                     else
                     {
@@ -92,7 +92,6 @@ namespace GameCore
             return cell;
         }
 
-
         public void UnspawnPooledCells()
         {
             foreach (var cell in _rewardCells.Values)
@@ -109,6 +108,12 @@ namespace GameCore
             }
         }
 
+        public CardCell SpawnCell(OneCellData cellData, Transform parentTransform)
+        {
+            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
+                cellData.Origin.X, cellData.Origin.Y, parentTransform);
+        }
+
         private CardCell SpawnCell(CellGeometry geometry, RewardName reward, int rotAngle, int localX, int localY, Transform parent)
         {
             var cell = GameObject.Instantiate(_cellPrefabsConfig.GetCardCell(geometry));
@@ -120,12 +125,6 @@ namespace GameCore
             cell.Init(reward, rotAngle);
 
             return cell;
-        }
-
-        public CardCell SpawnCell(OneCellData cellData, Transform parentTransform)
-        {
-            return SpawnCell(cellData.Geometry, cellData.Reward, cellData.RotationDeg,
-                cellData.Origin.X, cellData.Origin.Y, parentTransform);
         }
     }
 }
