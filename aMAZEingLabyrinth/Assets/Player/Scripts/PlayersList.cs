@@ -13,6 +13,8 @@ namespace GameCore
 
         public Player CurrentPlayer => _playersDict[_activeTypes[_currentIndex]];
 
+        public List<PlayerType> ActiveTypes => _activeTypes;
+
         [SerializeField]
         private Player[] _players;
 

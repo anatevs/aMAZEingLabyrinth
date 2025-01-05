@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameUI
 {
-    public class ChoosingPlayers : MonoBehaviour
+    public sealed class ChoosingPlayers : MonoBehaviour
     {
         public event Action<PlayerType, bool> OnPlayerToggled;
 
@@ -38,8 +38,6 @@ namespace GameUI
             {
                 _toggleViews[i].OnToggleChanged += ChooseToggle;
             }
-
-            _selectedAmount = _toggleViews.Length;
         }
 
         private void OnDisable()

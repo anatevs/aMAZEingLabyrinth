@@ -3,7 +3,6 @@ using SaveLoadNamespace;
 using System;
 using VContainer.Unity;
 using GameCore;
-using UnityEngine;
 
 namespace GameManagement
 {
@@ -86,7 +85,7 @@ namespace GameManagement
         {
             _saveLoadManager.LoadNewGame();
 
-            _menusService.PlayerSelector.Show();
+            _menusService.PlayerSelector.Show(_players.ActiveTypes);
 
             _cellHighlight.SetActive(false);
         }

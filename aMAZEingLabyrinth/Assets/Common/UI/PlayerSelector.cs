@@ -22,9 +22,9 @@ namespace GameUI
             _okButton.onClick.RemoveAllListeners();
         }
 
-        public void Show()
+        public void Show(ICollection<PlayerType> players)
         {
-            InitDropdown();
+            InitDropdown(players);
 
             _okButton.onClick.AddListener(MakeSelection);
 
@@ -46,18 +46,6 @@ namespace GameUI
         private void Hide()
         {
             gameObject.SetActive(false);
-        }
-
-        private void InitDropdown()
-        {
-            _dropdown.options.Clear();
-
-            _dropdown.RefreshShownValue();
-
-            foreach (var playerName in Enum.GetValues(typeof(PlayerType)))
-            {
-                _dropdown.options.Add(new(playerName.ToString()));
-            }
         }
 
         private void MakeSelection()

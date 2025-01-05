@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace GameUI
 {
-    public class PlayerTypeToggleView : MonoBehaviour
+    public sealed class PlayerTypeToggleView : MonoBehaviour
     {
         public event Action<PlayerType, bool> OnToggleChanged;
 
