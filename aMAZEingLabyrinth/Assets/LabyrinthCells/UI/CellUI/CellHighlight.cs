@@ -52,11 +52,6 @@ namespace GameCore
             {
                 var pos = _labyrinth.GetCellCenterCoordinates(mousePos);
 
-                if (_currentPos == pos)
-                {
-                    return;
-                }
-
                 _currentPos = pos;
 
                 _view.SetHighlight(pos);
