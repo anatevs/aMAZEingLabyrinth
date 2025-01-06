@@ -15,6 +15,9 @@ namespace EventBusNamespace
         protected override void RaiseEvent(NextPlayerEvent evnt)
         {
             _playersList.SetNextPlayer();
+
+            EventBus.RaiseEvent(new HighlightRewardInfoVisualEvent(
+                _playersList.CurrentPlayer.Type));
         }
     }
 }

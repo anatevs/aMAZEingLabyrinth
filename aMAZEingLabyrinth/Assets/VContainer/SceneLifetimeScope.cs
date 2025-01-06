@@ -98,6 +98,7 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<MoveThroughPathVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ShowNoPathVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ReleaseRewardVisualHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<HighlightRewardInfoVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EndGameVisualHandler>(Lifetime.Singleton);
     }
 

@@ -62,8 +62,8 @@ namespace GameCore
         {
             foreach (var player in _players)
             {
-                player.OnSetPlaying -=
-                    _rewardCardsService.SetActivePlayerHighlight;
+                //player.OnSetPlaying -=
+                //    _rewardCardsService.SetActivePlayerHighlight;
 
                 player.gameObject.SetActive(false);
             }
@@ -100,6 +100,8 @@ namespace GameCore
                 {
                     player.SetIsPlaying(true);
                     _currentIndex = i;
+
+                    _rewardCardsService.SetActivePlayerHighlight(player.Type);
                 }
             }
 
@@ -125,6 +127,8 @@ namespace GameCore
                 {
                     player.SetIsPlaying(true);
                     _currentIndex = i;
+
+                    _rewardCardsService.SetActivePlayerHighlight(player.Type);
                 }
             }
 
@@ -137,8 +141,8 @@ namespace GameCore
 
             player.Init(_playersDataConnector.Data.GetPlayerData(type));
 
-            player.OnSetPlaying +=
-                _rewardCardsService.SetActivePlayerHighlight;
+            //player.OnSetPlaying +=
+            //    _rewardCardsService.SetActivePlayerHighlight;
 
             return player;
         }

@@ -8,7 +8,7 @@ namespace GameCore
 {
     public sealed class Player : MonoBehaviour
     {
-        public event Action<PlayerType> OnSetPlaying;
+        //public event Action<PlayerType> OnSetPlaying;
 
         public PlayerType Type => _playerType;
 
@@ -59,10 +59,10 @@ namespace GameCore
         {
             _isPlaying = isPlaying;
 
-            if (_isPlaying)
-            {
-                OnSetPlaying?.Invoke(_playerType);
-            }
+            //if (_isPlaying)
+            //{
+            //    OnSetPlaying?.Invoke(_playerType);
+            //}
         }
 
         public void SetToDefaultPos()
