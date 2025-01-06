@@ -53,20 +53,7 @@ namespace GameCore
 
         private void OnDisable()
         {
-            UnsubscribeAll();
-
             _playersDataConnector.OnPlayersRequested -= SendPlayersToConnector;
-        }
-
-        private void UnsubscribeAll()
-        {
-            foreach (var player in _players)
-            {
-                //player.OnSetPlaying -=
-                //    _rewardCardsService.SetActivePlayerHighlight;
-
-                player.gameObject.SetActive(false);
-            }
         }
 
         public void SetPlayerToList(PlayerType type, bool isActive)
@@ -85,7 +72,7 @@ namespace GameCore
 
         public void InitPlayers(int firstPlayerIndex)
         {
-            UnsubscribeAll();
+            SetNoPlayingAll();
 
             _rewardCardsService.InitRewardsViews(ActivePlayers);
 
@@ -112,7 +99,7 @@ namespace GameCore
         {
             _activeTypes = _playersDataConnector.Data.GetActiveTypes().ToList();
 
-            UnsubscribeAll();
+            SetNoPlayingAll();
 
             _rewardCardsService.InitRewardsViews(ActivePlayers);
 
@@ -133,18 +120,6 @@ namespace GameCore
             }
 
             _rewardCardsService.DealOutLoadedCards(ActivePlayers);
-        }
-
-        private Player InitPlayer(PlayerType type)
-        {
-            var player = _playersDict[type];
-
-            player.Init(_playersDataConnector.Data.GetPlayerData(type));
-
-            //player.OnSetPlaying +=
-            //    _rewardCardsService.SetActivePlayerHighlight;
-
-            return player;
         }
 
         public void SetNextPlayer()
@@ -188,6 +163,23 @@ namespace GameCore
             }
 
             return result;
+        }
+
+        private Player InitPlayer(PlayerType type)
+        {
+            var player = _playersDict[type];
+
+            player.Init(_playersDataConnector.Data.GetPlayerData(type));
+
+            return player;
+        }
+
+        private void SetNoPlayingAll()
+        {
+            foreach (var player in _players)
+            {
+                player.gameObject.SetActive(false);
+            }
         }
 
         private void SendPlayersToConnector()

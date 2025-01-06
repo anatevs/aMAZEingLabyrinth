@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
@@ -8,8 +7,6 @@ namespace GameCore
 {
     public sealed class Player : MonoBehaviour
     {
-        //public event Action<PlayerType> OnSetPlaying;
-
         public PlayerType Type => _playerType;
 
         public (int X, int Y) Coordinate => _coordinate;
@@ -58,11 +55,6 @@ namespace GameCore
         public void SetIsPlaying(bool isPlaying)
         {
             _isPlaying = isPlaying;
-
-            //if (_isPlaying)
-            //{
-            //    OnSetPlaying?.Invoke(_playerType);
-            //}
         }
 
         public void SetToDefaultPos()
