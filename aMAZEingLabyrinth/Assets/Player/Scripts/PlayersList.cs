@@ -18,7 +18,6 @@ namespace GameCore
         [SerializeField]
         private Player[] _players;
 
-        [SerializeField]
         private RewardCardsService _rewardCardsService;
 
         private List<Player> ActivePlayers => _activeTypes.Select(type => _playersDict[type]).ToList();
@@ -32,8 +31,9 @@ namespace GameCore
         private int _currentIndex = 0;
 
         [Inject]
-        public void Construct(PlayersDataConnector playersDataConnector)
+        public void Construct(RewardCardsService rewardCardsService, PlayersDataConnector playersDataConnector)
         {
+            _rewardCardsService = rewardCardsService;
             _playersDataConnector = playersDataConnector;
         }
 
@@ -62,8 +62,6 @@ namespace GameCore
         {
             foreach (var player in _players)
             {
-                _rewardCardsService.UnsubscribePlayers(player);
-
                 player.OnSetPlaying -=
                     _rewardCardsService.SetActivePlayerHighlight;
 
@@ -103,8 +101,6 @@ namespace GameCore
                     player.SetIsPlaying(true);
                     _currentIndex = i;
                 }
-
-                _rewardCardsService.SubscribePlayer(player);
             }
 
             _rewardCardsService.DealOutDefaultCards(ActivePlayers);
@@ -130,8 +126,6 @@ namespace GameCore
                     player.SetIsPlaying(true);
                     _currentIndex = i;
                 }
-
-                _rewardCardsService.SubscribePlayer(player);
             }
 
             _rewardCardsService.DealOutLoadedCards(ActivePlayers);

@@ -19,6 +19,9 @@ public class SceneLifetimeScope : LifetimeScope
     private ShiftArrowsService _shiftArrowsService;
 
     [SerializeField]
+    private RewardCardsService _rewardCardsService;
+
+    [SerializeField]
     private CellsLabyrinth _cellsLabyrinth;
 
     [SerializeField]
@@ -55,6 +58,8 @@ public class SceneLifetimeScope : LifetimeScope
 
         builder.RegisterEntryPoint<ShiftArrowsController>(Lifetime.Singleton)
             .AsSelf();
+
+        builder.RegisterComponent(_rewardCardsService);
     }
 
     private void RegisterPipeline(IContainerBuilder builder)
@@ -83,6 +88,7 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<MakeShiftHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ClickCellHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<MoveThroughPathHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<ReleaseRewardHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<CheckWinHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<NextPlayerHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EndGameHandler>(Lifetime.Singleton);
@@ -91,6 +97,7 @@ public class SceneLifetimeScope : LifetimeScope
         builder.RegisterEntryPoint<MakeShiftVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<MoveThroughPathVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<ShowNoPathVisualHandler>(Lifetime.Singleton);
+        builder.RegisterEntryPoint<ReleaseRewardVisualHandler>(Lifetime.Singleton);
         builder.RegisterEntryPoint<EndGameVisualHandler>(Lifetime.Singleton);
     }
 

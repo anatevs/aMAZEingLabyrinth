@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using static GameCore.OnePlayerData;
 using Cysharp.Threading.Tasks;
 
 namespace GameCore
 {
     public sealed class Player : MonoBehaviour
     {
-        public event Action<Player> OnTargetChanged;
+        //public event Action<Player> OnTargetChanged;
 
         public event Action<PlayerType> OnSetPlaying;
 
@@ -124,7 +123,7 @@ namespace GameCore
         {
             _rewardTargets.Dequeue();
 
-            OnTargetChanged?.Invoke(this);
+            //OnTargetChanged?.Invoke(this);
         }
 
         public void SetupRewards(RewardName[] rewardNames)

@@ -415,6 +415,7 @@ MonoBehaviour:
   _menuWindowsService: {fileID: 699056894}
   _playersList: {fileID: 1276336701}
   _shiftArrowsService: {fileID: 1480633124}
+  _rewardCardsService: {fileID: 1634171523}
   _cellsLabyrinth: {fileID: 293525262}
   _cellHighlight: {fileID: 1322003525}
   _gameListenersManager: {fileID: 95123915}
@@ -6979,7 +6980,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1276336700}
   - component: {fileID: 1276336701}
-  - component: {fileID: 1276336702}
   m_Layer: 0
   m_Name: Players
   m_TagString: Untagged
@@ -7023,21 +7023,7 @@ MonoBehaviour:
   - {fileID: 1347911063}
   - {fileID: 1242712860}
   - {fileID: 1626672184}
-  _rewardCardsService: {fileID: 1276336702}
---- !u!114 &1276336702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1276336699}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef39aab0d0f73054e821215285c45371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rewardsConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
-  _targetsUI: {fileID: 1634171522}
+  _rewardCardsService: {fileID: 1634171523}
 --- !u!1001 &1291781462
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8336,6 +8322,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1634171521}
   - component: {fileID: 1634171522}
+  - component: {fileID: 1634171523}
   m_Layer: 0
   m_Name: RewardsInfo
   m_TagString: Untagged
@@ -8387,6 +8374,20 @@ MonoBehaviour:
   - {fileID: 495477210}
   _playerTypesConfig: {fileID: 11400000, guid: ff30d5dc005794441a725ed309af94eb, type: 2}
   _activePlayerHighlight: {fileID: 1221622661}
+--- !u!114 &1634171523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634171520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef39aab0d0f73054e821215285c45371, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rewardsConfig: {fileID: 11400000, guid: 13766bd94b19e5746b1bfd0bc7990e63, type: 2}
+  _targetsUI: {fileID: 1634171522}
 --- !u!1 &1644046083
 GameObject:
   m_ObjectHideFlags: 0

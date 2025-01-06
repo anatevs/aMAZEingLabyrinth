@@ -19,7 +19,7 @@ namespace GameUI
 
         private Vector3[] _highlightPos;
 
-        private readonly Dictionary<PlayerType, RewardInfoView> _playersInfo = new();
+        private readonly Dictionary<PlayerType, RewardInfoView> _rewardsViews = new();
 
         private readonly Dictionary<PlayerType, Vector3> _playableHighlightPos = new();
 
@@ -54,7 +54,7 @@ namespace GameUI
                 _views[i].SetPlayerImage(
                     _playerTypesConfig.GetPlayerSprite(playerType.Type));
 
-                _playersInfo.Add(playerType.Type, _views[i]);
+                _rewardsViews.Add(playerType.Type, _views[i]);
 
                 _playableHighlightPos.Add(playerType.Type, _highlightPos[i]);
 
@@ -66,15 +66,15 @@ namespace GameUI
         {
             try
             {
-                _playersInfo[player.Type].SetCurrentRewardSprite(
+                _rewardsViews[player.Type].SetCurrentRewardSprite(
                     rewardsConfig.GetRewardSprite(player.CurrentTarget));
             }
             catch
             {
-                _playersInfo[player.Type].SetNoReward();
+                _rewardsViews[player.Type].SetNoReward();
             }
 
-            _playersInfo[player.Type].SetRemainTargets(
+            _rewardsViews[player.Type].SetRemainTargets(
                 Mathf.Max(0, player.RemainTargetsCount - 1));
         }
 
@@ -91,7 +91,7 @@ namespace GameUI
                 view.gameObject.SetActive(false);
             }
 
-            _playersInfo.Clear();
+            _rewardsViews.Clear();
             _playableHighlightPos.Clear();
         }
     }

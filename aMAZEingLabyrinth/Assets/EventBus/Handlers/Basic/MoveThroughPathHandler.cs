@@ -27,8 +27,7 @@ namespace EventBusNamespace
             {
                 if (_cellsLabyrinth.HasCellReward(xy, target))
                 {
-                    EventBus.RaiseEvent(new CheckWinEvent(player));
-
+                    EventBus.RaiseEvent(new ReleaseRewardEvent(player));
                     return;
                 }
             }
