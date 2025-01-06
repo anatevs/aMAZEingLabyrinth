@@ -8,8 +8,6 @@ namespace GameCore
 {
     public sealed class Player : MonoBehaviour
     {
-        //public event Action<Player> OnTargetChanged;
-
         public event Action<PlayerType> OnSetPlaying;
 
         public PlayerType Type => _playerType;
@@ -122,8 +120,6 @@ namespace GameCore
         public void ReleaseReward()
         {
             _rewardTargets.Dequeue();
-
-            //OnTargetChanged?.Invoke(this);
         }
 
         public void SetupRewards(RewardName[] rewardNames)

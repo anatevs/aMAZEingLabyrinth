@@ -2,7 +2,7 @@
 
 namespace GamePipeline
 {
-    public class ReleaseRewardVisualTask : Task
+    public sealed class ReleaseRewardVisualTask : Task
     {
         private readonly Player _player;
         private readonly RewardCardsService _rewardCardsService;
