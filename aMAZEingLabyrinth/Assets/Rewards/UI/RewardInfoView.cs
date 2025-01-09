@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +16,9 @@ namespace GameUI
 
         [SerializeField]
         private TMP_Text _remainCardsText;
+
+        [SerializeField]
+        private Transform _scalePoint;
 
         public void SetPlayerImage(Sprite sprite)
         {
@@ -39,6 +44,16 @@ namespace GameUI
             }
 
             _remainCardsText.text = remain.ToString();
+        }
+
+        public async UniTask ScaleUpDown(float scale, float halfDuration)
+        {
+            Sequence sequence = DOTween.Sequence().Pause();
+
+            sequence.Append(_scalePoint.DOScale(scale, halfDuration)).Pause();
+            sequence.Append(_scalePoint.DOScale(1, halfDuration)).Pause();
+
+            await sequence.Play().AsyncWaitForCompletion();
         }
     }
 }

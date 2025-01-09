@@ -14,9 +14,9 @@ namespace GamePipeline
             _rewardCardsService = rewardCardsService;
         }
 
-        protected override void OnRun()
+        protected override async void OnRun()
         {
-            _rewardCardsService.SetTargetUIInfo(_player);
+            await _rewardCardsService.SetNewTarget(_player);
 
             Finish();
         }

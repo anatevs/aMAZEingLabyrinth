@@ -74,5 +74,12 @@ namespace GameCore
         {
             _targetsUI.SetTargetsInfo(player, _rewardsConfig);
         }
+
+        public async UniTask SetNewTarget(Player player)
+        {
+            SetTargetUIInfo(player);
+
+            await _targetsUI.ScaleViewUpDown(player);
+        }
     }
 }

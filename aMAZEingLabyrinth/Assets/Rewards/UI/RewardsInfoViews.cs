@@ -19,6 +19,12 @@ namespace GameUI
         [SerializeField]
         private Image _activePlayerHighlight;
 
+        [SerializeField]
+        private float _scaleUpDown = 1.5f;
+
+        [SerializeField]
+        private float _scaleHalfDuration = 0.2f;
+
         private Vector3[] _highlightPos;
 
         private readonly Dictionary<PlayerType, RewardInfoView> _rewardsViews = new();
@@ -78,6 +84,11 @@ namespace GameUI
 
             _rewardsViews[player.Type].SetRemainTargets(
                 Mathf.Max(0, player.RemainTargetsCount - 1));
+        }
+
+        public async UniTask ScaleViewUpDown(Player player)
+        {
+            await _rewardsViews[player.Type].ScaleUpDown(_scaleUpDown, _scaleHalfDuration);
         }
 
         public void SetActiveHighlight(PlayerType playerType)
