@@ -3,9 +3,8 @@ using GamePipeline;
 
 namespace EventBusNamespace
 {
-    public sealed class MoveThroughPathVisualHandler : BaseHandler<MoveThroughPathEvent>
+    public sealed class MoveThroughPathVisualHandler : VisualHandler<MoveThroughPathEvent>
     {
-        private readonly AudioVisualPipeline _visualPipeline;
         private readonly ShiftArrowsService _shiftArrows;
         private readonly CellHighlight _cellHighlight;
         private readonly PathMarkersPool _pathMarkersPool;
@@ -14,9 +13,9 @@ namespace EventBusNamespace
             AudioVisualPipeline visualPipeline,
             ShiftArrowsService shiftArrows,
             CellHighlight cellHighlight,
-            PathMarkersPool pathMarkersPool) : base(eventBus)
+            PathMarkersPool pathMarkersPool)
+            : base(eventBus, visualPipeline)
         {
-            _visualPipeline = visualPipeline;
             _shiftArrows = shiftArrows;
             _cellHighlight = cellHighlight;
             _pathMarkersPool = pathMarkersPool;
@@ -24,16 +23,16 @@ namespace EventBusNamespace
 
         protected override void RaiseEvent(MoveThroughPathEvent evnt)
         {
-            _visualPipeline.AddTask(new ShowPathMarkersVisualTask(
+            VisualPipeline.AddTask(new ShowPathMarkersVisualTask(
                 _pathMarkersPool, evnt.Path));
 
-            _visualPipeline.AddTask(new MoveThroughPathVisualTask
+            VisualPipeline.AddTask(new MoveThroughPathVisualTask
                 (evnt.Player, evnt.Path));
 
-            _visualPipeline.AddTask(new HidePathMarkersVisualTask(
+            VisualPipeline.AddTask(new HidePathMarkersVisualTask(
                 _pathMarkersPool));
 
-            _visualPipeline.AddTask(new SetActiveBoardUITask(
+            VisualPipeline.AddTask(new SetActiveBoardUITask(
                 _shiftArrows, _cellHighlight, true));
         }
     }

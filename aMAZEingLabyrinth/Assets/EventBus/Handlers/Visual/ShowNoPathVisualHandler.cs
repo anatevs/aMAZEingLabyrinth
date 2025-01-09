@@ -2,19 +2,17 @@
 
 namespace EventBusNamespace
 {
-    public sealed class ShowNoPathVisualHandler : BaseHandler<ShowNoPathVisualEvent>
+    public sealed class ShowNoPathVisualHandler : VisualHandler<ShowNoPathVisualEvent>
     {
-        private readonly AudioVisualPipeline _visualPipeline;
-
         public ShowNoPathVisualHandler(EventBus eventBus,
-            AudioVisualPipeline visualPipeline) : base(eventBus)
+            AudioVisualPipeline visualPipeline)
+            : base(eventBus, visualPipeline)
         {
-            _visualPipeline = visualPipeline;
         }
 
         protected override void RaiseEvent(ShowNoPathVisualEvent evnt)
         {
-            _visualPipeline.AddTask(new ShowNoPathVisualTask(evnt.NoPathWindow));
+            VisualPipeline.AddTask(new ShowNoPathVisualTask(evnt.NoPathWindow));
         }
     }
 }

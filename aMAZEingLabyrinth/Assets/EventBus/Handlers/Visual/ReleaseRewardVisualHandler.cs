@@ -3,9 +3,8 @@ using GamePipeline;
 
 namespace EventBusNamespace
 {
-    public sealed class ReleaseRewardVisualHandler : BaseHandler<ReleaseRewardEvent>
+    public sealed class ReleaseRewardVisualHandler : VisualHandler<ReleaseRewardEvent>
     {
-        private readonly AudioVisualPipeline _visualPipeline;
         private readonly RewardCardsService _rewardCardsService;
         private readonly ShiftArrowsService _shiftArrows;
         private readonly CellHighlight _cellHighlight;
@@ -14,9 +13,9 @@ namespace EventBusNamespace
             AudioVisualPipeline visualPipeline,
             RewardCardsService rewardCardsService,
             ShiftArrowsService shiftArrows,
-            CellHighlight cellHighlight) : base(eventBus)
+            CellHighlight cellHighlight)
+            : base(eventBus, visualPipeline)
         {
-            _visualPipeline = visualPipeline;
             _rewardCardsService = rewardCardsService;
             _shiftArrows = shiftArrows;
             _cellHighlight = cellHighlight;
@@ -24,13 +23,13 @@ namespace EventBusNamespace
 
         protected override void RaiseEvent(ReleaseRewardEvent evnt)
         {
-            _visualPipeline.AddTask(new SetActiveBoardUITask(
+            VisualPipeline.AddTask(new SetActiveBoardUITask(
                 _shiftArrows, _cellHighlight, false));
 
-            _visualPipeline.AddTask(new ReleaseRewardVisualTask(
+            VisualPipeline.AddTask(new ReleaseRewardVisualTask(
                 evnt.Player, _rewardCardsService));
 
-            _visualPipeline.AddTask(new SetActiveBoardUITask(
+            VisualPipeline.AddTask(new SetActiveBoardUITask(
                 _shiftArrows, _cellHighlight, true));
         }
     }

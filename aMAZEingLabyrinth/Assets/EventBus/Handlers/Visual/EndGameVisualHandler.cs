@@ -3,22 +3,21 @@ using GameUI;
 
 namespace EventBusNamespace
 {
-    public sealed class EndGameVisualHandler : BaseHandler<EndGameEvent>
+    public sealed class EndGameVisualHandler : VisualHandler<EndGameEvent>
     {
-        private readonly AudioVisualPipeline _visualPipeline;
         private readonly EndGameMenu _endGameMenu;
 
         public EndGameVisualHandler(EventBus eventBus,
             AudioVisualPipeline visualPipeline,
-            MenusService menusService) : base(eventBus)
+            MenusService menusService) 
+            : base(eventBus, visualPipeline)
         {
-            _visualPipeline = visualPipeline;
             _endGameMenu = menusService.EndGame;
         }
 
         protected override void RaiseEvent(EndGameEvent evnt)
         {
-            _visualPipeline.AddTask(new EndGameVisualTask(
+            VisualPipeline.AddTask(new EndGameVisualTask(
                 evnt.WinPlayer, _endGameMenu));
         }
     }
