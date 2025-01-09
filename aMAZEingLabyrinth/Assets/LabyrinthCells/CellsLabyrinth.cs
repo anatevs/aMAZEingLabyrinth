@@ -173,16 +173,14 @@ namespace GameCore
 
         public Vector3 GetCellCenterCoordinates(Vector3 pos)
         {
-            (int i, int j) = LabyrinthMath.GetCellIndex(((int)(pos.x - transform.position.x),
-                (int)(pos.y - transform.position.y)));
+            (int i, int j) = LabyrinthMath.GetCellIndex(pos, transform);
 
             return _cardCells[i, j].transform.position;
         }
 
         public void LayerUpRewardSprite(Vector3 pos, bool isLayerUp)
         {
-            (int i, int j) = LabyrinthMath.GetCellIndex(((int)(pos.x - transform.position.x),
-                (int)(pos.y - transform.position.y)));
+            (int i, int j) = LabyrinthMath.GetCellIndex(pos, transform);
 
             _cardCells[i, j].LayerUpRewardSprite(isLayerUp);
         }

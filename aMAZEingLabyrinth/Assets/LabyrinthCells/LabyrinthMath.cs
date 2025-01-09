@@ -1,4 +1,7 @@
-﻿namespace GameCore
+﻿using System.Transactions;
+using UnityEngine;
+
+namespace GameCore
 {
     public static class LabyrinthMath
     {
@@ -65,6 +68,14 @@
         {
             int i = _size.Rows - 1 - coordinates.y / _cellSize;
             int j = coordinates.x / _cellSize;
+
+            return (i, j);
+        }
+
+        public static (int iCell, int jCell) GetCellIndex(Vector3 globalPos, Transform labyrinthTransform)
+        {
+            (int i, int j) = GetCellIndex(((int)(globalPos.x - labyrinthTransform.position.x),
+                (int)(globalPos.y - labyrinthTransform.position.y)));
 
             return (i, j);
         }
