@@ -72,6 +72,18 @@ namespace GameCore
             transform.DORotate(newAngle, _rotateDuration);
         }
 
+        public void LayerUpRewardSprite(bool isLevelUp)
+        {
+            if (isLevelUp)
+            {
+                _rewardImage.sortingOrder = 2;
+            }
+            else
+            {
+                _rewardImage.sortingOrder = 0;
+            }
+        }
+
         private void SetAngleRotation(Quaternion angleQuaternion)
         {
             transform.rotation = angleQuaternion * transform.rotation;

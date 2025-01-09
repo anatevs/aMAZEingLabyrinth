@@ -179,6 +179,14 @@ namespace GameCore
             return _cardCells[i, j].transform.position;
         }
 
+        public void LayerUpRewardSprite(Vector3 pos, bool isLayerUp)
+        {
+            (int i, int j) = LabyrinthMath.GetCellIndex(((int)(pos.x - transform.position.x),
+                (int)(pos.y - transform.position.y)));
+
+            _cardCells[i, j].LayerUpRewardSprite(isLayerUp);
+        }
+
         public (int row, int col, int iterNumber) CalcShiftParams(int shiftRow, int shiftCol)
         {
             bool isRow = LabyrinthMath.MovableRowCols.Contains(shiftRow);

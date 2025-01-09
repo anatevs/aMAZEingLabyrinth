@@ -16,7 +16,9 @@ namespace GameCore
 
         private bool _isActive;
 
-        private Vector3 _currentPos = new();
+        private Vector3 _currentPos;
+
+        private Vector3 _outPos = new(-1, -1, 0);
 
         private TurnPipeline _turnPipeline;
 
@@ -28,7 +30,11 @@ namespace GameCore
 
         private void OnEnable()
         {
+            _currentPos = _outPos;
+
             _view.OnMouseEnter += SetHighlight;
+
+            _view.OnMouseExit += UnhighlightReward;
 
             _view.OnCellClicked += ClickOnCell;
         }
@@ -36,6 +42,8 @@ namespace GameCore
         private void OnDisable()
         {
             _view.OnMouseEnter -= SetHighlight;
+
+            _view.OnMouseExit -= UnhighlightReward;
 
             _view.OnCellClicked -= ClickOnCell;
         }
@@ -52,10 +60,25 @@ namespace GameCore
             {
                 var pos = _labyrinth.GetCellCenterCoordinates(mousePos);
 
+                if (pos != _currentPos)
+                {
+                    if (_currentPos != _outPos)
+                    {
+                        _labyrinth.LayerUpRewardSprite(_currentPos, false);
+                    }
+                    _labyrinth.LayerUpRewardSprite(pos, true);
+                }
+
                 _currentPos = pos;
 
                 _view.SetHighlight(pos);
             }
+        }
+
+        private void UnhighlightReward()
+        {
+            _labyrinth.LayerUpRewardSprite(_currentPos, false);
+            _currentPos = _outPos;
         }
 
         private void ClickOnCell()

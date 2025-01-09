@@ -1,4 +1,6 @@
-﻿using GameCore;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using GameCore;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,7 +40,7 @@ namespace GameUI
 
         public void InitViews(ICollection<Player> activePlayers)
         {
-            RefreshAllViews();
+            ResetAllViews();
 
             if (_views.Length < activePlayers.Count)
             {
@@ -84,7 +86,14 @@ namespace GameUI
                 _playableHighlightPos[playerType];
         }
 
-        private void RefreshAllViews()
+        public async UniTask SmoothSetActiveHighlight(PlayerType playerType, float duration)
+        {
+            await _activePlayerHighlight.transform
+                .DOLocalMove(_playableHighlightPos[playerType], duration)
+                .AsyncWaitForCompletion();
+        }
+
+        private void ResetAllViews()
         {
             foreach (var view in _views)
             {

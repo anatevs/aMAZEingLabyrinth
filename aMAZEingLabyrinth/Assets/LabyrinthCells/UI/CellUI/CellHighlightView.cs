@@ -9,6 +9,8 @@ namespace GameCore
     {
         public event Action<Vector3> OnMouseEnter;
 
+        public event Action OnMouseExit;
+
         public event Action OnCellClicked;
 
         [SerializeField]
@@ -17,6 +19,8 @@ namespace GameCore
         private BoxCollider2D _boxCollider;
 
         private InputSystem _inputSystem;
+
+        private bool _isOverlapping = false;
 
         private void Awake()
         {
@@ -31,6 +35,8 @@ namespace GameCore
 
             if (_boxCollider.OverlapPoint(mousePos))
             {
+                _isOverlapping = true;
+
                 OnMouseEnter?.Invoke(mousePos);
 
                 if (_inputSystem.IsMouseClicked())
@@ -40,6 +46,13 @@ namespace GameCore
             }
             else
             {
+                if (_isOverlapping && _highlightImage.activeSelf)
+                {
+                    OnMouseExit?.Invoke();
+                }
+
+                _isOverlapping = false;
+
                 _highlightImage.SetActive(false);
             }
         }

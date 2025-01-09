@@ -13,9 +13,9 @@ namespace GamePipeline
             _rewardCardsService = rewardCardsService;
         }
 
-        protected override void OnRun()
+        protected override async void OnRun()
         {
-            _rewardCardsService.SetActivePlayerHighlight(_playerType);
+            await _rewardCardsService.SmoothSetHighlight(_playerType);
 
             Finish();
         }

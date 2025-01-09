@@ -1,4 +1,5 @@
-﻿using GameUI;
+﻿using Cysharp.Threading.Tasks;
+using GameUI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,6 +13,9 @@ namespace GameCore
 
         [SerializeField]
         private RewardsInfoViews _targetsUI;
+
+        [SerializeField]
+        private float _setHighlightDuration = 0.2f;
 
         public void InitRewardsViews(ICollection<Player> players)
         {
@@ -59,6 +63,11 @@ namespace GameCore
         public void SetActivePlayerHighlight(PlayerType playerType)
         {
             _targetsUI.SetActiveHighlight(playerType);
+        }
+
+        public async UniTask SmoothSetHighlight(PlayerType playerType)
+        {
+            await _targetsUI.SmoothSetActiveHighlight(playerType, _setHighlightDuration);
         }
 
         public void SetTargetUIInfo(Player player)
