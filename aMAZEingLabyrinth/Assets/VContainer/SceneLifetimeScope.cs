@@ -28,6 +28,9 @@ public class SceneLifetimeScope : LifetimeScope
     private CellHighlight _cellHighlight;
 
     [SerializeField]
+    private PathMarkersPool _pathMarkersPool;
+
+    [SerializeField]
     private GameListenersManager _gameListenersManager;
 
     protected override void Configure(IContainerBuilder builder)
@@ -60,6 +63,8 @@ public class SceneLifetimeScope : LifetimeScope
             .AsSelf();
 
         builder.RegisterComponent(_rewardCardsService);
+
+        builder.RegisterComponent(_pathMarkersPool);
     }
 
     private void RegisterPipeline(IContainerBuilder builder)

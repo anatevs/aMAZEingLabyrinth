@@ -16,9 +16,6 @@ namespace GameCore
         private CardCell[] _fixedCells;
 
         [SerializeField]
-        private PathMarkersPool _pathMarkersPool;
-
-        [SerializeField]
         private Transform _movableParentTransform;
 
         [SerializeField]
@@ -43,6 +40,10 @@ namespace GameCore
         private UnfixedCellsDataConnector _unfixedCellsConnector;
 
         private CellsPool _cellsPool;
+
+        private readonly List<Transform> _shiftedTransforms = new();
+
+        private Vector3Int _shiftDirection;
 
         [Inject]
         public void Construct(UnfixedCellsDataConnector unfixedCellsConnector, CellsPool cellsPool)
@@ -170,7 +171,6 @@ namespace GameCore
             _playableCell.ReplacePlayableCell(playableCell, out _);
         }
 
-
         public Vector3 GetCellCenterCoordinates(Vector3 pos)
         {
             (int i, int j) = LabyrinthMath.GetCellIndex(((int)(pos.x - transform.position.x),
@@ -178,7 +178,6 @@ namespace GameCore
 
             return _cardCells[i, j].transform.position;
         }
-
 
         public (int row, int col, int iterNumber) CalcShiftParams(int shiftRow, int shiftCol)
         {
@@ -222,10 +221,6 @@ namespace GameCore
 
             return (opRow, opCol, iterNumber);
         }
-
-
-        private List<Transform> _shiftedTransforms = new();
-        private Vector3Int _shiftDirection;
 
         public void MakeShift(int shiftRow, int shiftCol, out (int row, int col, Vector3Int direction) shiftParams)
         {
@@ -309,17 +304,17 @@ namespace GameCore
             return _cardCells[i, j].Reward == reward;
         }
 
-        public bool FindPath((int, int) startXY, Vector2 endCellGlobalXY, out List<(int x, int y)> path)
+        public bool TryFindPath((int, int) startXY, Vector2 endCellGlobalXY, out List<(int x, int y)> path)
         {
             var endXY = ((int)(endCellGlobalXY.x - transform.position.x),
                 (int)(endCellGlobalXY.y - transform.position.y));
 
-            var result = FindPath(startXY, endXY, out path);
+            var result = TryFindPath(startXY, endXY, out path);
 
             return result;
         }
 
-        private bool FindPath((int x, int y) startXY, (int x, int y) endXY, out List<(int x, int y)> path)
+        private bool TryFindPath((int x, int y) startXY, (int x, int y) endXY, out List<(int x, int y)> path)
         {
             path = new List<(int x, int y)>();
 
@@ -328,18 +323,11 @@ namespace GameCore
 
             var resultBool = _grid.TryFindAStarPath(start, end, out List<Vector2Int> resultVector2);
 
-            _pathMarkersPool.SpawnedTime = Time.time;
-
-            _pathMarkersPool.Spawn(start.x, start.y);
-            _pathMarkersPool.Spawn(end.x, end.y);
-
             if (resultBool)
             {
                 foreach (var pathPoint in resultVector2)
                 {
                     path.Add((pathPoint.x, pathPoint.y));
-
-                    _pathMarkersPool.Spawn(pathPoint.x, pathPoint.y);
                 }
             }
 

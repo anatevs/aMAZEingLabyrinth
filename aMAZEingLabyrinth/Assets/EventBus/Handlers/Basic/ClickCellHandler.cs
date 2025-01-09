@@ -32,7 +32,7 @@ namespace EventBusNamespace
             var startXY = player.Coordinate;
             var endXY = evnt.CellHighlight.CurrentPosition;
 
-            var result = _cellsLabyrinth.FindPath(startXY, endXY, out var path);
+            var result = _cellsLabyrinth.TryFindPath(startXY, endXY, out var path);
 
             if (result)
             {
