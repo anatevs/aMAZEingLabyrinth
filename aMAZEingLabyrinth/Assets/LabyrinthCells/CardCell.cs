@@ -29,6 +29,8 @@ namespace GameCore
         [SerializeField]
         private RewardsConfig _rewardsConfig;
 
+
+
         private CardCellValues _cellValues;
 
         private void Start()
@@ -96,6 +98,15 @@ namespace GameCore
                 var sprite = _rewardsConfig.GetRewardSprite(_rewardName);
 
                 _rewardImage.sprite = sprite;
+
+                (float scale, float rotZ, (float shiftX, float shiftY)) = _rewardsConfig.GetScaleRot(_rewardName);
+
+                _rewardImage.transform.Rotate(new Vector3(0, 0, rotZ));
+
+                _rewardImage.transform.localPosition = new Vector3(
+                    shiftX, shiftY, _rewardImage.transform.localPosition.z);
+
+                _rewardImage.transform.localScale = Vector3.one * scale;
             }
         }
     }

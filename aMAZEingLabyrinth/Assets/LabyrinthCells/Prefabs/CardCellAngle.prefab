@@ -130,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cellTransform: {fileID: 3880097349464966393}
+  _rotateDuration: 0.2
   _cellGeometry: 0
   _rewardName: 1
   _rewardImage: {fileID: 6423054805153121488}

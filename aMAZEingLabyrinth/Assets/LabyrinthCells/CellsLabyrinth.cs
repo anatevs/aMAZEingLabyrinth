@@ -78,7 +78,7 @@ namespace GameCore
 
                 cell.InitCellValues();
 
-                SetCellsToLabyrinth(cell, iCell, jCell);
+                SetCellToLabyrinth(cell, iCell, jCell);
             }
 
             _cellsPool.PopulatePool(_movableParentTransform);
@@ -140,7 +140,7 @@ namespace GameCore
 
             var (Row, Col) = LabyrinthMath.GetCellIndex(cellData.Origin);
 
-            SetCellsToLabyrinth(cell, Row, Col);
+            SetCellToLabyrinth(cell, Row, Col);
         }
 
         private void InitPlayebleCellFromData(OneCellData cellData, Transform parentTransform)
@@ -163,7 +163,7 @@ namespace GameCore
 
                 var (Row, Col) = LabyrinthMath.GetCellIndex(cellData.Origin);
 
-                SetCellsToLabyrinth(cell, Row, Col);
+                SetCellToLabyrinth(cell, Row, Col);
             }
 
             var playableCell = _cellsPool.SpawnCell(cellsData.PlayableCellData, _movableParentTransform);
@@ -263,12 +263,12 @@ namespace GameCore
                 var newRow = opRow - iterDirectionRowCol[0];
                 var newCol = opCol - iterDirectionRowCol[1];
 
-                SetCellsToLabyrinth(cell, newRow, newCol);
+                SetCellToLabyrinth(cell, newRow, newCol);
 
                 _shiftedTransforms.Add(cell.transform);
             }
 
-            SetCellsToLabyrinth(oldPlayable, shiftRow, shiftCol);
+            SetCellToLabyrinth(oldPlayable, shiftRow, shiftCol);
 
             _playableCell.SetCellValues(newPlayable);
         }
@@ -342,7 +342,7 @@ namespace GameCore
             return resultBool;
         }
 
-        private void SetCellsToLabyrinth(CardCell cell, int i, int j)
+        private void SetCellToLabyrinth(CardCell cell, int i, int j)
         {
             if (i < LabyrinthMath.Size.Rows && j < LabyrinthMath.Size.Cols
                 && i > -1 && j > -1)
