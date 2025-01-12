@@ -17,86 +17,86 @@ MonoBehaviour:
     RewardPicture: {fileID: 21300000, guid: f65783d95c91c334f889d87ac6f999b9, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.15
+    ShiftY: 0.2
   - Name: 3
     RewardPicture: {fileID: 21300000, guid: 4649b103c85454d4e99b286583e35e6d, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.08
+    ShiftY: 0.19
   - Name: 4
     RewardPicture: {fileID: 21300000, guid: 48cfd044dbfcf024399806feb822a8da, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.05
+    ShiftY: 0.24
   - Name: 5
     RewardPicture: {fileID: 21300000, guid: e29eae5accb2dfd4f889ab5c84566c24, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.12
+    ShiftY: 0.3
   - Name: 6
     RewardPicture: {fileID: 21300000, guid: a7c1143ac0c51b24aa17e074d8318b47, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.2
   - Name: 7
     RewardPicture: {fileID: 21300000, guid: 55887fd8173c85841b4788349e3027df, type: 3}
-    Scale: 1
-    RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    Scale: 0.9
+    RotationZ: 90
+    ShiftX: -0.08
+    ShiftY: 0.26
   - Name: 8
     RewardPicture: {fileID: 21300000, guid: fc19457136214724f9db4e7d6f0d49e3, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.45
   - Name: 9
     RewardPicture: {fileID: 21300000, guid: f844c31b3476d204fbf044fd12cfda54, type: 3}
     Scale: 1
-    RotationZ: 0
+    RotationZ: -90
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.2
   - Name: 10
     RewardPicture: {fileID: 21300000, guid: 21baa456caf650f478aee5b602bbd78f, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.12
+    ShiftY: 0.12
   - Name: 11
     RewardPicture: {fileID: 21300000, guid: 2ad9926ecd26d0842b55f371c69f5999, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.2
   - Name: 12
     RewardPicture: {fileID: 21300000, guid: 321c05b6cc897e342a1e78a82083446f, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.35
   - Name: 13
     RewardPicture: {fileID: 21300000, guid: d3a1e783ea85ab4409d02a9252f2bf1d, type: 3}
-    Scale: 1
+    Scale: 0.96
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.15
   - Name: 14
     RewardPicture: {fileID: 21300000, guid: 43c6a6a46e5b48d4da67ab3a75ff1f70, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.06
+    ShiftY: 0.25
   - Name: 15
     RewardPicture: {fileID: 21300000, guid: fe1d133af1b355241adc391f6412afc7, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0
-    ShiftY: 0
+    ShiftY: 0.2
   - Name: 16
     RewardPicture: {fileID: 21300000, guid: 6c2cddf7176ef064e9aa8ea3b9326478, type: 3}
     Scale: 1
@@ -112,48 +112,48 @@ MonoBehaviour:
   - Name: 18
     RewardPicture: {fileID: 21300000, guid: 8c3414683f68fc440ad213e0c5934584, type: 3}
     Scale: 1
-    RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    RotationZ: -45
+    ShiftX: 0.22
+    ShiftY: 0.22
   - Name: 19
     RewardPicture: {fileID: 21300000, guid: 451411846b584524ab6a7756d92335e3, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.25
+    ShiftY: 0.3
   - Name: 20
     RewardPicture: {fileID: 21300000, guid: af3fadc0236bdc34784496373ce24791, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.35
+    ShiftY: 0.24
   - Name: 21
     RewardPicture: {fileID: 21300000, guid: d8c0efad334e07344bc79e7e98d9ef78, type: 3}
     Scale: 1
-    RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    RotationZ: 180
+    ShiftX: 0.34
+    ShiftY: 0.1
   - Name: 22
     RewardPicture: {fileID: 21300000, guid: 262eb3982ddc6ae4e9381cb01c67cb39, type: 3}
     Scale: 1
-    RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    RotationZ: 90
+    ShiftX: 0.25
+    ShiftY: 0.1
   - Name: 23
     RewardPicture: {fileID: 21300000, guid: 27515c25d6da67b419890863f33dda40, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: -0.1
+    ShiftY: 0.4
   - Name: 24
     RewardPicture: {fileID: 21300000, guid: 33f5ed0966c9fd34eb3e09dae2921068, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: 0.28
+    ShiftY: 0.22
   - Name: 25
     RewardPicture: {fileID: 21300000, guid: d1ab508438b722248b88d7667e6f5acd, type: 3}
     Scale: 1
     RotationZ: 0
-    ShiftX: 0
-    ShiftY: 0
+    ShiftX: -0.01
+    ShiftY: 0.34
