@@ -18,13 +18,13 @@ MonoBehaviour:
     Scale: 1
     RotationZ: 0
     ShiftX: 0.15
-    ShiftY: 0.2
+    ShiftY: 0.15
   - Name: 3
     RewardPicture: {fileID: 21300000, guid: 4649b103c85454d4e99b286583e35e6d, type: 3}
     Scale: 1
     RotationZ: 0
     ShiftX: 0.08
-    ShiftY: 0.19
+    ShiftY: 0.16
   - Name: 4
     RewardPicture: {fileID: 21300000, guid: 48cfd044dbfcf024399806feb822a8da, type: 3}
     Scale: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
     Scale: 0.9
     RotationZ: 90
     ShiftX: -0.08
-    ShiftY: 0.26
+    ShiftY: 0.24
   - Name: 8
     RewardPicture: {fileID: 21300000, guid: fc19457136214724f9db4e7d6f0d49e3, type: 3}
     Scale: 1
@@ -81,7 +81,7 @@ MonoBehaviour:
     ShiftY: 0.35
   - Name: 13
     RewardPicture: {fileID: 21300000, guid: d3a1e783ea85ab4409d02a9252f2bf1d, type: 3}
-    Scale: 0.96
+    Scale: 0.9
     RotationZ: 0
     ShiftX: 0
     ShiftY: 0.15
@@ -102,10 +102,10 @@ MonoBehaviour:
     Scale: 1
     RotationZ: -45
     ShiftX: 0.16
-    ShiftY: 0.16
+    ShiftY: 0.18
   - Name: 17
     RewardPicture: {fileID: 21300000, guid: d5b0ef9a6b6148045a5effa1e142b925, type: 3}
-    Scale: 1.4
+    Scale: 1
     RotationZ: 135
     ShiftX: 0.05
     ShiftY: 0.35
