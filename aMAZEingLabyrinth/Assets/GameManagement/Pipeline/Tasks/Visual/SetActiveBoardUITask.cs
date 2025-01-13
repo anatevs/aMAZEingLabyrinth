@@ -1,9 +1,8 @@
 ﻿using GameCore;
-using UnityEngine;
 
 namespace GamePipeline
 {
-    public class SetActiveBoardUITask : Task
+    public sealed class SetActiveBoardUITask : Task
     {
         private readonly ShiftArrowsService _shiftArrows;
         private readonly CellHighlight _cellHighlight;

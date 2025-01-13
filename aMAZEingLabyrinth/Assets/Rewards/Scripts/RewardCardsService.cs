@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GameCore
 {
-    public class RewardCardsService : MonoBehaviour
+    public sealed class RewardCardsService : MonoBehaviour
     {
         [SerializeField]
         private RewardsConfig _rewardsConfig;

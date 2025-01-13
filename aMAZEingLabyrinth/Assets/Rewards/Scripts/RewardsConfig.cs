@@ -10,7 +10,7 @@ namespace GameCore
         menuName = "Configs/RewardsConfig"
         )]
 
-    public class RewardsConfig : ScriptableObject
+    public sealed class RewardsConfig : ScriptableObject
     {
         public int RewardsCount => _rewards.Count;
 
