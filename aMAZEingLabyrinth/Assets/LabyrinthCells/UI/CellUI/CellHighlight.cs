@@ -14,8 +14,6 @@ namespace GameCore
         [SerializeField]
         CellHighlightView _view;
 
-        private bool _isActive;
-
         private Vector3 _currentPos;
 
         private Vector3 _outPos = new(-1, -1, 0);
@@ -50,29 +48,25 @@ namespace GameCore
 
         public void SetActive(bool isActive)
         {
-            _isActive = isActive;
             _view.SetActive(isActive);
         }
 
         private void SetHighlight(Vector3 mousePos)
         {
-            if (_isActive)
+            var pos = _labyrinth.GetCellCenterCoordinates(mousePos);
+
+            if (pos != _currentPos)
             {
-                var pos = _labyrinth.GetCellCenterCoordinates(mousePos);
-
-                if (pos != _currentPos)
+                if (_currentPos != _outPos)
                 {
-                    if (_currentPos != _outPos)
-                    {
-                        _labyrinth.LayerUpRewardSprite(_currentPos, false);
-                    }
-                    _labyrinth.LayerUpRewardSprite(pos, true);
+                    _labyrinth.LayerUpRewardSprite(_currentPos, false);
                 }
-
-                _currentPos = pos;
-
-                _view.SetHighlight(pos);
+                _labyrinth.LayerUpRewardSprite(pos, true);
             }
+
+            _currentPos = pos;
+
+            _view.SetHighlight(pos);
         }
 
         private void UnhighlightReward()
@@ -83,10 +77,7 @@ namespace GameCore
 
         private void ClickOnCell()
         {
-            if (_isActive)
-            {
-                _turnPipeline.Run();
-            }
+            _turnPipeline.Run();
         }
     }
 }

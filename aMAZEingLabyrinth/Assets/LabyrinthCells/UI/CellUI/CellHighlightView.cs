@@ -9,6 +9,8 @@ namespace GameCore
     [RequireComponent(typeof(BoxCollider2D))]
     public sealed class CellHighlightView : MonoBehaviour
     {
+        public bool IsActive => _isActive;
+
         public event Action<Vector3> OnMouseEnter;
 
         public event Action OnMouseExit;
@@ -59,7 +61,7 @@ namespace GameCore
             {
                 _isOverlapping = true;
 
-                if (!_isShowingClick)
+                if (!_isShowingClick && _isActive)
                 {
                     OnMouseEnter?.Invoke(mousePos);
 
@@ -101,12 +103,12 @@ namespace GameCore
         public async void PlayClickVisual()
         {
             _isShowingClick = true;
-            Debug.Log($"start click: {Time.time}");
+
             await DOTween.Sequence()
                 .Append(_highlightImage.transform.DOScale(_clickScale, _clickVisualDuration))
                 .Append(_highlightImage.transform.DOScale(1, _clickVisualDuration))
                 .AsyncWaitForCompletion();
-            Debug.Log($"end click: {Time.time}");
+
             _isShowingClick = false;
 
             _highlightImage.SetActive(_isActive);
