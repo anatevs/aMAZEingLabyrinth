@@ -9,7 +9,7 @@ namespace GameUI
         private GameObject _window;
 
         [SerializeField]
-        private float _activeTime;
+        private float _activeTime = 0.5f;
 
         public async UniTask SetActiveTask()
         {

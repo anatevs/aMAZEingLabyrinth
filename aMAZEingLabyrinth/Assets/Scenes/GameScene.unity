@@ -4653,7 +4653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _window: {fileID: 809425667}
-  _activeTime: 0.8
+  _activeTime: 0.5
 --- !u!1 &820667952
 GameObject:
   m_ObjectHideFlags: 0
@@ -7634,6 +7634,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highlightImage: {fileID: 2092645388}
+  _clickVisualDuration: 0.1
+  _clickScale: 0.8
 --- !u!114 &1322003525
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GamePipeline
 {
-    public class PlaySequenceVisualTask : Task
+    public sealed class PlaySequenceVisualTask : Task
     {
         private readonly Sequence _sequence;
 
