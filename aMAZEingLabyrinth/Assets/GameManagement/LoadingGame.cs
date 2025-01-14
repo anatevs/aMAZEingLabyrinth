@@ -5,7 +5,9 @@ using VContainer.Unity;
 
 namespace GameManagement
 {
-    public sealed class LoadingGame : IInitializable
+    public sealed class LoadingGame :
+        IInitializable,
+        IPostInitializable
     {
         private readonly SaveLoadManager _loadManager;
 
@@ -20,6 +22,11 @@ namespace GameManagement
         {
             await SceneManager.LoadSceneAsync(_gameSceneID);
 
+            //_loadManager.LoadGame();
+        }
+
+        void IPostInitializable.PostInitialize()
+        {
             _loadManager.LoadGame();
         }
     }

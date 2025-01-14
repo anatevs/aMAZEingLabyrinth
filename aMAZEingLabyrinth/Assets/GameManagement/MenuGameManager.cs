@@ -85,6 +85,8 @@ namespace GameManagement
         {
             _saveLoadManager.LoadNewGame();
 
+            _menusService.ChoosingPlayer.Show(_players.ActiveTypes);
+
             _menusService.PlayerSelector.Show(_players.ActiveTypes);
 
             _cellHighlight.SetActive(false);

@@ -34,9 +34,9 @@ namespace GameUI
             _label.text = playerType.ToString();
         }
 
-        public void SetTrue()
+        public void SetOn(bool isOn)
         {
-            _toggle.isOn = true;
+            _toggle.isOn = isOn;
         }
 
         private void SetToggle(bool value)
