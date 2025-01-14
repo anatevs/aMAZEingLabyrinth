@@ -7,7 +7,7 @@ using VContainer;
 using VContainer.Unity;
 using GameManagement;
 
-public class SceneLifetimeScope : LifetimeScope
+public sealed class SceneLifetimeScope : LifetimeScope
 {
     [SerializeField]
     private MenusService _menuWindowsService;

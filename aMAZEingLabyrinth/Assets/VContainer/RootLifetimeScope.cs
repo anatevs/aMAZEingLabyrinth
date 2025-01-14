@@ -5,7 +5,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
-public class RootLifetimeScope : LifetimeScope
+public sealed class RootLifetimeScope : LifetimeScope
 {
     [SerializeField]
     private MovableCellsConfig _movableCellsConfig;

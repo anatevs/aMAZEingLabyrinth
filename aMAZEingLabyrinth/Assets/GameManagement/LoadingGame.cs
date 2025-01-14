@@ -5,9 +5,9 @@ using VContainer.Unity;
 
 namespace GameManagement
 {
-    public sealed class LoadingGame : IInitializable, IPostInitializable
+    public sealed class LoadingGame : IInitializable
     {
-        private SaveLoadManager _loadManager;
+        private readonly SaveLoadManager _loadManager;
 
         private readonly int _gameSceneID = 1;
 
@@ -19,11 +19,6 @@ namespace GameManagement
         async void IInitializable.Initialize()
         {
             await SceneManager.LoadSceneAsync(_gameSceneID);
-        }
-
-        void IPostInitializable.PostInitialize()
-        {
-            //var scope = LifetimeScope.Find<SceneLifetimeScope>();
 
             _loadManager.LoadGame();
         }

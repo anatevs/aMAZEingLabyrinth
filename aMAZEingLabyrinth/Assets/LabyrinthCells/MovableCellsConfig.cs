@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace GameCore
         fileName = "MovableCellsConfig",
         menuName = "Configs/MovableCells"
         )]
-    public class MovableCellsConfig : ScriptableObject
+    public sealed class MovableCellsConfig : ScriptableObject
     {
         public int Count => _movableCells.Length;
 
@@ -27,7 +26,7 @@ namespace GameCore
 
         private CardCellsType[] _movableCells;
 
-        private void OnValidate()
+        private void Awake()
         {
             var angleShapeReward = new CardCellsType[_angleRewardCount];
             var tShape = new CardCellsType[_tCount];
