@@ -2,19 +2,29 @@ This project realises the Labyrinth Board Game as a computer game. It is a non-c
 The study goals of the project:
  - Event Bus pattern
  - Save/Load system
- - Applying the DoTween library for visual effects (in process)
+ - Applying the DoTween library for visual effects
+
+Used libraries:
+- VContainer (https://vcontainer.hadashikick.jp/)
+- DoTween (https://dotween.demigiant.com/getstarted.php)
+- UniTask (https://github.com/Cysharp/UniTask)
 
 
 New game and 1st player turn:
 
-![movie_021-basicTurn](https://github.com/user-attachments/assets/ec5e159b-9dc0-4841-b588-6e899472cce5)
+![movie_046-basicTurn](https://github.com/user-attachments/assets/260355ad-2408-42c1-b9a8-a1289d2df425)
 
 
-Loading previous game, turn without labyrinth change and no path case:
+Loading previous game, turn without shifting row/column, no path case and taking reward case:
 
-![movie_022-loadGame-(red)turnWithoutShift-noPathTurn](https://github.com/user-attachments/assets/8efcfe85-39e8-445b-81dc-b07f62418efe)
+![movie_047-loadSaved-turnWithoutShiftAndNoPath-TakeReward](https://github.com/user-attachments/assets/d166dee3-17b4-4705-acbc-9d480d4439c6)
 
 
-Taking reward:
+Start new game:
 
-![movie_023-takeReward](https://github.com/user-attachments/assets/9072cda7-c061-4652-8b33-f75b80297d8e)
+![movie_048-newGame](https://github.com/user-attachments/assets/86dce8ae-b82c-4da0-80d0-a473c7c027e4)
+
+
+Winning:
+
+![movie_049-win](https://github.com/user-attachments/assets/967eef20-e6ba-470a-8614-a556860c45d6)
