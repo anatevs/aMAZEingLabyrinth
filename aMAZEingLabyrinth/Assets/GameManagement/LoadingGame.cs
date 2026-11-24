@@ -20,14 +20,22 @@ namespace GameManagement
 
         async void IInitializable.Initialize()
         {
-            await SceneManager.LoadSceneAsync(_gameSceneID);
-
-            //_loadManager.LoadGame();
+            await LoadScene(_gameSceneID);
         }
 
         void IPostInitializable.PostInitialize()
         {
             _loadManager.LoadGame();
+        }
+
+        private async UniTask LoadScene(int sceneID)
+        {
+            var operation = SceneManager.LoadSceneAsync(sceneID);
+
+            while (!operation.isDone)
+            {
+                await UniTask.Yield();
+            }
         }
     }
 }

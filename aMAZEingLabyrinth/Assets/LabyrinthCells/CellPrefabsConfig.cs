@@ -18,7 +18,7 @@ namespace GameCore
         {
             foreach (var prefab in _prefabs)
             {
-                _prefabsDict.Add(prefab.Geometry, prefab);
+                _prefabsDict.TryAdd(prefab.Geometry, prefab);
             }
         }
 

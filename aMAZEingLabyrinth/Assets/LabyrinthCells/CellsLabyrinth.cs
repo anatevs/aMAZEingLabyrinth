@@ -337,7 +337,7 @@ namespace GameCore
                 }
             }
 
-            Debug.Log($"path found: {resultBool}");
+            //Debug.Log($"path found: {resultBool}");
 
             return resultBool;
         }

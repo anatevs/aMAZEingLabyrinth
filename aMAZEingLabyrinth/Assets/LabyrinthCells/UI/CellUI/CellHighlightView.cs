@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using GameModules;
 using DG.Tweening;
-using Cysharp.Threading.Tasks;
 
 namespace GameCore
 {
@@ -32,7 +31,7 @@ namespace GameCore
 
         private BoxCollider2D _boxCollider;
 
-        private InputSystem _inputSystem;
+        private IInput _inputSystem;
 
         private bool _isOverlapping = false;
 
@@ -40,7 +39,9 @@ namespace GameCore
         {
             _boxCollider = GetComponent<BoxCollider2D>();
 
-            _inputSystem = new();
+            //_inputSystem = new();
+
+            _inputSystem = new InputHandler();
         }
 
         private void OnEnable()

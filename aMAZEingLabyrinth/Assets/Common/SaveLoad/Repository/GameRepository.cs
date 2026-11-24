@@ -44,8 +44,6 @@ namespace SaveLoadNamespace
 
         public void SaveState()
         {
-            Debug.Log($"can save: {_canSave}");
-
             if (_canSave)
             {
                 string gameData = JsonConvert.SerializeObject(ObjectsPresentations);

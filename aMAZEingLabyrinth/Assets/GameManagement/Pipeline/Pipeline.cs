@@ -34,14 +34,9 @@ namespace GamePipeline
         {
             _currentIndex++;
 
-            Debug.Log($"task {this} has {_tasks.Count} tasks and current is {_currentIndex}");
-
-
             if (_currentIndex >= _tasks.Count)
             {
                 _currentIndex = 0;
-
-                Debug.Log($"finish {this} pipeline");
 
                 OnFinished?.Invoke();
 
